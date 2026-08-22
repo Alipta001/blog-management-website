@@ -1,0 +1,33 @@
+cat > .gitignore <<'EOF'
+# Dependencies
+**/node_modules/
+
+# Next.js
+**/.next/
+**/out/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Uploaded files
+backend/uploads/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+**/.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Coverage
+coverage/
+EOF
