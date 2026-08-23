@@ -79,7 +79,12 @@ const analyticsRoutes = require("./app/routes/analytics.route");
 app.use("/analytics", analyticsRoutes);
 
 
-
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Blog Management API is running",
+  });
+});
 
 app.use((req, res, next) => {
   const error = new Error(`Not Found - ${req.originalUrl}`);
