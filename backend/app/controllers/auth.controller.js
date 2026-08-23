@@ -579,6 +579,7 @@ class AuthController {
       const allowedRoles = [
         "author",
         "user",
+        "reader"
       ];
 
 

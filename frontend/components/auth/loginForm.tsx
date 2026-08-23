@@ -421,7 +421,7 @@ export default function LoginForm() {
 
 
         <Link
-          href="/forgot-password"
+          href="/register"
 
           className="
             font-medium
