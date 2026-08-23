@@ -471,6 +471,7 @@ const accessCookieOptions = {
   httpOnly: true,
   secure: true,
   sameSite: "none",
+  partitioned: true,
   path: "/",
   maxAge:
     15 * 60 * 1000,
@@ -485,6 +486,7 @@ const refreshCookieOptions = {
   secure: true,
 
   sameSite: "none",
+  partitioned: true,
 path: "/",
   maxAge:
     7 *
