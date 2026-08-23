@@ -6,10 +6,17 @@ import axios, {
 import { endPoints } from "@/api/endPoints/endPoints";
 
 
-const BASE_URL =
-  process.env
-    .NEXT_PUBLIC_API_BASE_URL;
+// =================================
+// BASE URL
+// =================================
 
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL;
+
+
+// =================================
+// AXIOS INSTANCE
+// =================================
 
 const AxiosInstance =
   axios.create({
@@ -24,24 +31,54 @@ const AxiosInstance =
 
     },
 
+    /*
+     * VERY IMPORTANT
+     *
+     * Allows browser to send
+     * HttpOnly cookies to Render.
+     */
+
     withCredentials:
       true,
 
   });
 
 
-// Let the browser add the multipart boundary for file uploads.
+// =================================
+// REQUEST INTERCEPTOR
+// =================================
+//
+// Let browser set multipart boundary
+// automatically for FormData.
+//
+
 AxiosInstance.interceptors.request.use(
+
   (config) => {
+
     if (
       typeof FormData !== "undefined" &&
       config.data instanceof FormData
     ) {
-      config.headers?.delete("Content-Type");
+
+      config.headers?.delete(
+        "Content-Type"
+      );
+
     }
 
     return config;
+
   },
+
+  (error) => {
+
+    return Promise.reject(
+      error
+    );
+
+  }
+
 );
 
 
@@ -49,11 +86,8 @@ AxiosInstance.interceptors.request.use(
 // REFRESH STATE
 // =================================
 
-let isRefreshing =
-  false;
-
 let refreshPromise:
-  Promise<unknown> | null =
+  Promise<void> | null =
   null;
 
 
@@ -63,8 +97,24 @@ let refreshPromise:
 
 AxiosInstance.interceptors.response.use(
 
-  (response) =>
-    response,
+  /*
+   * ================================
+   * SUCCESS
+   * ================================
+   */
+
+  (response) => {
+
+    return response;
+
+  },
+
+
+  /*
+   * ================================
+   * ERROR
+   * ================================
+   */
 
   async (
     error: AxiosError
@@ -78,9 +128,9 @@ AxiosInstance.interceptors.response.use(
         | undefined;
 
 
-    /*
-     * No request configuration.
-     */
+    // =================================
+    // NO REQUEST CONFIG
+    // =================================
 
     if (!originalRequest) {
 
@@ -91,9 +141,9 @@ AxiosInstance.interceptors.response.use(
     }
 
 
-    /*
-     * Only handle 401.
-     */
+    // =================================
+    // ONLY HANDLE 401
+    // =================================
 
     if (
       error.response?.status !== 401
@@ -106,13 +156,52 @@ AxiosInstance.interceptors.response.use(
     }
 
 
-    /*
-     * Never refresh the refresh endpoint
-     * itself.
-     */
+    // =================================
+    // REQUEST URL
+    // =================================
+
+    const requestUrl =
+      originalRequest.url || "";
+
+
+    // =================================
+    // NEVER REFRESH LOGIN REQUEST
+    // =================================
 
     if (
-      originalRequest.url?.includes(
+      requestUrl.includes(
+        endPoints.auth.login
+      )
+    ) {
+
+      return Promise.reject(
+        error
+      );
+
+    }
+
+
+    // =================================
+    // NEVER REFRESH REFRESH-TOKEN
+    // =================================
+    //
+    // This is extremely important.
+    //
+    // Otherwise:
+    //
+    // refresh-token -> 401
+    //       ↓
+    // interceptor
+    //       ↓
+    // refresh-token
+    //       ↓
+    // 401
+    //       ↓
+    // infinite loop
+    //
+
+    if (
+      requestUrl.includes(
         endPoints.auth.refreshToken
       )
     ) {
@@ -124,10 +213,10 @@ AxiosInstance.interceptors.response.use(
     }
 
 
-    /*
-     * Don't retry the same request
-     * more than once.
-     */
+    // =================================
+    // DO NOT RETRY SAME REQUEST
+    // MORE THAN ONCE
+    // =================================
 
     if (
       originalRequest._retry
@@ -144,70 +233,99 @@ AxiosInstance.interceptors.response.use(
       true;
 
 
+    // =================================
+    // REFRESH ACCESS TOKEN
+    // =================================
+
     try {
 
       /*
        * If another request is already
-       * refreshing the token, wait for it.
+       * refreshing the token, wait for
+       * that same request.
        */
 
       if (
-        !isRefreshing
+        !refreshPromise
       ) {
 
-        isRefreshing =
-          true;
-
-
         refreshPromise =
-          AxiosInstance.post(
-            endPoints.auth.refreshToken,
-          );
+          AxiosInstance
+            .post(
+              endPoints.auth.refreshToken
+            )
+            .then(() => {
+
+              /*
+               * Backend sets the new
+               * accessToken as an
+               * HttpOnly cookie.
+               */
+
+              return;
+
+            })
+            .finally(() => {
+
+              /*
+               * Allow a future refresh
+               * after this one completes.
+               */
+
+              refreshPromise =
+                null;
+
+            });
 
       }
 
 
+      // =================================
+      // WAIT FOR REFRESH
+      // =================================
+
       await refreshPromise;
 
 
-      /*
-       * Refresh successful.
-       *
-       * Backend has already sent the
-       * new access token as a cookie.
-       *
-       * Retry original request.
-       */
+      // =================================
+      // RETRY ORIGINAL REQUEST
+      // =================================
 
       return AxiosInstance(
         originalRequest
       );
 
-    } catch (
+    }
+
+    catch (
       refreshError
     ) {
+
+      // =================================
+      // REFRESH FAILED
+      // =================================
+      //
+      // Do NOT call window.location here.
+      //
+      // This prevents redirect/reload loops.
+      //
 
       if (
         typeof window !== "undefined"
       ) {
+
         window.dispatchEvent(
-          new Event("auth:session-expired")
+          new Event(
+            "auth:session-expired"
+          )
         );
 
-        window.location.replace("/login");
       }
+
 
       return Promise.reject(
         refreshError
       );
-
-    } finally {
-
-      isRefreshing =
-        false;
-
-      refreshPromise =
-        null;
 
     }
 
@@ -215,5 +333,9 @@ AxiosInstance.interceptors.response.use(
 
 );
 
+
+// =================================
+// EXPORT
+// =================================
 
 export default AxiosInstance;
