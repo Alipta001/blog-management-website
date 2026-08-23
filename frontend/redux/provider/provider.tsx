@@ -4,6 +4,8 @@ import { Provider } from 'react-redux'
 import { store } from "../store/store"
 import { useAppDispatch } from "../hooks";
 import { getCurrentUser } from "../slice/auth/authSlice";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface ProvidersProps {
   children: ReactNode;
@@ -24,6 +26,7 @@ export default function Providers({ children }: ProvidersProps) {
     <Provider store={store}>
       <AuthInitializer>
         {children}
+        <ToastContainer position="top-right" autoClose={4000} />
       </AuthInitializer>
     </Provider>
   )

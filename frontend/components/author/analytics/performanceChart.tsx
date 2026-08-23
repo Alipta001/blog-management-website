@@ -16,7 +16,7 @@ import {
 export interface PerformanceData {
   date: string;
 
-  views: number;
+  readers: number;
 
   likes: number;
 
@@ -53,7 +53,7 @@ export default function PerformanceChart({
         </h2>
 
         <p className="mt-1 text-sm text-slate-500">
-          Views and engagement across your content.
+          Readers and engagement across your content.
         </p>
 
       </div>
@@ -144,11 +144,11 @@ export default function PerformanceChart({
 
             <Area
               type="monotone"
-              dataKey="views"
+              dataKey="readers"
               stroke="#8b5cf6"
               strokeWidth={2}
               fill="url(#viewsGradient)"
-              name="Views"
+              name="Readers"
             />
 
 

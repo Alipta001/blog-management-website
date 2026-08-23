@@ -503,11 +503,17 @@ interface LoginResponse {
 
 
 interface RegisterResponse {
-
-  user: User;
+  email: string;
 
   message: string;
 
+}
+
+
+interface VerifyRegistrationOtpPayload {
+  email: string;
+
+  otp: string;
 }
 
 
@@ -618,16 +624,14 @@ export const registerUser =
 
         const response =
           await AxiosInstance.post(
-            endPoints.auth.register,
+            endPoints.auth.sendRegistrationOtp,
             data,
           );
 
 
         return {
 
-          user: normalizeAuthUser(
-            response.data.data.user,
-          ),
+          email: response.data.data.email,
 
           message:
             response.data.message,
@@ -648,6 +652,54 @@ export const registerUser =
 
     }
 
+  );
+
+
+// =================================
+// VERIFY REGISTRATION OTP
+// =================================
+
+export const verifyRegistrationOtp =
+  createAsyncThunk<
+    RegisterResponse & { user: User },
+    VerifyRegistrationOtpPayload,
+    {
+      rejectValue: string;
+    }
+  >(
+    "auth/verifyRegistrationOtp",
+
+    async (
+      data,
+      {
+        rejectWithValue,
+      }
+    ) => {
+      try {
+        const response =
+          await AxiosInstance.post(
+            endPoints.auth.verifyRegistrationOtp,
+            data,
+          );
+
+        return {
+          user: normalizeAuthUser(
+            response.data.data.user,
+          ),
+
+          message:
+            response.data.message,
+
+          email: data.email,
+        };
+
+      } catch (error: any) {
+        return rejectWithValue(
+          error?.response?.data?.message ||
+          "OTP verification failed"
+        );
+      }
+    }
   );
 
 
@@ -1104,6 +1156,63 @@ const authSlice =
             state.error =
               action.payload ||
               "Registration failed";
+
+          }
+
+        )
+
+
+        // =================================
+        // VERIFY REGISTRATION OTP
+        // =================================
+
+        .addCase(
+
+          verifyRegistrationOtp.pending,
+
+          (state) => {
+
+            state.loading =
+              true;
+
+            state.error =
+              null;
+
+            state.successMessage =
+              null;
+
+          }
+
+        )
+
+        .addCase(
+
+          verifyRegistrationOtp.fulfilled,
+
+          (state, action) => {
+
+            state.loading =
+              false;
+
+            state.successMessage =
+              action.payload.message;
+
+          }
+
+        )
+
+        .addCase(
+
+          verifyRegistrationOtp.rejected,
+
+          (state, action) => {
+
+            state.loading =
+              false;
+
+            state.error =
+              action.payload ||
+              "OTP verification failed";
 
           }
 

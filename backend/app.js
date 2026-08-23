@@ -80,6 +80,29 @@ app.use("/analytics", analyticsRoutes);
 
 
 
+
+app.use((req, res, next) => {
+  const error = new Error(`Not Found - ${req.originalUrl}`);
+  error.status = 404;
+  next(error); // Passes the 404 error to the global handler below
+});
+
+// 🚨 2. GLOBAL ERROR HANDLER (Must have 4 arguments!)
+app.use((err, req, res, next) => {
+  // Always log the error internally for debugging
+  console.error("❌ App Error:", err.stack || err.message);
+
+  // Set standard status code default to 500 if not specified
+  const statusCode = err.status || 500;
+
+  res.status(statusCode).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+    // Only show detailed error trace while working on localhost
+    stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
+  });
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, (error) => {
   if (error) {

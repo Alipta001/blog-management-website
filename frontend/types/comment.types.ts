@@ -1,7 +1,7 @@
 // src/types/comment.types.ts
 
 import type { Blog } from "./blog.types";
-import type {  user } from "./ user.types";
+import type { User } from "./user.types";
 
 export type CommentStatus =
   | "pending"
@@ -13,13 +13,13 @@ export interface Comment {
   _id: string;
 
   blog: string | Blog;
-   user: string |  user;
+  user: string | User;
 
   content: string;
 
   status: CommentStatus;
 
-  moderatedBy: string |  user | null;
+  moderatedBy: string | User | null;
 
   moderatedAt: string | null;
 

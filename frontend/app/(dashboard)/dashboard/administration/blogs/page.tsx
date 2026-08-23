@@ -23,6 +23,8 @@ import {
   unpublishBlog,
 } from "@/redux/slice/blog/blogSlice";
 
+import type { GetAdminBlogsParams } from "@/types/blogRequest.types";
+
 import {
   getCategories,
 } from "@/redux/slice/category/categorySlice";
@@ -55,7 +57,7 @@ export default function AdministrationBlogsPage() {
 
     adminBlogsPagination,
 
-    adminBlogsStats,
+    adminBlogStats,
 
     loading,
 
@@ -215,7 +217,7 @@ export default function AdministrationBlogsPage() {
 
             ...(status
               ? {
-                  status,
+                  status: status as GetAdminBlogsParams["status"],
                 }
               : {}),
 
@@ -583,7 +585,7 @@ export default function AdministrationBlogsPage() {
       <BlogsStats
 
         stats={
-          adminBlogsStats
+          adminBlogStats
         }
 
       />

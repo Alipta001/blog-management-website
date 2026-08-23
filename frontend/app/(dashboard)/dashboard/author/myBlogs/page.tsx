@@ -11,10 +11,20 @@ import {
 } from "@/redux/hooks";
 
 import {
+  clearBlogError,
+  deleteBlog,
   getMyBlogs,
+  submitBlog,
 } from "@/redux/slice/blog/blogSlice";
-import Pagination from "@/components/common/pagination/pagination";
 
+import type {
+  BlogStatus,
+} from "@/types/blog.types";
+
+import Pagination from "@/components/common/pagination/pagination";
+import MyBlogsTable from "@/components/author/myBlogs/myBlogsTable";
+import MyBlogsFilters from "@/components/author/myBlogs/myBlogsFilters";
+import MyBlogsHeader from "@/components/author/myBlogs/myBlogsHeader";
 
 export default function MyBlogsPage() {
   const dispatch =
@@ -24,6 +34,7 @@ export default function MyBlogsPage() {
     myBlogs,
     myBlogsPagination,
     loading,
+    error,
   } = useAppSelector(
     (state) => state.blog,
   );
@@ -31,21 +42,61 @@ export default function MyBlogsPage() {
   const [page, setPage] =
     useState(1);
 
+  const [status, setStatus] =
+    useState<
+      BlogStatus | "all"
+    >("all");
+
   const limit = 10;
 
 
+  // =================================
+  // FETCH MY BLOGS
+  // =================================
+
   useEffect(() => {
+    const params: {
+      page: number;
+      limit: number;
+      status?: BlogStatus;
+    } = {
+      page,
+      limit,
+    };
+
+    if (status !== "all") {
+      params.status = status;
+    }
+
     dispatch(
-      getMyBlogs({
-        page,
-        limit,
-      }),
+      getMyBlogs(params),
     );
   }, [
     dispatch,
     page,
+    status,
   ]);
 
+
+  // =================================
+  // STATUS CHANGE
+  // =================================
+
+  const handleStatusChange = (
+    value:
+      | BlogStatus
+      | "all",
+  ) => {
+    setStatus(value);
+
+    // Reset pagination when filter changes
+    setPage(1);
+  };
+
+
+  // =================================
+  // PAGE CHANGE
+  // =================================
 
   const handlePageChange = (
     selectedPage: number,
@@ -54,57 +105,142 @@ export default function MyBlogsPage() {
   };
 
 
+  // =================================
+  // SUBMIT BLOG
+  // =================================
+
+  const handleSubmit = async (
+    id: string,
+  ) => {
+    try {
+      await dispatch(
+        submitBlog(id),
+      ).unwrap();
+
+      // Refetch current page
+      dispatch(
+        getMyBlogs({
+          page,
+          limit,
+          ...(status !== "all"
+            ? { status }
+            : {}),
+        }),
+      );
+    } catch (error) {
+      console.error(
+        "Failed to submit blog:",
+        error,
+      );
+    }
+  };
+
+
+  // =================================
+  // DELETE BLOG
+  // =================================
+
+  const handleDelete = async (
+    id: string,
+  ) => {
+    const confirmed =
+      window.confirm(
+        "Are you sure you want to delete this blog?",
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      await dispatch(
+        deleteBlog(id),
+      ).unwrap();
+
+      // Refetch blogs after deletion
+      dispatch(
+        getMyBlogs({
+          page,
+          limit,
+          ...(status !== "all"
+            ? { status }
+            : {}),
+        }),
+      );
+    } catch (error) {
+      console.error(
+        "Failed to delete blog:",
+        error,
+      );
+    }
+  };
+
+
+  // =================================
+  // CLEAR ERROR
+  // =================================
+
+  useEffect(() => {
+    if (!error) {
+      return;
+    }
+
+    return () => {
+      dispatch(
+        clearBlogError(),
+      );
+    };
+  }, [
+    error,
+    dispatch,
+  ]);
+
+
   return (
     <div className="space-y-6">
 
-      <div>
-        <h1 className="text-2xl font-bold text-white">
-          My Blogs
-        </h1>
+      {/* ============================= */}
+      {/* HEADER */}
+      {/* ============================= */}
 
-        <p className="mt-1 text-sm text-slate-400">
-          Manage and track all your blogs.
-        </p>
-      </div>
+      <MyBlogsHeader />
 
 
-      <div className="rounded-2xl border border-white/10 bg-[#111114]">
+      {/* ============================= */}
+      {/* FILTERS */}
+      {/* ============================= */}
 
-        {loading ? (
-          <div className="p-6">
-            Loading...
-          </div>
-        ) : myBlogs.length === 0 ? (
-          <div className="p-6 text-slate-400">
-            No blogs found.
-          </div>
-        ) : (
-          <div className="divide-y divide-white/10">
-
-            {myBlogs.map((blog) => (
-              <div
-                key={blog._id}
-                className="p-6"
-              >
-                <h2 className="font-semibold text-white">
-                  {blog.title}
-                </h2>
-
-                <p className="mt-1 text-sm text-slate-400">
-                  {blog.description}
-                </p>
-
-                <p className="mt-3 text-xs text-violet-400">
-                  {blog.status}
-                </p>
-              </div>
-            ))}
-
-          </div>
-        )}
+      <MyBlogsFilters
+        status={status}
+        onStatusChange={
+          handleStatusChange
+        }
+      />
 
 
-        <div className="px-6 pb-6">
+      {/* ============================= */}
+      {/* BLOG TABLE */}
+      {/* ============================= */}
+
+      <MyBlogsTable
+        blogs={myBlogs}
+        loading={loading}
+        error={error}
+        onSubmit={
+          handleSubmit
+        }
+        onDelete={
+          handleDelete
+        }
+      />
+
+
+      {/* ============================= */}
+      {/* PAGINATION */}
+      {/* ============================= */}
+
+      {myBlogsPagination && (
+        <div className="flex justify-center">
 
           <Pagination
             pagination={
@@ -117,8 +253,7 @@ export default function MyBlogsPage() {
           />
 
         </div>
-
-      </div>
+      )}
 
     </div>
   );

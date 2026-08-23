@@ -1,441 +1,1730 @@
+// const bcrypt = require("bcryptjs");
+
+// const User = require("../models/user");
+
+// const { generateAccessToken, generateRefreshToken } = require("../utils/token");
+
+// // =================================
+// // COOKIE OPTIONS
+// // =================================
+
+// const isProduction = process.env.NODE_ENV === "production";
+
+// const accessCookieOptions = {
+//   httpOnly: true,
+
+//   secure: isProduction,
+
+//   sameSite: isProduction ? "none" : "lax",
+
+//   maxAge: 15 * 60 * 1000,
+// };
+
+// const refreshCookieOptions = {
+//   httpOnly: true,
+
+//   secure: isProduction,
+
+//   sameSite: isProduction ? "none" : "lax",
+
+//   maxAge: 7 * 24 * 60 * 60 * 1000,
+// };
+
+// // =================================
+// // CONTROLLER
+// // =================================
+
+// class AuthController {
+//   // =================================
+//   // REGISTER
+//   // =================================
+
+//   async register(req, res, next) {
+//     try {
+//       const { name, email, phone, password, role } = req.body;
+
+//       // Check existing user
+
+//       const existingUser = await User.findOne({
+//         email,
+//       });
+
+//       if (existingUser) {
+//         return res.status(409).json({
+//           success: false,
+
+//           message: "User already exists with this email",
+//         });
+//       }
+
+//       // Hash password
+
+//       const hashedPassword = await bcrypt.hash(password, 12);
+
+//       // Create user
+
+//       const user = await User.create({
+//         name,
+
+//         email,
+
+//         phone,
+
+//         password: hashedPassword,
+
+//         role,
+//       });
+
+//       return res.status(201).json({
+//         success: true,
+
+//         message: "Registration successful",
+
+//         data: {
+//           user: {
+//             id: user._id,
+
+//             name: user.name,
+
+//             email: user.email,
+
+//             role: user.role,
+
+//             profileImage: user.profileImage,
+//           },
+//         },
+//       });
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+
+//   // =================================
+//   // LOGIN
+//   // =================================
+
+//   async login(req, res, next) {
+//     try {
+//       const { email, password } = req.body;
+
+//       // Find user
+
+//       const user = await User.findOne({
+//         email,
+//       }).select("+password +refreshToken");
+
+//       // User not found
+
+//       if (!user) {
+//         return res.status(401).json({
+//           success: false,
+
+//           message: "Invalid email or password",
+//         });
+//       }
+
+//       // Check account status
+
+//       if (user.status !== "active") {
+//         return res.status(403).json({
+//           success: false,
+
+//           message: `Your account is ${user.status}`,
+//         });
+//       }
+
+//       // Compare password
+
+//       const isPasswordMatched = await bcrypt.compare(password, user.password);
+
+//       if (!isPasswordMatched) {
+//         return res.status(401).json({
+//           success: false,
+
+//           message: "Invalid email or password",
+//         });
+//       }
+
+//       // Generate access token
+
+//       const accessToken = generateAccessToken({
+//         userId: user._id,
+
+//         role: user.role,
+//       });
+
+//       // Generate refresh token
+
+//       const refreshToken = generateRefreshToken({
+//         userId: user._id,
+//       });
+
+//       // Save refresh token
+
+//       user.refreshToken = refreshToken;
+
+//       await user.save();
+
+//       // Set access token cookie
+
+//       res.cookie("accessToken", accessToken, accessCookieOptions);
+
+//       // Set refresh token cookie
+
+//       res.cookie("refreshToken", refreshToken, refreshCookieOptions);
+
+//       return res.status(200).json({
+//         success: true,
+
+//         message: "Login successful",
+
+//         data: {
+//           user: {
+//             id: user._id,
+
+//             name: user.name,
+
+//             email: user.email,
+
+//             role: user.role,
+
+//             profileImage: user.profileImage,
+//           },
+//         },
+//       });
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+
+//   // =================================
+//   // REFRESH TOKEN
+//   // =================================
+
+//   async refreshToken(req, res, next) {
+//     try {
+//       const refreshToken = req.cookies.refreshToken;
+
+//       // Refresh token missing
+
+//       if (!refreshToken) {
+//         return res.status(401).json({
+//           success: false,
+
+//           message: "Refresh token missing",
+//         });
+//       }
+
+//       // Find user
+
+//       const user = await User.findOne({
+//         refreshToken,
+//       }).select("+refreshToken");
+
+//       if (!user) {
+//         return res.status(401).json({
+//           success: false,
+
+//           message: "Invalid refresh token",
+//         });
+//       }
+
+//       // Generate new access token
+
+//       const accessToken = generateAccessToken({
+//         userId: user._id,
+
+//         role: user.role,
+//       });
+
+//       // Set new access token cookie
+
+//       res.cookie("accessToken", accessToken, accessCookieOptions);
+
+//       return res.status(200).json({
+//         success: true,
+
+//         message: "Access token refreshed",
+//       });
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+
+//   async getCurrentUser(req, res){
+//   try {
+
+//     const user = await User.findById(
+//       req.user._id
+//     ).select("-password -refreshToken");
+
+//     if (!user) {
+
+//       return res.status(404).json({
+//         success: false,
+//         message: "User not found",
+//       });
+
+//     }
+
+//     return res.status(200).json({
+
+//       success: true,
+
+//       message:
+//         "Current user fetched successfully",
+
+//       data: {
+//         user,
+//       },
+
+//     });
+
+//   } catch (error) {
+
+//     console.error(
+//       "Get current user error:",
+//       error
+//     );
+
+//     return res.status(500).json({
+
+//       success: false,
+
+//       message:
+//         "Internal server error",
+
+//     });
+
+//   }
+// };
+
+
+//   // =================================
+//   // LOGOUT
+//   // =================================
+
+//   async logout(req, res, next) {
+//     try {
+//       const userId = req.user.id;
+
+//       // Remove refresh token
+//       // from database
+
+//       await User.findByIdAndUpdate(
+//         userId,
+
+//         {
+//           refreshToken: null,
+//         },
+//       );
+
+//       // Clear access token
+
+//       res.clearCookie("accessToken", {
+//         httpOnly: true,
+
+//         secure: isProduction,
+
+//         sameSite: isProduction ? "none" : "lax",
+//       });
+
+//       // Clear refresh token
+
+//       res.clearCookie("refreshToken", {
+//         httpOnly: true,
+
+//         secure: isProduction,
+
+//         sameSite: isProduction ? "none" : "lax",
+//       });
+
+//       return res.status(200).json({
+//         success: true,
+
+//         message: "Logout successful",
+//       });
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+
+//   // =================================
+//   // CHANGE PASSWORD
+//   // =================================
+
+//   async changePassword(req, res, next) {
+//     try {
+//       const userId = req.user.id;
+
+//       const { currentPassword, newPassword } = req.body;
+
+//       // Find user
+
+//       const user = await User.findById(userId).select(
+//         "+password +refreshToken",
+//       );
+
+//       if (!user) {
+//         return res.status(404).json({
+//           success: false,
+
+//           message: "User not found",
+//         });
+//       }
+
+//       // Compare current password
+
+//       const isPasswordMatched = await bcrypt.compare(
+//         currentPassword,
+
+//         user.password,
+//       );
+
+//       if (!isPasswordMatched) {
+//         return res.status(400).json({
+//           success: false,
+
+//           message: "Current password is incorrect",
+//         });
+//       }
+
+//       // Hash new password
+
+//       const hashedPassword = await bcrypt.hash(
+//         newPassword,
+
+//         12,
+//       );
+
+//       // Update password
+
+//       user.password = hashedPassword;
+
+//       // Invalidate refresh token
+
+//       user.refreshToken = null;
+
+//       await user.save();
+
+//       // Clear access token
+
+//       res.clearCookie("accessToken", {
+//         httpOnly: true,
+
+//         secure: isProduction,
+
+//         sameSite: isProduction ? "none" : "lax",
+//       });
+
+//       // Clear refresh token
+
+//       res.clearCookie("refreshToken", {
+//         httpOnly: true,
+
+//         secure: isProduction,
+
+//         sameSite: isProduction ? "none" : "lax",
+//       });
+
+//       return res.status(200).json({
+//         success: true,
+
+//         message: "Password changed successfully",
+//       });
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// }
+
+// module.exports = new AuthController();
+
+
+
+
+
+
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 
 const User = require("../models/user");
+const Otp = require("../models/otp");
 
-const { generateAccessToken, generateRefreshToken } = require("../utils/token");
+const sendRegistrationOtpEmail = require(
+  "../utils/sendRegistrationOtpEmail",
+);
+
+const {
+  generateAccessToken,
+  generateRefreshToken,
+} = require("../utils/token");
+
 
 // =================================
 // COOKIE OPTIONS
 // =================================
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction =
+  process.env.NODE_ENV === "production";
+
 
 const accessCookieOptions = {
+
   httpOnly: true,
 
   secure: isProduction,
 
-  sameSite: isProduction ? "none" : "lax",
+  sameSite:
+    isProduction
+      ? "none"
+      : "lax",
 
-  maxAge: 15 * 60 * 1000,
+  maxAge:
+    15 * 60 * 1000,
+
 };
+
 
 const refreshCookieOptions = {
+
   httpOnly: true,
 
   secure: isProduction,
 
-  sameSite: isProduction ? "none" : "lax",
+  sameSite:
+    isProduction
+      ? "none"
+      : "lax",
 
-  maxAge: 7 * 24 * 60 * 60 * 1000,
+  maxAge:
+    7 *
+    24 *
+    60 *
+    60 *
+    1000,
+
 };
+
 
 // =================================
 // CONTROLLER
 // =================================
 
 class AuthController {
+
+
   // =================================
-  // REGISTER
+  // SEND REGISTRATION OTP
+  //
+  // POST /auth/send-registration-otp
   // =================================
 
-  async register(req, res, next) {
+  async sendRegistrationOtp(
+    req,
+    res,
+    next,
+  ) {
+
     try {
-      const { name, email, phone, password, role } = req.body;
 
-      // Check existing user
-
-      const existingUser = await User.findOne({
+      const {
+        name,
         email,
-      });
+        phone,
+        password,
+        role,
+      } = req.body;
+
+
+      // =============================
+      // NORMALIZE EMAIL
+      // =============================
+
+      const normalizedEmail =
+        email.toLowerCase().trim();
+
+
+      // =============================
+      // CHECK EXISTING USER
+      // =============================
+
+      const existingUser =
+        await User.findOne({
+          email:
+            normalizedEmail,
+        });
+
 
       if (existingUser) {
+
         return res.status(409).json({
+
           success: false,
 
-          message: "User already exists with this email",
+          message:
+            "User already exists with this email",
+
         });
+
       }
 
-      // Hash password
 
-      const hashedPassword = await bcrypt.hash(password, 12);
+      // =============================
+      // ALLOW ONLY PUBLIC ROLES
+      // Never allow administration
+      // registration from frontend
+      // =============================
 
-      // Create user
+      const allowedRoles = [
+        "author",
+        "user",
+      ];
 
-      const user = await User.create({
+
+      const userRole =
+        allowedRoles.includes(role)
+          ? role
+          : "reader";
+
+
+      // =============================
+      // HASH PASSWORD
+      // =============================
+
+      const hashedPassword =
+        await bcrypt.hash(
+          password,
+          12,
+        );
+
+
+      // =============================
+      // GENERATE 6 DIGIT OTP
+      // =============================
+
+      const otp =
+        crypto
+          .randomInt(
+            100000,
+            1000000,
+          )
+          .toString();
+
+
+      // =============================
+      // HASH OTP
+      // =============================
+
+      const hashedOtp =
+        await bcrypt.hash(
+          otp,
+          10,
+        );
+
+
+      // =============================
+      // SET EXPIRY
+      // 10 MINUTES
+      // =============================
+
+      const expiresAt =
+        new Date(
+          Date.now() +
+          10 *
+          60 *
+          1000,
+        );
+
+
+      // =============================
+      // REMOVE EXISTING
+      // REGISTRATION OTP
+      // =============================
+
+      await Otp.deleteOne({
+
+        email:
+          normalizedEmail,
+
+        purpose:
+          "registration",
+
+      });
+
+
+      // =============================
+      // CREATE OTP RECORD
+      // =============================
+
+      await Otp.create({
+
         name,
 
-        email,
+        email:
+          normalizedEmail,
 
         phone,
 
-        password: hashedPassword,
+        password:
+          hashedPassword,
 
-        role,
+        role:
+          userRole,
+
+        otp:
+          hashedOtp,
+
+        expiresAt,
+
+        purpose:
+          "registration",
+
+        attempts: 0,
+
       });
 
-      return res.status(201).json({
+
+      // =============================
+      // SEND OTP EMAIL
+      // =============================
+
+      await sendRegistrationOtpEmail({
+  email: normalizedEmail,
+
+  name,
+
+  otp,
+});
+
+
+      return res.status(200).json({
+
         success: true,
 
-        message: "Registration successful",
+        message:
+          "OTP sent successfully",
 
         data: {
-          user: {
-            id: user._id,
 
-            name: user.name,
+          email:
+            normalizedEmail,
 
-            email: user.email,
+          expiresIn:
+            600,
 
-            role: user.role,
-
-            profileImage: user.profileImage,
-          },
         },
+
       });
+
     } catch (error) {
+
       next(error);
+
     }
+
   }
+
+
+  // =================================
+  // VERIFY REGISTRATION OTP
+  //
+  // POST /auth/verify-registration-otp
+  // =================================
+
+  async verifyRegistrationOtp(
+    req,
+    res,
+    next,
+  ) {
+
+    try {
+
+      const {
+        email,
+        otp,
+      } = req.body;
+
+
+      // =============================
+      // NORMALIZE EMAIL
+      // =============================
+
+      const normalizedEmail =
+        email.toLowerCase().trim();
+
+
+      // =============================
+      // FIND OTP RECORD
+      // =============================
+
+      const otpRecord =
+        await Otp.findOne({
+
+          email:
+            normalizedEmail,
+
+          purpose:
+            "registration",
+
+        })
+          .select(
+            "+otp +password",
+          );
+
+
+      // =============================
+      // OTP NOT FOUND
+      // =============================
+
+      if (!otpRecord) {
+
+        return res.status(400).json({
+
+          success: false,
+
+          message:
+            "OTP not found or expired",
+
+        });
+
+      }
+
+
+      // =============================
+      // CHECK OTP EXPIRY
+      // =============================
+
+      if (
+        otpRecord.expiresAt <
+        new Date()
+      ) {
+
+        await Otp.deleteOne({
+
+          _id:
+            otpRecord._id,
+
+        });
+
+
+        return res.status(400).json({
+
+          success: false,
+
+          message:
+            "OTP has expired",
+
+        });
+
+      }
+
+
+      // =============================
+      // CHECK MAX ATTEMPTS
+      // =============================
+
+      if (
+        otpRecord.attempts >=
+        5
+      ) {
+
+        await Otp.deleteOne({
+
+          _id:
+            otpRecord._id,
+
+        });
+
+
+        return res.status(429).json({
+
+          success: false,
+
+          message:
+            "Too many invalid attempts. Please request a new OTP.",
+
+        });
+
+      }
+
+
+      // =============================
+      // VERIFY OTP
+      // =============================
+
+      const isOtpValid =
+        await bcrypt.compare(
+          otp,
+          otpRecord.otp,
+        );
+
+
+      // =============================
+      // INVALID OTP
+      // =============================
+
+      if (!isOtpValid) {
+
+        otpRecord.attempts += 1;
+
+        await otpRecord.save();
+
+
+        return res.status(400).json({
+
+          success: false,
+
+          message:
+            "Invalid OTP",
+
+        });
+
+      }
+
+
+      // =============================
+      // DOUBLE CHECK
+      // USER DOESN'T EXIST
+      // =============================
+
+      const existingUser =
+        await User.findOne({
+
+          email:
+            normalizedEmail,
+
+        });
+
+
+      if (existingUser) {
+
+        await Otp.deleteOne({
+
+          _id:
+            otpRecord._id,
+
+        });
+
+
+        return res.status(409).json({
+
+          success: false,
+
+          message:
+            "User already exists with this email",
+
+        });
+
+      }
+
+
+      // =============================
+      // CREATE USER
+      // =============================
+
+      const user =
+        await User.create({
+
+          name:
+            otpRecord.name,
+
+          email:
+            otpRecord.email,
+
+          phone:
+            otpRecord.phone,
+
+          password:
+            otpRecord.password,
+
+          role:
+            otpRecord.role,
+
+          isVerified:
+            true,
+
+        });
+
+
+      // =============================
+      // DELETE USED OTP
+      // =============================
+
+      await Otp.deleteOne({
+
+        _id:
+          otpRecord._id,
+
+      });
+
+
+      return res.status(201).json({
+
+        success: true,
+
+        message:
+          "Email verified and registration successful",
+
+        data: {
+
+          user: {
+
+            id:
+              user._id,
+
+            name:
+              user.name,
+
+            email:
+              user.email,
+
+            role:
+              user.role,
+
+            profileImage:
+              user.profileImage,
+
+          },
+
+        },
+
+      });
+
+    } catch (error) {
+
+      next(error);
+
+    }
+
+  }
+
 
   // =================================
   // LOGIN
+  //
+  // POST /auth/login
   // =================================
 
-  async login(req, res, next) {
+  async login(
+    req,
+    res,
+    next,
+  ) {
+
     try {
-      const { email, password } = req.body;
 
-      // Find user
-
-      const user = await User.findOne({
+      const {
         email,
-      }).select("+password +refreshToken");
+        password,
+      } = req.body;
 
-      // User not found
+
+      // =============================
+      // NORMALIZE EMAIL
+      // =============================
+
+      const normalizedEmail =
+        email.toLowerCase().trim();
+
+
+      // =============================
+      // FIND USER
+      // =============================
+
+      const user =
+        await User.findOne({
+
+          email:
+            normalizedEmail,
+
+        })
+          .select(
+            "+password +refreshToken",
+          );
+
+
+      // =============================
+      // USER NOT FOUND
+      // =============================
 
       if (!user) {
+
         return res.status(401).json({
+
           success: false,
 
-          message: "Invalid email or password",
+          message:
+            "Invalid email or password",
+
         });
+
       }
 
-      // Check account status
 
-      if (user.status !== "active") {
+      // =============================
+      // CHECK ACCOUNT STATUS
+      // =============================
+
+      if (
+        user.status !==
+        "active"
+      ) {
+
         return res.status(403).json({
+
           success: false,
 
-          message: `Your account is ${user.status}`,
+          message:
+            `Your account is ${user.status}`,
+
         });
+
       }
 
-      // Compare password
 
-      const isPasswordMatched = await bcrypt.compare(password, user.password);
+      // =============================
+      // CHECK EMAIL VERIFICATION
+      // =============================
+
+      if (!user.isVerified) {
+
+        return res.status(403).json({
+
+          success: false,
+
+          message:
+            "Please verify your email before logging in",
+
+        });
+
+      }
+
+
+      // =============================
+      // COMPARE PASSWORD
+      // =============================
+
+      const isPasswordMatched =
+        await bcrypt.compare(
+
+          password,
+
+          user.password,
+
+        );
+
 
       if (!isPasswordMatched) {
+
         return res.status(401).json({
+
           success: false,
 
-          message: "Invalid email or password",
+          message:
+            "Invalid email or password",
+
         });
+
       }
 
-      // Generate access token
 
-      const accessToken = generateAccessToken({
-        userId: user._id,
+      // =============================
+      // GENERATE ACCESS TOKEN
+      // =============================
 
-        role: user.role,
-      });
+      const accessToken =
+        generateAccessToken({
 
-      // Generate refresh token
+          userId:
+            user._id,
 
-      const refreshToken = generateRefreshToken({
-        userId: user._id,
-      });
+          role:
+            user.role,
 
-      // Save refresh token
+        });
 
-      user.refreshToken = refreshToken;
+
+      // =============================
+      // GENERATE REFRESH TOKEN
+      // =============================
+
+      const refreshToken =
+        generateRefreshToken({
+
+          userId:
+            user._id,
+
+        });
+
+
+      // =============================
+      // SAVE REFRESH TOKEN
+      // =============================
+
+      user.refreshToken =
+        refreshToken;
+
 
       await user.save();
 
-      // Set access token cookie
 
-      res.cookie("accessToken", accessToken, accessCookieOptions);
+      // =============================
+      // SET ACCESS COOKIE
+      // =============================
 
-      // Set refresh token cookie
+      res.cookie(
 
-      res.cookie("refreshToken", refreshToken, refreshCookieOptions);
+        "accessToken",
+
+        accessToken,
+
+        accessCookieOptions,
+
+      );
+
+
+      // =============================
+      // SET REFRESH COOKIE
+      // =============================
+
+      res.cookie(
+
+        "refreshToken",
+
+        refreshToken,
+
+        refreshCookieOptions,
+
+      );
+
 
       return res.status(200).json({
+
         success: true,
 
-        message: "Login successful",
+        message:
+          "Login successful",
 
         data: {
+
           user: {
-            id: user._id,
 
-            name: user.name,
+            id:
+              user._id,
 
-            email: user.email,
+            name:
+              user.name,
 
-            role: user.role,
+            email:
+              user.email,
 
-            profileImage: user.profileImage,
+            role:
+              user.role,
+
+            profileImage:
+              user.profileImage,
+
           },
+
         },
+
       });
+
     } catch (error) {
+
       next(error);
+
     }
+
   }
+
 
   // =================================
   // REFRESH TOKEN
+  //
+  // POST /auth/refresh-token
   // =================================
 
-  async refreshToken(req, res, next) {
-    try {
-      const refreshToken = req.cookies.refreshToken;
+  async refreshToken(
+    req,
+    res,
+    next,
+  ) {
 
-      // Refresh token missing
+    try {
+
+      const refreshToken =
+        req.cookies.refreshToken;
+
+
+      // =============================
+      // REFRESH TOKEN MISSING
+      // =============================
 
       if (!refreshToken) {
+
         return res.status(401).json({
+
           success: false,
 
-          message: "Refresh token missing",
+          message:
+            "Refresh token missing",
+
         });
+
       }
 
-      // Find user
 
-      const user = await User.findOne({
-        refreshToken,
-      }).select("+refreshToken");
+      // =============================
+      // FIND USER
+      // =============================
+
+      const user =
+        await User.findOne({
+
+          refreshToken,
+
+        })
+          .select(
+            "+refreshToken",
+          );
+
 
       if (!user) {
+
         return res.status(401).json({
+
           success: false,
 
-          message: "Invalid refresh token",
+          message:
+            "Invalid refresh token",
+
         });
+
       }
 
-      // Generate new access token
 
-      const accessToken = generateAccessToken({
-        userId: user._id,
+      // =============================
+      // CHECK STATUS
+      // =============================
 
-        role: user.role,
-      });
+      if (
+        user.status !==
+        "active"
+      ) {
 
-      // Set new access token cookie
+        return res.status(403).json({
 
-      res.cookie("accessToken", accessToken, accessCookieOptions);
+          success: false,
+
+          message:
+            `Your account is ${user.status}`,
+
+        });
+
+      }
+
+
+      // =============================
+      // GENERATE NEW ACCESS TOKEN
+      // =============================
+
+      const accessToken =
+        generateAccessToken({
+
+          userId:
+            user._id,
+
+          role:
+            user.role,
+
+        });
+
+
+      // =============================
+      // SET ACCESS TOKEN COOKIE
+      // =============================
+
+      res.cookie(
+
+        "accessToken",
+
+        accessToken,
+
+        accessCookieOptions,
+
+      );
+
 
       return res.status(200).json({
+
         success: true,
 
-        message: "Access token refreshed",
+        message:
+          "Access token refreshed",
+
       });
+
     } catch (error) {
+
       next(error);
+
     }
+
   }
 
-  async getCurrentUser(req, res){
-  try {
 
-    const user = await User.findById(
-      req.user._id
-    ).select("-password -refreshToken");
+  // =================================
+  // GET CURRENT USER
+  //
+  // GET /auth/me
+  // =================================
 
-    if (!user) {
+  async getCurrentUser(
+    req,
+    res,
+    next,
+  ) {
 
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
+    try {
+
+      const userId =
+        req.user.id ||
+        req.user._id;
+
+
+      const user =
+        await User.findById(
+          userId,
+        )
+          .select(
+            "-password -refreshToken",
+          );
+
+
+      if (!user) {
+
+        return res.status(404).json({
+
+          success: false,
+
+          message:
+            "User not found",
+
+        });
+
+      }
+
+
+      return res.status(200).json({
+
+        success: true,
+
+        message:
+          "Current user fetched successfully",
+
+        data: {
+
+          user,
+
+        },
+
       });
 
+    } catch (error) {
+
+      next(error);
+
     }
 
-    return res.status(200).json({
-
-      success: true,
-
-      message:
-        "Current user fetched successfully",
-
-      data: {
-        user,
-      },
-
-    });
-
-  } catch (error) {
-
-    console.error(
-      "Get current user error:",
-      error
-    );
-
-    return res.status(500).json({
-
-      success: false,
-
-      message:
-        "Internal server error",
-
-    });
-
   }
-};
 
 
   // =================================
   // LOGOUT
+  //
+  // POST /auth/logout
   // =================================
 
-  async logout(req, res, next) {
-    try {
-      const userId = req.user.id;
+  async logout(
+    req,
+    res,
+    next,
+  ) {
 
-      // Remove refresh token
-      // from database
+    try {
+
+      const userId =
+        req.user.id ||
+        req.user._id;
+
+
+      // =============================
+      // REMOVE REFRESH TOKEN
+      // =============================
 
       await User.findByIdAndUpdate(
+
         userId,
 
         {
-          refreshToken: null,
+          refreshToken:
+            null,
         },
+
       );
 
-      // Clear access token
 
-      res.clearCookie("accessToken", {
-        httpOnly: true,
+      // =============================
+      // CLEAR ACCESS TOKEN
+      // =============================
 
-        secure: isProduction,
+      res.clearCookie(
 
-        sameSite: isProduction ? "none" : "lax",
-      });
+        "accessToken",
 
-      // Clear refresh token
+        {
 
-      res.clearCookie("refreshToken", {
-        httpOnly: true,
+          httpOnly: true,
 
-        secure: isProduction,
+          secure:
+            isProduction,
 
-        sameSite: isProduction ? "none" : "lax",
-      });
+          sameSite:
+            isProduction
+              ? "none"
+              : "lax",
+
+        },
+
+      );
+
+
+      // =============================
+      // CLEAR REFRESH TOKEN
+      // =============================
+
+      res.clearCookie(
+
+        "refreshToken",
+
+        {
+
+          httpOnly: true,
+
+          secure:
+            isProduction,
+
+          sameSite:
+            isProduction
+              ? "none"
+              : "lax",
+
+        },
+
+      );
+
 
       return res.status(200).json({
+
         success: true,
 
-        message: "Logout successful",
+        message:
+          "Logout successful",
+
       });
+
     } catch (error) {
+
       next(error);
+
     }
+
   }
+
 
   // =================================
   // CHANGE PASSWORD
+  //
+  // PATCH /auth/change-password
   // =================================
 
-  async changePassword(req, res, next) {
+  async changePassword(
+    req,
+    res,
+    next,
+  ) {
+
     try {
-      const userId = req.user.id;
 
-      const { currentPassword, newPassword } = req.body;
+      const userId =
+        req.user.id ||
+        req.user._id;
 
-      // Find user
 
-      const user = await User.findById(userId).select(
-        "+password +refreshToken",
-      );
+      const {
+        currentPassword,
+        newPassword,
+      } = req.body;
+
+
+      // =============================
+      // FIND USER
+      // =============================
+
+      const user =
+        await User.findById(
+          userId,
+        )
+          .select(
+            "+password +refreshToken",
+          );
+
 
       if (!user) {
+
         return res.status(404).json({
+
           success: false,
 
-          message: "User not found",
+          message:
+            "User not found",
+
         });
+
       }
 
-      // Compare current password
 
-      const isPasswordMatched = await bcrypt.compare(
-        currentPassword,
+      // =============================
+      // COMPARE CURRENT PASSWORD
+      // =============================
 
-        user.password,
-      );
+      const isPasswordMatched =
+        await bcrypt.compare(
+
+          currentPassword,
+
+          user.password,
+
+        );
+
 
       if (!isPasswordMatched) {
+
         return res.status(400).json({
+
           success: false,
 
-          message: "Current password is incorrect",
+          message:
+            "Current password is incorrect",
+
         });
+
       }
 
-      // Hash new password
 
-      const hashedPassword = await bcrypt.hash(
-        newPassword,
+      // =============================
+      // HASH NEW PASSWORD
+      // =============================
 
-        12,
-      );
+      const hashedPassword =
+        await bcrypt.hash(
 
-      // Update password
+          newPassword,
 
-      user.password = hashedPassword;
+          12,
 
-      // Invalidate refresh token
+        );
 
-      user.refreshToken = null;
+
+      // =============================
+      // UPDATE PASSWORD
+      // =============================
+
+      user.password =
+        hashedPassword;
+
+
+      // =============================
+      // INVALIDATE REFRESH TOKEN
+      // =============================
+
+      user.refreshToken =
+        null;
+
 
       await user.save();
 
-      // Clear access token
 
-      res.clearCookie("accessToken", {
-        httpOnly: true,
+      // =============================
+      // CLEAR ACCESS TOKEN
+      // =============================
 
-        secure: isProduction,
+      res.clearCookie(
 
-        sameSite: isProduction ? "none" : "lax",
-      });
+        "accessToken",
 
-      // Clear refresh token
+        {
 
-      res.clearCookie("refreshToken", {
-        httpOnly: true,
+          httpOnly: true,
 
-        secure: isProduction,
+          secure:
+            isProduction,
 
-        sameSite: isProduction ? "none" : "lax",
-      });
+          sameSite:
+            isProduction
+              ? "none"
+              : "lax",
+
+        },
+
+      );
+
+
+      // =============================
+      // CLEAR REFRESH TOKEN
+      // =============================
+
+      res.clearCookie(
+
+        "refreshToken",
+
+        {
+
+          httpOnly: true,
+
+          secure:
+            isProduction,
+
+          sameSite:
+            isProduction
+              ? "none"
+              : "lax",
+
+        },
+
+      );
+
 
       return res.status(200).json({
+
         success: true,
 
-        message: "Password changed successfully",
+        message:
+          "Password changed successfully. Please login again.",
+
       });
+
     } catch (error) {
+
       next(error);
+
     }
+
   }
+
 }
 
-module.exports = new AuthController();
+module.exports =
+  new AuthController();

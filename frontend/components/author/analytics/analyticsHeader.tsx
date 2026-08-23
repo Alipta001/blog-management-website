@@ -6,18 +6,33 @@ import {
   RefreshCw,
 } from "lucide-react";
 
+import type { AnalyticsRange } from "@/types/analytics.types";
+
 
 interface AnalyticsHeaderProps {
   onRefresh?: () => void;
 
   isRefreshing?: boolean;
+
+  range?: AnalyticsRange;
+
+  onRangeChange?: (range: AnalyticsRange) => void;
 }
 
 
 export default function AnalyticsHeader({
   onRefresh,
   isRefreshing = false,
+  range = "30d",
+  onRangeChange,
 }: AnalyticsHeaderProps) {
+
+  const rangeLabels: Record<AnalyticsRange, string> = {
+    "7d": "Last 7 Days",
+    "30d": "Last 30 Days",
+    "90d": "Last 90 Days",
+    all: "All Time",
+  };
 
   return (
     <div
@@ -58,8 +73,7 @@ export default function AnalyticsHeader({
 
       <div className="flex items-center gap-3">
 
-        <button
-          type="button"
+        <label
           className="
             inline-flex
             items-center
@@ -70,20 +84,29 @@ export default function AnalyticsHeader({
             px-4 py-2.5
             text-sm
             text-slate-300
-            transition
-            hover:bg-white/[0.06]
-            hover:text-white
           "
         >
-
           <CalendarDays className="h-4 w-4 text-slate-500" />
 
-          <span>
-            Last 30 Days
-          </span>
-
-        </button>
-
+          <select
+            value={range}
+            onChange={(event) =>
+              onRangeChange?.(
+                event.target.value as AnalyticsRange,
+              )
+            }
+            className="bg-transparent outline-none"
+            aria-label="Analytics date range"
+          >
+            {(Object.keys(rangeLabels) as AnalyticsRange[]).map(
+              (option) => (
+                <option key={option} value={option}>
+                  {rangeLabels[option]}
+                </option>
+              ),
+            )}
+          </select>
+        </label>
 
         <button
           type="button"

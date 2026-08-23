@@ -1,6 +1,9 @@
 export const endPoints = {
   auth: {
-    register: "/auth/register",
+    // Registration OTP flow
+    sendRegistrationOtp: "/auth/send-registration-otp",
+    verifyRegistrationOtp: "/auth/verify-registration-otp",
+    // Authentication
     login: "/auth/login",
     logout: "/auth/logout",
     refreshToken: "/auth/refresh-token",
@@ -11,6 +14,7 @@ export const endPoints = {
   blog: {
     getAllBlogs: "/blog",
     myBlogs: "/blog/my-blogs",
+    recordBlogView: "/blog/:id/view",
     adminBlogs: "/blog/administration/all",
     getBlogById: "/blog/:id",
     create: "/blog/create",
@@ -97,11 +101,9 @@ export const endPoints = {
     blockUser: "/user/:id/block",
     deleteUser: "/user/:id/delete",
   },
-  
+
   //Analytics
   analytics: {
-  getAuthorAnalytics:
-    "/analytics/author",
-
-},
+    getAuthorAnalytics: "/analytics/author",
+  },
 } as const;

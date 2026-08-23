@@ -171,7 +171,7 @@ export default function ReaderHistoryPage() {
                 key={item._id}
                 href={
                   blog
-                    ? `/blogs/${blog._id}`
+                    ? `/dashboard/reader/blogs/${blog._id}`
                     : "/blogs"
                 }
                 className="

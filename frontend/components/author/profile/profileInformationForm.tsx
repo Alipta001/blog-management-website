@@ -58,7 +58,7 @@ interface ProfileFormValues {
 // VALIDATION
 // =================================
 
-const profileSchema = yup.object({
+const profileSchema: yup.ObjectSchema<ProfileFormValues> = yup.object({
   name: yup
     .string()
     .required("Name is required")
@@ -73,7 +73,7 @@ const profileSchema = yup.object({
 
   phone: yup
     .string()
-    .optional()
+    .defined()
     .test(
       "phone",
       "Please enter a valid phone number",
@@ -94,7 +94,7 @@ const profileSchema = yup.object({
       300,
       "Address cannot exceed 300 characters",
     )
-    .optional(),
+    .defined(),
 
   bio: yup
     .string()
@@ -102,7 +102,7 @@ const profileSchema = yup.object({
       500,
       "Bio cannot exceed 500 characters",
     )
-    .optional(),
+    .defined(),
 });
 
 

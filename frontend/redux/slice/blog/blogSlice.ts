@@ -34,7 +34,6 @@ import {
 // =================================
 
 interface BlogState {
-
   blogs: Blog[];
 
   myBlogs: Blog[];
@@ -56,7 +55,6 @@ interface BlogState {
   error: string | null;
 
   successMessage: string | null;
-
 }
 
 
@@ -65,7 +63,6 @@ interface BlogState {
 // =================================
 
 const initialState: BlogState = {
-
   blogs: [],
 
   myBlogs: [],
@@ -87,7 +84,6 @@ const initialState: BlogState = {
   error: null,
 
   successMessage: null,
-
 };
 
 
@@ -96,38 +92,32 @@ const initialState: BlogState = {
 // =================================
 
 interface CreateBlogResponse {
-
   blog: Blog;
-
   message: string;
-
 }
 
 
 interface UpdateBlogResponse {
-
   blog: Blog;
-
   message: string;
-
 }
 
 
 interface BlogActionResponse {
-
   blog: Blog;
-
   message: string;
-
 }
 
 
 interface DeleteBlogResponse {
-
   id: string;
-
   message: string;
+}
 
+
+interface RecordBlogViewResponse {
+  blogId: string;
+  views: number;
 }
 
 
@@ -148,9 +138,7 @@ export const getBlogs = createAsyncThunk<
     params = {},
     { rejectWithValue },
   ) => {
-
     try {
-
       const response =
         await AxiosInstance.get(
           endPoints.blog.getAllBlogs,
@@ -167,9 +155,7 @@ export const getBlogs = createAsyncThunk<
         error?.response?.data?.message ||
           "Failed to fetch blogs",
       );
-
     }
-
   },
 );
 
@@ -191,7 +177,6 @@ export const getAdminBlogs = createAsyncThunk<
     params = {},
     { rejectWithValue },
   ) => {
-
     try {
 
       const response =
@@ -210,9 +195,7 @@ export const getAdminBlogs = createAsyncThunk<
         error?.response?.data?.message ||
           "Failed to fetch administration blogs",
       );
-
     }
-
   },
 );
 
@@ -234,7 +217,6 @@ export const getBlogById = createAsyncThunk<
     id,
     { rejectWithValue },
   ) => {
-
     try {
 
       const url =
@@ -256,9 +238,7 @@ export const getBlogById = createAsyncThunk<
         error?.response?.data?.message ||
           "Failed to fetch blog",
       );
-
     }
-
   },
 );
 
@@ -280,7 +260,6 @@ export const getMyBlogs = createAsyncThunk<
     params = {},
     { rejectWithValue },
   ) => {
-
     try {
 
       const response =
@@ -299,9 +278,7 @@ export const getMyBlogs = createAsyncThunk<
         error?.response?.data?.message ||
           "Failed to fetch your blogs",
       );
-
     }
-
   },
 );
 
@@ -324,6 +301,7 @@ export const createBlog = createAsyncThunk<
     { rejectWithValue },
   ) => {
     try {
+
       const formData =
         createBlogFormData(data);
 
@@ -332,24 +310,6 @@ export const createBlog = createAsyncThunk<
           endPoints.blog.create,
           formData,
         );
-        console.log(
-  "CREATE BLOG PAYLOAD:",
-  data,
-);
-
-console.log(
-  "CREATE BLOG FORMDATA:",
-);
-
-for (
-  const [key, value]
-  of formData.entries()
-) {
-  console.log(
-    key,
-    value,
-  );
-}
 
       return {
         blog:
@@ -360,6 +320,7 @@ for (
       };
 
     } catch (error: any) {
+
       return rejectWithValue(
         error?.response?.data?.message ||
           "Failed to create blog",
@@ -367,6 +328,7 @@ for (
     }
   },
 );
+
 
 // =================================
 // UPDATE BLOG
@@ -385,7 +347,6 @@ export const updateBlog = createAsyncThunk<
     { id, data },
     { rejectWithValue },
   ) => {
-
     try {
 
       const url =
@@ -395,9 +356,7 @@ export const updateBlog = createAsyncThunk<
         );
 
       const formData =
-        updateBlogFormData(
-          data,
-        );
+        updateBlogFormData(data);
 
       const response =
         await AxiosInstance.patch(
@@ -406,13 +365,11 @@ export const updateBlog = createAsyncThunk<
         );
 
       return {
-
         blog:
           response.data.data,
 
         message:
           response.data.message,
-
       };
 
     } catch (error: any) {
@@ -421,9 +378,7 @@ export const updateBlog = createAsyncThunk<
         error?.response?.data?.message ||
           "Failed to update blog",
       );
-
     }
-
   },
 );
 
@@ -445,7 +400,6 @@ export const submitBlog = createAsyncThunk<
     id,
     { rejectWithValue },
   ) => {
-
     try {
 
       const url =
@@ -460,13 +414,11 @@ export const submitBlog = createAsyncThunk<
         );
 
       return {
-
         blog:
           response.data.data,
 
         message:
           response.data.message,
-
       };
 
     } catch (error: any) {
@@ -475,9 +427,7 @@ export const submitBlog = createAsyncThunk<
         error?.response?.data?.message ||
           "Failed to submit blog",
       );
-
     }
-
   },
 );
 
@@ -499,7 +449,6 @@ export const publishBlog = createAsyncThunk<
     id,
     { rejectWithValue },
   ) => {
-
     try {
 
       const url =
@@ -514,13 +463,11 @@ export const publishBlog = createAsyncThunk<
         );
 
       return {
-
         blog:
           response.data.data,
 
         message:
           response.data.message,
-
       };
 
     } catch (error: any) {
@@ -529,9 +476,7 @@ export const publishBlog = createAsyncThunk<
         error?.response?.data?.message ||
           "Failed to publish blog",
       );
-
     }
-
   },
 );
 
@@ -556,7 +501,6 @@ export const rejectBlog = createAsyncThunk<
     },
     { rejectWithValue },
   ) => {
-
     try {
 
       const url =
@@ -574,13 +518,11 @@ export const rejectBlog = createAsyncThunk<
         );
 
       return {
-
         blog:
           response.data.data,
 
         message:
           response.data.message,
-
       };
 
     } catch (error: any) {
@@ -589,9 +531,7 @@ export const rejectBlog = createAsyncThunk<
         error?.response?.data?.message ||
           "Failed to reject blog",
       );
-
     }
-
   },
 );
 
@@ -613,7 +553,6 @@ export const unpublishBlog = createAsyncThunk<
     id,
     { rejectWithValue },
   ) => {
-
     try {
 
       const url =
@@ -628,13 +567,11 @@ export const unpublishBlog = createAsyncThunk<
         );
 
       return {
-
         blog:
           response.data.data,
 
         message:
           response.data.message,
-
       };
 
     } catch (error: any) {
@@ -643,9 +580,7 @@ export const unpublishBlog = createAsyncThunk<
         error?.response?.data?.message ||
           "Failed to unpublish blog",
       );
-
     }
-
   },
 );
 
@@ -667,7 +602,6 @@ export const deleteBlog = createAsyncThunk<
     id,
     { rejectWithValue },
   ) => {
-
     try {
 
       const url =
@@ -682,13 +616,11 @@ export const deleteBlog = createAsyncThunk<
         );
 
       return {
-
         id:
           response.data.data.id,
 
         message:
           response.data.message,
-
       };
 
     } catch (error: any) {
@@ -697,9 +629,58 @@ export const deleteBlog = createAsyncThunk<
         error?.response?.data?.message ||
           "Failed to delete blog",
       );
-
     }
+  },
+);
 
+
+// =================================
+// RECORD BLOG VIEW
+//
+// PATCH /blog/:id/view
+// POST /blog/:id/view
+// =================================
+
+export const recordBlogView = createAsyncThunk<
+  RecordBlogViewResponse,
+  string,
+  {
+    rejectValue: string;
+  }
+>(
+  "blog/recordBlogView",
+
+  async (
+    id,
+    { rejectWithValue },
+  ) => {
+    try {
+
+      const url =
+        endPoints.blog.recordBlogView.replace(
+          ":id",
+          id,
+        );
+
+      const response =
+        await AxiosInstance.post(
+          url,
+        );
+
+      return {
+        blogId: id,
+
+        views:
+          response.data.data.views,
+      };
+
+    } catch (error: any) {
+
+      return rejectWithValue(
+        error?.response?.data?.message ||
+          "Failed to record blog view",
+      );
+    }
   },
 );
 
@@ -726,7 +707,6 @@ const replaceBlogInList = (
       updatedBlog;
 
   }
-
 };
 
 
@@ -748,7 +728,30 @@ const updateSelectedBlog = (
       updatedBlog;
 
   }
+};
 
+
+// =================================
+// UPDATE BLOG VIEWS
+// =================================
+
+const updateBlogViewsInList = (
+  blogs: Blog[],
+  blogId: string,
+  views: number,
+) => {
+
+  const blog =
+    blogs.find(
+      (item) =>
+        item._id === blogId,
+    );
+
+  if (blog) {
+
+    blog.views = views;
+
+  }
 };
 
 
@@ -765,6 +768,10 @@ const blogSlice = createSlice({
 
   reducers: {
 
+    // =============================
+    // CLEAR ERROR
+    // =============================
+
     clearBlogError: (
       state,
     ) => {
@@ -773,6 +780,10 @@ const blogSlice = createSlice({
 
     },
 
+
+    // =============================
+    // CLEAR SUCCESS MESSAGE
+    // =============================
 
     clearBlogSuccessMessage: (
       state,
@@ -783,6 +794,10 @@ const blogSlice = createSlice({
     },
 
 
+    // =============================
+    // CLEAR SELECTED BLOG
+    // =============================
+
     clearSelectedBlog: (
       state,
     ) => {
@@ -790,6 +805,11 @@ const blogSlice = createSlice({
       state.selectedBlog = null;
 
     },
+
+
+    // =============================
+    // UPDATE LIKE STATE
+    // =============================
 
     setSelectedBlogLikeState: (
       state,
@@ -800,10 +820,17 @@ const blogSlice = createSlice({
         };
       },
     ) => {
+
       if (state.selectedBlog) {
-        state.selectedBlog.likeCount = action.payload.likeCount;
-        state.selectedBlog.isLiked = action.payload.isLiked;
+
+        state.selectedBlog.likeCount =
+          action.payload.likeCount;
+
+        state.selectedBlog.isLiked =
+          action.payload.isLiked;
+
       }
+
     },
 
   },
@@ -825,7 +852,6 @@ const blogSlice = createSlice({
         (state) => {
 
           state.loading = true;
-
           state.error = null;
 
         },
@@ -833,10 +859,7 @@ const blogSlice = createSlice({
 
       .addCase(
         getBlogs.fulfilled,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -851,10 +874,7 @@ const blogSlice = createSlice({
 
       .addCase(
         getBlogs.rejected,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -875,7 +895,6 @@ const blogSlice = createSlice({
         (state) => {
 
           state.loading = true;
-
           state.error = null;
 
         },
@@ -883,10 +902,7 @@ const blogSlice = createSlice({
 
       .addCase(
         getAdminBlogs.fulfilled,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -905,10 +921,7 @@ const blogSlice = createSlice({
 
       .addCase(
         getAdminBlogs.rejected,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -929,7 +942,6 @@ const blogSlice = createSlice({
         (state) => {
 
           state.loading = true;
-
           state.error = null;
 
         },
@@ -937,10 +949,7 @@ const blogSlice = createSlice({
 
       .addCase(
         getBlogById.fulfilled,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -952,10 +961,7 @@ const blogSlice = createSlice({
 
       .addCase(
         getBlogById.rejected,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -976,7 +982,6 @@ const blogSlice = createSlice({
         (state) => {
 
           state.loading = true;
-
           state.error = null;
 
         },
@@ -984,10 +989,7 @@ const blogSlice = createSlice({
 
       .addCase(
         getMyBlogs.fulfilled,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1002,10 +1004,7 @@ const blogSlice = createSlice({
 
       .addCase(
         getMyBlogs.rejected,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1026,9 +1025,7 @@ const blogSlice = createSlice({
         (state) => {
 
           state.loading = true;
-
           state.error = null;
-
           state.successMessage = null;
 
         },
@@ -1036,10 +1033,7 @@ const blogSlice = createSlice({
 
       .addCase(
         createBlog.fulfilled,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1055,10 +1049,7 @@ const blogSlice = createSlice({
 
       .addCase(
         createBlog.rejected,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1079,7 +1070,6 @@ const blogSlice = createSlice({
         (state) => {
 
           state.loading = true;
-
           state.error = null;
 
         },
@@ -1087,10 +1077,7 @@ const blogSlice = createSlice({
 
       .addCase(
         updateBlog.fulfilled,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1125,10 +1112,7 @@ const blogSlice = createSlice({
 
       .addCase(
         updateBlog.rejected,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1149,7 +1133,6 @@ const blogSlice = createSlice({
         (state) => {
 
           state.loading = true;
-
           state.error = null;
 
         },
@@ -1157,10 +1140,7 @@ const blogSlice = createSlice({
 
       .addCase(
         submitBlog.fulfilled,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1190,10 +1170,7 @@ const blogSlice = createSlice({
 
       .addCase(
         submitBlog.rejected,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1214,7 +1191,6 @@ const blogSlice = createSlice({
         (state) => {
 
           state.loading = true;
-
           state.error = null;
 
         },
@@ -1222,10 +1198,7 @@ const blogSlice = createSlice({
 
       .addCase(
         publishBlog.fulfilled,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1260,10 +1233,7 @@ const blogSlice = createSlice({
 
       .addCase(
         publishBlog.rejected,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1284,7 +1254,6 @@ const blogSlice = createSlice({
         (state) => {
 
           state.loading = true;
-
           state.error = null;
 
         },
@@ -1292,10 +1261,7 @@ const blogSlice = createSlice({
 
       .addCase(
         rejectBlog.fulfilled,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1325,10 +1291,7 @@ const blogSlice = createSlice({
 
       .addCase(
         rejectBlog.rejected,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1349,7 +1312,6 @@ const blogSlice = createSlice({
         (state) => {
 
           state.loading = true;
-
           state.error = null;
 
         },
@@ -1357,10 +1319,7 @@ const blogSlice = createSlice({
 
       .addCase(
         unpublishBlog.fulfilled,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1397,10 +1356,7 @@ const blogSlice = createSlice({
 
       .addCase(
         unpublishBlog.rejected,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1421,7 +1377,6 @@ const blogSlice = createSlice({
         (state) => {
 
           state.loading = true;
-
           state.error = null;
 
         },
@@ -1429,10 +1384,7 @@ const blogSlice = createSlice({
 
       .addCase(
         deleteBlog.fulfilled,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
@@ -1461,8 +1413,7 @@ const blogSlice = createSlice({
             state.selectedBlog?._id === id
           ) {
 
-            state.selectedBlog =
-              null;
+            state.selectedBlog = null;
 
           }
 
@@ -1474,16 +1425,66 @@ const blogSlice = createSlice({
 
       .addCase(
         deleteBlog.rejected,
-        (
-          state,
-          action,
-        ) => {
+        (state, action) => {
 
           state.loading = false;
 
           state.error =
             action.payload ||
             "Failed to delete blog";
+
+        },
+      )
+
+
+      // ===============================
+      // RECORD BLOG VIEW
+      // ===============================
+
+      .addCase(
+        recordBlogView.fulfilled,
+        (state, action) => {
+
+          const {
+            blogId,
+            views,
+          } = action.payload;
+
+
+          // Update selected blog
+          if (
+            state.selectedBlog?._id ===
+            blogId
+          ) {
+
+            state.selectedBlog.views =
+              views;
+
+          }
+
+
+          // Update public blogs list
+          updateBlogViewsInList(
+            state.blogs,
+            blogId,
+            views,
+          );
+
+
+          // Update author's blogs list
+          updateBlogViewsInList(
+            state.myBlogs,
+            blogId,
+            views,
+          );
+
+
+          // Update administration blogs list
+          updateBlogViewsInList(
+            state.adminBlogs,
+            blogId,
+            views,
+          );
 
         },
       );

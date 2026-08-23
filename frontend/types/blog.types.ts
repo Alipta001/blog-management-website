@@ -75,6 +75,8 @@ export interface Blog {
 
   views: number;
 
+  readingTime?: number;
+
   likeCount?: number;
 
   isLiked?: boolean;

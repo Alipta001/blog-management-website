@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { clearAuthError, loginUser } from "@/redux/slice/auth/authSlice";
 import { AppDispatch } from "@/redux/store/store";
-import { RootState } from "@reduxjs/toolkit/query";
+import type { RootState } from "@/redux/store/store";
 
 
 export default function LoginForm() {

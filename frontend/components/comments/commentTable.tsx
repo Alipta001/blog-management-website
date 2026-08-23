@@ -10,9 +10,6 @@ interface CommentTableProps {
   onModerate: (id: string, status: Comment["status"]) => void;
 }
 
-const getName = (value: Comment["user"] | Comment["blog"], fallback: string) =>
-  typeof value === "string" ? fallback : value?.name || value?.title || fallback;
-
 export default function CommentTable({ comments, administration, onModerate }: CommentTableProps) {
   return (
     <div className="overflow-x-auto">
@@ -36,11 +33,26 @@ export default function CommentTable({ comments, administration, onModerate }: C
               <td className="px-5 py-4 align-top">
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4 text-slate-500" />
-                  <span className="text-sm text-slate-300">{getName(comment.user, "Unknown user")}</span>
+                  <span className="text-sm text-slate-300">
+                    {typeof comment.user === "string"
+                      ? "Unknown user"
+                      : comment.user?.name || "Unknown user"}
+                  </span>
                 </div>
               </td>
               <td className="max-w-[190px] px-5 py-4 align-top">
-                {typeof comment.blog === "string" ? <span className="text-sm text-slate-500">Unknown blog</span> : comment.blog ? <Link href={`/blog/${comment.blog.slug}`} className="line-clamp-2 text-sm text-violet-400 hover:text-violet-300">{comment.blog.title}</Link> : <span className="text-sm text-slate-500">Deleted blog</span>}
+                {typeof comment.blog === "string" ? (
+                  <span className="text-sm text-slate-500">Unknown blog</span>
+                ) : comment.blog ? (
+                  <Link
+                    href={`/dashboard/administration/blogs/${comment.blog._id}`}
+                    className="line-clamp-2 text-sm text-violet-400 hover:text-violet-300"
+                  >
+                    {comment.blog.title || "Untitled blog"}
+                  </Link>
+                ) : (
+                  <span className="text-sm text-slate-500">Deleted blog</span>
+                )}
               </td>
               <td className="px-5 py-4 align-top"><span className="rounded-full bg-white/[0.06] px-2.5 py-1 text-xs capitalize text-slate-300">{comment.status}</span></td>
               <td className="px-5 py-4 align-top"><div className="flex items-center gap-2 text-xs text-slate-500"><CalendarDays className="h-3.5 w-3.5" />{new Date(comment.createdAt).toLocaleDateString()}</div></td>

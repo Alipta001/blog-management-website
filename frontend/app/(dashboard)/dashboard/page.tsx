@@ -2,107 +2,41 @@
 
 import { useEffect } from "react";
 
-import {
-  useRouter,
-} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { useAppSelector } from "@/redux/hooks";
 
 
-interface DashboardLayoutProps {
-  children:
-    React.ReactNode;
-}
-
-
-export default function DashboardLayout({
-  children,
-}: DashboardLayoutProps) {
-
-  const router =
-    useRouter();
-
+export default function DashboardPage() {
+  const router = useRouter();
 
   const {
     user,
-    isAuthenticated,
     authInitialized,
-    loading,
-  } =
-    useAppSelector(
-      (state) =>
-        state.auth
-    );
-
-
-  // =================================
-  // REDIRECT
-  // =================================
-
-  useEffect(() => {
-
-    if (
-      authInitialized &&
-      !isAuthenticated
-    ) {
-
-      router.replace(
-        "/login"
-      );
-
-    }
-
-  }, [
-    authInitialized,
-    isAuthenticated,
-    router,
-  ]);
-
-
-  // =================================
-  // INITIALIZING
-  // =================================
-
-  if (
-    !authInitialized ||
-    loading
-  ) {
-
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#09090b]">
-
-        <div className="text-sm text-slate-400">
-          Restoring session...
-        </div>
-
-      </div>
-    );
-
-  }
-
-
-  // =================================
-  // NOT AUTHENTICATED
-  // =================================
-
-  if (
-    !isAuthenticated ||
-    !user
-  ) {
-
-    return null;
-
-  }
-
-
-  // =================================
-  // DASHBOARD
-  // =================================
-
-  return (
-    <>
-      {children}
-    </>
+  } = useAppSelector(
+    (state) => state.auth,
   );
 
+  useEffect(() => {
+    if (!authInitialized || !user) {
+      return;
+    }
+
+    const dashboardByRole = {
+      administration: "/dashboard/administration",
+      administrator: "/dashboard/administration",
+      author: "/dashboard/author",
+      user: "/dashboard/reader",
+    } as const;
+
+    router.replace(dashboardByRole[user.role]);
+  }, [authInitialized, router, user]);
+
+  return (
+    <div className="flex min-h-[calc(100vh-72px)] items-center justify-center">
+      <p className="text-sm text-slate-400">
+        Loading your workspace...
+      </p>
+    </div>
+  );
 }

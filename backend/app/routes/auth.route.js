@@ -1,47 +1,3 @@
-// const router = require("express").Router();
-
-// const authController =
-//   require("../controllers/auth.controller");
-
-// const authMiddleware =
-//   require("../middleware/auth.middleware");
-
-
-// // REGISTER
-// router.post(
-//   "/register",
-//   authController.register
-// );
-
-
-// // LOGIN
-// router.post(
-//   "/login",
-//   authController.login
-// );
-
-
-// // LOGOUT
-// router.post(
-//   "/logout",
-//   authMiddleware,
-//   authController.logout
-// );
-
-
-
-// // CHANGE PASSWORD
-// router.patch(
-//   "/change-password",
-//   authMiddleware,
-//   authController.changePassword
-// );
-
-
-// module.exports = router;
-
-
-
 const router =
   require("express").Router();
 
@@ -58,21 +14,56 @@ const authMiddleware =
 // PUBLIC ROUTES
 // =================================
 
+
+// ---------------------------------
+// SEND REGISTRATION OTP
+// ---------------------------------
+
 router.post(
-  "/register",
-  authController.register
+
+  "/send-registration-otp",
+
+  authController.sendRegistrationOtp
+
 );
 
 
+// ---------------------------------
+// VERIFY REGISTRATION OTP
+// ---------------------------------
+
 router.post(
+
+  "/verify-registration-otp",
+
+  authController.verifyRegistrationOtp
+
+);
+
+
+// ---------------------------------
+// LOGIN
+// ---------------------------------
+
+router.post(
+
   "/login",
+
   authController.login
+
 );
 
 
+// ---------------------------------
+// REFRESH ACCESS TOKEN
+// ---------------------------------
+
 router.post(
+
   "/refresh-token",
+
   authController.refreshToken
+
 );
 
 
@@ -80,23 +71,49 @@ router.post(
 // PROTECTED ROUTES
 // =================================
 
+
+// ---------------------------------
+// GET CURRENT USER
+// ---------------------------------
+
 router.get(
+
   "/me",
+
   authMiddleware,
+
   authController.getCurrentUser
+
 );
+
+
+// ---------------------------------
+// LOGOUT
+// ---------------------------------
 
 router.post(
+
   "/logout",
+
   authMiddleware,
+
   authController.logout
+
 );
 
 
+// ---------------------------------
+// CHANGE PASSWORD
+// ---------------------------------
+
 router.patch(
+
   "/change-password",
+
   authMiddleware,
+
   authController.changePassword
+
 );
 
 

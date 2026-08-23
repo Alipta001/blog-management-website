@@ -294,6 +294,7 @@
 import {
   useCallback,
   useEffect,
+  useState,
 } from "react";
 
 import {
@@ -314,6 +315,8 @@ import {
   getAuthorAnalytics,
 } from "@/redux/slice/analytics/analyticsSlice";
 
+import type { AnalyticsRange } from "@/types/analytics.types";
+
 
 // =================================
 // AUTHOR ANALYTICS PAGE
@@ -324,20 +327,24 @@ export default function AuthorAnalyticsPage() {
   const dispatch =
     useAppDispatch();
 
+  const [range, setRange] =
+    useState<AnalyticsRange>("30d");
+
 
   // =================================
   // REDUX STATE
   // =================================
 
   const {
-    analytics,
+    authorAnalytics,
     loading,
-    refreshing,
     error,
   } = useAppSelector(
     (state) =>
       state.analytics
   );
+
+  const analytics = authorAnalytics;
 
 
   // =================================
@@ -347,11 +354,12 @@ export default function AuthorAnalyticsPage() {
   useEffect(() => {
 
     dispatch(
-      getAuthorAnalytics()
+      getAuthorAnalytics({ range })
     );
 
   }, [
     dispatch,
+    range,
   ]);
 
 
@@ -366,7 +374,7 @@ export default function AuthorAnalyticsPage() {
         try {
 
           await dispatch(
-            getAuthorAnalytics()
+            getAuthorAnalytics({ range })
           ).unwrap();
 
         } catch (
@@ -383,6 +391,7 @@ export default function AuthorAnalyticsPage() {
       },
       [
         dispatch,
+        range,
       ]
     );
 
@@ -393,7 +402,7 @@ export default function AuthorAnalyticsPage() {
 
   if (
     loading &&
-    !analytics
+    !authorAnalytics
   ) {
 
     return (
@@ -413,7 +422,7 @@ export default function AuthorAnalyticsPage() {
 
   if (
     error &&
-    !analytics
+    !authorAnalytics
   ) {
 
     return (
@@ -526,8 +535,10 @@ export default function AuthorAnalyticsPage() {
           onRefresh={
             handleRefresh
           }
+          range={range}
+          onRangeChange={setRange}
           isRefreshing={
-            refreshing
+            loading
           }
         />
 
@@ -536,7 +547,7 @@ export default function AuthorAnalyticsPage() {
             REFRESH INDICATOR
         ============================= */}
 
-        {refreshing && (
+        {loading && analytics && (
 
           <div
             className="
@@ -636,7 +647,21 @@ export default function AuthorAnalyticsPage() {
 
           <BlogStatusChart
             data={
-              analytics.blogStatus
+              analytics.blogStatus.map(
+                (item) => ({
+                  ...item,
+                  color:
+                    item.status === "published"
+                      ? "#22c55e"
+                      : item.status === "draft"
+                        ? "#64748b"
+                        : item.status === "pending"
+                          ? "#f59e0b"
+                          : item.status === "rejected"
+                            ? "#ef4444"
+                            : "#94a3b8",
+                }),
+              )
             }
           />
 

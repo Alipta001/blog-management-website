@@ -260,7 +260,8 @@ class CommentController {
       return res.status(201).json({
         success: true,
 
-        message: "Comment added successfully",
+        message:
+          "Comment sent for review. It will be published after approval.",
 
         data: comment,
       });

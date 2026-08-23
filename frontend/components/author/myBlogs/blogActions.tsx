@@ -40,7 +40,7 @@ export default function BlogActions({
       {blog.status === "published" && (
 
         <Link
-          href={`/blog/${blog._id}`}
+          href={`/dashboard/author/blogs/${blog._id}`}
           className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition hover:bg-white/10 hover:text-white"
         >
 

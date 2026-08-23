@@ -1,6 +1,6 @@
 // src/types/notification.types.ts
 
-import type {  user } from "./ user.types";
+import type { User } from "./user.types";
 import type { Blog } from "./blog.types";
 import type { Comment } from "./comment.types";
 
@@ -15,8 +15,8 @@ export type NotificationType =
 export interface Notification {
   _id: string;
 
-  recipient: string |  user;
-  sender: string |  user | null;
+  recipient: string | User;
+  sender: string | User | null;
 
   type: NotificationType;
 

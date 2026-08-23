@@ -4,7 +4,7 @@ import {
 } from "next/server";
 
 
-export function middleware(
+export function proxy(
   request: NextRequest
 ) {
 

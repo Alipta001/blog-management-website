@@ -88,17 +88,17 @@ export default function AuthorCommentsPage() {
               .includes(
                 searchValue,
               ) ||
-            comment.user?.name
-              ?.toLowerCase()
-              .includes(
-                searchValue,
-              );
+            (typeof comment.user === "string"
+              ? ""
+              : comment.user?.name || ""
+            ).toLowerCase().includes(searchValue);
 
 
           const matchesBlog =
             selectedBlog === "all" ||
-            comment.blog?._id ===
-              selectedBlog;
+            (typeof comment.blog === "string"
+              ? ""
+              : comment.blog?._id) === selectedBlog;
 
 
           return (
@@ -128,7 +128,10 @@ export default function AuthorCommentsPage() {
       comments.forEach(
         (comment) => {
 
-          if (comment.blog) {
+          if (
+            typeof comment.blog !== "string" &&
+            comment.blog
+          ) {
             uniqueBlogs.set(
               comment.blog._id,
               comment.blog,

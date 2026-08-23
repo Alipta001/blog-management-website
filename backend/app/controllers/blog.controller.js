@@ -12,6 +12,7 @@ const Notification = require("../models/notification");
 
 const Like = require("../models/like");
 
+const BlogView = require("../models/blogView");
 
 const {
   uploadToCloudinary,
@@ -19,187 +20,111 @@ const {
   deleteFromCloudinary,
 } = require("../utils/cloudinaryUpload");
 
-
 // ========================================
 // HELPER: PARSE TAGS
 // ========================================
 
 const parseTags = (tags) => {
-
   if (!tags) {
     return [];
   }
-
 
   if (Array.isArray(tags)) {
     return tags;
   }
 
-
   try {
+    const parsed = JSON.parse(tags);
 
-    const parsed =
-      JSON.parse(tags);
-
-
-    return Array.isArray(parsed)
-      ? parsed
-      : [];
-
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
-
     return [];
-
   }
-
 };
-
 
 // ========================================
 // HELPER: GENERATE SLUG
 // ========================================
 
 const generateSlug = (title) => {
-
   const baseSlug = title
 
     .toLowerCase()
 
     .trim()
 
-    .replace(
-      /[^a-z0-9\s-]/g,
-      "",
-    )
+    .replace(/[^a-z0-9\s-]/g, "")
 
-    .replace(
-      /\s+/g,
-      "-",
-    )
+    .replace(/\s+/g, "-")
 
-    .replace(
-      /-+/g,
-      "-",
-    );
-
+    .replace(/-+/g, "-");
 
   return `${baseSlug}-${Date.now()}`;
-
 };
-
 
 // ========================================
 // HELPER: UPLOAD FEATURED IMAGE
 // ========================================
 
-const uploadFeaturedImage =
-  async (file) => {
+const uploadFeaturedImage = async (file) => {
+  if (!file) {
+    return null;
+  }
 
-    if (!file) {
-      return null;
-    }
+  const result = await uploadToCloudinary(
+    file.buffer,
+    "blog-management/featured",
+  );
 
+  return {
+    url: result.secure_url,
 
-    const result =
-      await uploadToCloudinary(
-        file.buffer,
-        "blog-management/featured",
-      );
+    publicId: result.public_id,
 
-
-    return {
-
-      url:
-        result.secure_url,
-
-      publicId:
-        result.public_id,
-
-      alt:
-        "",
-
-    };
-
+    alt: "",
   };
-
+};
 
 // ========================================
 // HELPER: UPLOAD CONTENT IMAGES
 // ========================================
 
-const uploadContentImages =
-  async (files) => {
+const uploadContentImages = async (files) => {
+  if (!files || files.length === 0) {
+    return [];
+  }
 
-    if (
-      !files ||
-      files.length === 0
-    ) {
-      return [];
-    }
-
-
-    const uploadedImages =
-      await Promise.all(
-
-        files.map(
-          async (file) => {
-
-            const result =
-              await uploadToCloudinary(
-                file.buffer,
-                "blog-management/content",
-              );
-
-
-            return {
-
-              url:
-                result.secure_url,
-
-              publicId:
-                result.public_id,
-
-              alt:
-                "",
-
-            };
-
-          },
-        ),
-
+  const uploadedImages = await Promise.all(
+    files.map(async (file) => {
+      const result = await uploadToCloudinary(
+        file.buffer,
+        "blog-management/content",
       );
 
+      return {
+        url: result.secure_url,
 
-    return uploadedImages;
+        publicId: result.public_id,
 
-  };
+        alt: "",
+      };
+    }),
+  );
 
+  return uploadedImages;
+};
 
 // ========================================
 // HELPER: REPLACE IMAGE PLACEHOLDERS
 // ========================================
 
-const replaceImagePlaceholders =
-  (
-    content,
-    uploadedImages,
-  ) => {
+const replaceImagePlaceholders = (content, uploadedImages) => {
+  let finalContent = content;
 
-    let finalContent =
-      content;
+  uploadedImages.forEach((image, index) => {
+    const placeholder = `[[BLOG_IMAGE_${index}]]`;
 
-
-    uploadedImages.forEach(
-      (
-        image,
-        index,
-      ) => {
-
-        const placeholder =
-          `[[BLOG_IMAGE_${index}]]`;
-
-
-        const imageHTML = `
+    const imageHTML = `
           <figure>
             <img
               src="${image.url}"
@@ -209,386 +134,213 @@ const replaceImagePlaceholders =
           </figure>
         `;
 
+    finalContent = finalContent.replace(placeholder, imageHTML);
+  });
 
-        finalContent =
-          finalContent.replace(
-            placeholder,
-            imageHTML,
-          );
-
-      },
-    );
-
-
-    return finalContent;
-
-  };
-
+  return finalContent;
+};
 
 // ========================================
 // BLOG CONTROLLER
 // ========================================
 
 class BlogController {
-
   // ======================================
   // CREATE BLOG
   // POST /blog/create
   // ======================================
 
- async createBlog(
-  req,
-  res,
-  next,
-) {
+  async createBlog(req, res, next) {
+    let uploadedFeaturedImage = null;
 
-  let uploadedFeaturedImage =
-    null;
+    let uploadedContentImages = [];
 
-  let uploadedContentImages =
-    [];
+    try {
+      const { title, description, content, category, status } = req.body;
 
-  try {
+      const tags = parseTags(req.body.tags);
 
-    const {
-      title,
-      description,
-      content,
-      category,
-      status,
-    } = req.body;
-
-
-    const tags =
-      parseTags(
-        req.body.tags,
-      );
-
-
-    // ====================================
-    // BASIC VALIDATION
-    // ====================================
-
-    if (
-      !title?.trim() ||
-      !description?.trim() ||
-      !content?.trim() ||
-      !category ||
-      category === "undefined" ||
-      category === "null"
-    ) {
-
-      return res.status(400).json({
-
-        success:
-          false,
-
-        message:
-          "Title, description, content and a valid category are required",
-
-      });
-
-    }
-
-
-    // ====================================
-    // VALIDATE CATEGORY OBJECT ID
-    // ====================================
-
-    if (
-      !mongoose.Types.ObjectId.isValid(
-        category,
-      )
-    ) {
-
-      return res.status(400).json({
-
-        success:
-          false,
-
-        message:
-          "Invalid category ID",
-
-      });
-
-    }
-
-
-    // ====================================
-    // CATEGORY VALIDATION
-    // ====================================
-
-    const existingCategory =
-      await Category.findOne({
-
-        _id:
-          category,
-
-        isActive:
-          true,
-
-        isDeleted:
-          false,
-
-      });
-
-
-    if (!existingCategory) {
-
-      return res.status(400).json({
-
-        success:
-          false,
-
-        message:
-          "Selected category does not exist or is inactive",
-
-      });
-
-    }
-
-
-    // ====================================
-    // VALIDATE TAG IDS
-    // ====================================
-
-    if (
-      tags.length > 0
-    ) {
-
-      const invalidTag =
-        tags.find(
-          (tagId) =>
-            !mongoose.Types.ObjectId.isValid(
-              tagId,
-            ),
-        );
-
-
-      if (invalidTag) {
-
-        return res.status(400).json({
-
-          success:
-            false,
-
-          message:
-            "One or more tag IDs are invalid",
-
-        });
-
-      }
-
-
-      const validTags =
-        await Tag.countDocuments({
-
-          _id: {
-
-            $in:
-              tags,
-
-          },
-
-          isActive:
-            true,
-
-          isDeleted:
-            false,
-
-        });
-
+      // ====================================
+      // BASIC VALIDATION
+      // ====================================
 
       if (
-        validTags !==
-        tags.length
+        !title?.trim() ||
+        !description?.trim() ||
+        !content?.trim() ||
+        !category ||
+        category === "undefined" ||
+        category === "null"
       ) {
-
         return res.status(400).json({
-
-          success:
-            false,
+          success: false,
 
           message:
-            "One or more tags are invalid or inactive",
-
+            "Title, description, content and a valid category are required",
         });
-
       }
 
-    }
+      // ====================================
+      // VALIDATE CATEGORY OBJECT ID
+      // ====================================
 
+      if (!mongoose.Types.ObjectId.isValid(category)) {
+        return res.status(400).json({
+          success: false,
 
-    // ====================================
-    // FEATURED IMAGE
-    // ====================================
+          message: "Invalid category ID",
+        });
+      }
 
-    const featuredFile =
-      req.files?.featuredImage?.[0];
+      // ====================================
+      // CATEGORY VALIDATION
+      // ====================================
 
+      const existingCategory = await Category.findOne({
+        _id: category,
 
-    if (featuredFile) {
+        isActive: true,
 
-      uploadedFeaturedImage =
-        await uploadFeaturedImage(
-          featuredFile,
+        isDeleted: false,
+      });
+
+      if (!existingCategory) {
+        return res.status(400).json({
+          success: false,
+
+          message: "Selected category does not exist or is inactive",
+        });
+      }
+
+      // ====================================
+      // VALIDATE TAG IDS
+      // ====================================
+
+      if (tags.length > 0) {
+        const invalidTag = tags.find(
+          (tagId) => !mongoose.Types.ObjectId.isValid(tagId),
         );
 
-    }
+        if (invalidTag) {
+          return res.status(400).json({
+            success: false,
 
+            message: "One or more tag IDs are invalid",
+          });
+        }
 
-    // ====================================
-    // CONTENT IMAGES
-    // ====================================
+        const validTags = await Tag.countDocuments({
+          _id: {
+            $in: tags,
+          },
 
-    const contentFiles =
-      req.files?.contentImages ||
-      [];
+          isActive: true,
 
+          isDeleted: false,
+        });
 
-    uploadedContentImages =
-      await uploadContentImages(
-        contentFiles,
-      );
+        if (validTags !== tags.length) {
+          return res.status(400).json({
+            success: false,
 
+            message: "One or more tags are invalid or inactive",
+          });
+        }
+      }
 
-    // ====================================
-    // REPLACE IMAGE PLACEHOLDERS
-    // ====================================
+      // ====================================
+      // FEATURED IMAGE
+      // ====================================
 
-    const finalContent =
-      replaceImagePlaceholders(
+      const featuredFile = req.files?.featuredImage?.[0];
+
+      if (featuredFile) {
+        uploadedFeaturedImage = await uploadFeaturedImage(featuredFile);
+      }
+
+      // ====================================
+      // CONTENT IMAGES
+      // ====================================
+
+      const contentFiles = req.files?.contentImages || [];
+
+      uploadedContentImages = await uploadContentImages(contentFiles);
+
+      // ====================================
+      // REPLACE IMAGE PLACEHOLDERS
+      // ====================================
+
+      const finalContent = replaceImagePlaceholders(
         content,
         uploadedContentImages,
       );
 
+      // ====================================
+      // GENERATE SLUG
+      // ====================================
 
-    // ====================================
-    // GENERATE SLUG
-    // ====================================
+      const slug = generateSlug(title);
 
-    const slug =
-      generateSlug(
-        title,
-      );
+      // ====================================
+      // CREATE BLOG
+      // ====================================
 
+      const blog = await Blog.create({
+        title: title.trim(),
 
-    // ====================================
-    // CREATE BLOG
-    // ====================================
+        description: description.trim(),
 
-    const blog =
-      await Blog.create({
+        content: finalContent,
 
-        title:
-          title.trim(),
+        featuredImage: uploadedFeaturedImage,
 
-        description:
-          description.trim(),
-
-        content:
-          finalContent,
-
-        featuredImage:
-          uploadedFeaturedImage,
-
-        contentImages:
-          uploadedContentImages,
+        contentImages: uploadedContentImages,
 
         category,
 
         tags,
 
-        status:
-          status === "submitted"
-            ? "pending"
-            : "draft",
+        status: status === "submitted" ? "pending" : "draft",
 
         slug,
 
-        author:
-          req.user.id,
-
+        author: req.user.id,
       });
 
+      return res.status(201).json({
+        success: true,
 
-    return res.status(201).json({
+        message: "Blog created successfully",
 
-      success:
-        true,
-
-      message:
-        "Blog created successfully",
-
-      data:
-        blog,
-
-    });
-
-  } catch (error) {
-
-    try {
-
-      if (
-        uploadedFeaturedImage?.publicId
-      ) {
-
-        await deleteFromCloudinary(
-          uploadedFeaturedImage.publicId,
-        );
-
-      }
-
-
-      for (
-        const image
-        of uploadedContentImages
-      ) {
-
-        if (
-          image.publicId
-        ) {
-
-          await deleteFromCloudinary(
-            image.publicId,
-          );
-
+        data: blog,
+      });
+    } catch (error) {
+      try {
+        if (uploadedFeaturedImage?.publicId) {
+          await deleteFromCloudinary(uploadedFeaturedImage.publicId);
         }
 
+        for (const image of uploadedContentImages) {
+          if (image.publicId) {
+            await deleteFromCloudinary(image.publicId);
+          }
+        }
+      } catch (cleanupError) {
+        console.error("Cloudinary cleanup error:", cleanupError);
       }
 
-    } catch (cleanupError) {
-
-      console.error(
-        "Cloudinary cleanup error:",
-        cleanupError,
-      );
-
+      next(error);
     }
-
-
-    next(error);
-
   }
-
-}
-
 
   // ======================================
   // GET ALL PUBLISHED BLOGS
   // GET /blog
   // ======================================
 
-  async getBlogs(
-    req,
-    res,
-    next,
-  ) {
-
+  async getBlogs(req, res, next) {
     try {
-
       const {
-
         search,
 
         category,
@@ -602,240 +354,126 @@ class BlogController {
         page = 1,
 
         limit = 10,
-
       } = req.query;
 
-
       const filter = {
+        status: "published",
 
-        status:
-          "published",
-
-        isDeleted:
-          false,
-
+        isDeleted: false,
       };
-
 
       // ====================================
       // CATEGORY
       // ====================================
 
       if (category) {
-
-        filter.category =
-          category;
-
+        filter.category = category;
       }
-
 
       // ====================================
       // AUTHOR
       // ====================================
 
       if (author) {
-
-        filter.author =
-          author;
-
+        filter.author = author;
       }
-
 
       // ====================================
       // TAG
       // ====================================
 
       if (tag) {
-
-        filter.tags =
-          tag;
-
+        filter.tags = tag;
       }
-
 
       // ====================================
       // SEARCH
       // ====================================
 
       if (search) {
-
         filter.$text = {
-
-          $search:
-            search,
-
+          $search: search,
         };
-
       }
-
 
       // ====================================
       // SORT
       // ====================================
 
       let sortOption = {
-
-        createdAt:
-          -1,
-
+        createdAt: -1,
       };
 
-
-      if (
-        sort === "oldest"
-      ) {
-
+      if (sort === "oldest") {
         sortOption = {
-
-          createdAt:
-            1,
-
+          createdAt: 1,
         };
-
       }
 
-
-      if (
-        sort === "mostViewed"
-      ) {
-
+      if (sort === "mostViewed") {
         sortOption = {
-
-          views:
-            -1,
-
+          views: -1,
         };
-
       }
-
 
       // ====================================
       // PAGINATION
       // ====================================
 
-      const pageNumber =
-        Math.max(
-          Number(page) || 1,
-          1,
-        );
+      const pageNumber = Math.max(Number(page) || 1, 1);
 
+      const limitNumber = Math.min(Math.max(Number(limit) || 10, 1), 100);
 
-      const limitNumber =
-        Math.min(
-          Math.max(
-            Number(limit) || 10,
-            1,
-          ),
-          100,
-        );
+      const skip = (pageNumber - 1) * limitNumber;
 
+      const [blogs, total] = await Promise.all([
+        Blog.find(filter)
 
-      const skip =
-        (pageNumber - 1) *
-        limitNumber;
+          .populate("author", "name email profileImage")
 
+          .populate("category", "name slug")
 
-      const [
+          .populate("tags", "name slug")
 
-        blogs,
+          .sort(sortOption)
 
-        total,
+          .skip(skip)
 
-      ] =
-        await Promise.all([
+          .limit(limitNumber),
 
-          Blog.find(filter)
-
-            .populate(
-              "author",
-              "name email profileImage",
-            )
-
-            .populate(
-              "category",
-              "name slug",
-            )
-
-            .populate(
-              "tags",
-              "name slug",
-            )
-
-            .sort(
-              sortOption,
-            )
-
-            .skip(
-              skip,
-            )
-
-            .limit(
-              limitNumber,
-            ),
-
-
-          Blog.countDocuments(
-            filter,
-          ),
-
-        ]);
-
+        Blog.countDocuments(filter),
+      ]);
 
       return res.status(200).json({
-
-        success:
-          true,
+        success: true,
 
         data: {
-
           blogs,
 
           pagination: {
-
             total,
 
-            page:
-              pageNumber,
+            page: pageNumber,
 
-            limit:
-              limitNumber,
+            limit: limitNumber,
 
-            totalPages:
-              Math.ceil(
-                total /
-                limitNumber,
-              ),
-
+            totalPages: Math.ceil(total / limitNumber),
           },
-
         },
-
       });
-
     } catch (error) {
-
       next(error);
-
     }
-
   }
-
 
   // ======================================
   // GET ALL BLOGS FOR ADMINISTRATION
   // GET /blog/admin/all
   // ======================================
 
-  async getAdminBlogs(
-    req,
-    res,
-    next,
-  ) {
-
+  async getAdminBlogs(req, res, next) {
     try {
-
       const {
-
         search,
 
         status,
@@ -845,367 +483,186 @@ class BlogController {
         page = 1,
 
         limit = 10,
-
       } = req.query;
-
 
       // ====================================
       // BASE FILTER
       // ====================================
 
       const filter = {
-
-        isDeleted:
-          false,
-
+        isDeleted: false,
       };
-
 
       // ====================================
       // STATUS FILTER
       // ====================================
 
       if (status) {
-
-        filter.status =
-          status;
-
+        filter.status = status;
       }
-
 
       // ====================================
       // CATEGORY FILTER
       // ====================================
 
       if (category) {
-
-        filter.category =
-          category;
-
+        filter.category = category;
       }
-
 
       // ====================================
       // SEARCH
       // ====================================
 
       if (search) {
-
         filter.$text = {
-
-          $search:
-            search,
-
+          $search: search,
         };
-
       }
-
 
       // ====================================
       // PAGINATION
       // ====================================
 
-      const pageNumber =
-        Math.max(
-          Number(page) || 1,
-          1,
-        );
+      const pageNumber = Math.max(Number(page) || 1, 1);
 
+      const limitNumber = Math.min(Math.max(Number(limit) || 10, 1), 100);
 
-      const limitNumber =
-        Math.min(
-          Math.max(
-            Number(limit) || 10,
-            1,
-          ),
-          100,
-        );
-
-
-      const skip =
-        (pageNumber - 1) *
-        limitNumber;
-
+      const skip = (pageNumber - 1) * limitNumber;
 
       // ====================================
       // GET BLOGS + COUNT + STATS
       // ====================================
 
-      const [
+      const [blogs, total, stats] = await Promise.all([
+        Blog.find(filter)
 
-        blogs,
+          .populate("author", "name email profileImage")
 
-        total,
+          .populate("category", "name slug")
 
-        stats,
+          .populate("tags", "name slug")
 
-      ] =
-        await Promise.all([
+          .sort({
+            createdAt: -1,
+          })
 
-          Blog.find(filter)
+          .skip(skip)
 
-            .populate(
-              "author",
-              "name email profileImage",
-            )
+          .limit(limitNumber),
 
-            .populate(
-              "category",
-              "name slug",
-            )
+        Blog.countDocuments(filter),
 
-            .populate(
-              "tags",
-              "name slug",
-            )
-
-            .sort({
-
-              createdAt:
-                -1,
-
-            })
-
-            .skip(
-              skip,
-            )
-
-            .limit(
-              limitNumber,
-            ),
-
-
-          Blog.countDocuments(
-            filter,
-          ),
-
-
-          Blog.aggregate([
-
-            {
-
-              $match: {
-
-                isDeleted:
-                  false,
-
-              },
-
+        Blog.aggregate([
+          {
+            $match: {
+              isDeleted: false,
             },
+          },
 
-            {
+          {
+            $group: {
+              _id: "$status",
 
-              $group: {
-
-                _id:
-                  "$status",
-
-                count: {
-
-                  $sum:
-                    1,
-
-                },
-
+              count: {
+                $sum: 1,
               },
-
             },
-
-          ]),
-
-        ]);
-
+          },
+        ]),
+      ]);
 
       // ====================================
       // FORMAT STATISTICS
       // ====================================
 
       const blogStats = {
+        total: 0,
 
-        total:
-          0,
+        published: 0,
 
-        published:
-          0,
+        pending: 0,
 
-        pending:
-          0,
+        draft: 0,
 
-        draft:
-          0,
+        rejected: 0,
 
-        rejected:
-          0,
-
-        unpublished:
-          0,
-
+        unpublished: 0,
       };
 
+      stats.forEach((item) => {
+        if (Object.prototype.hasOwnProperty.call(blogStats, item._id)) {
+          blogStats[item._id] = item.count;
+        }
 
-      stats.forEach(
-        (item) => {
-
-          if (
-
-            Object.prototype.hasOwnProperty.call(
-              blogStats,
-              item._id,
-            )
-
-          ) {
-
-            blogStats[
-              item._id
-            ] =
-              item.count;
-
-          }
-
-
-          blogStats.total +=
-            item.count;
-
-        },
-      );
-
+        blogStats.total += item.count;
+      });
 
       // ====================================
       // RESPONSE
       // ====================================
 
       return res.status(200).json({
-
-        success:
-          true,
+        success: true,
 
         data: {
-
           blogs,
 
-          stats:
-            blogStats,
+          stats: blogStats,
 
           pagination: {
-
             total,
 
-            page:
-              pageNumber,
+            page: pageNumber,
 
-            limit:
-              limitNumber,
+            limit: limitNumber,
 
-            totalPages:
-              Math.ceil(
-                total /
-                limitNumber,
-              ),
-
+            totalPages: Math.ceil(total / limitNumber),
           },
-
         },
-
       });
-
     } catch (error) {
-
       next(error);
-
     }
-
   }
-
 
   // ======================================
   // GET BLOG BY ID
   // GET /blog/:id
   // ======================================
 
-  async getBlogById(
-    req,
-    res,
-    next,
-  ) {
-
+  async getBlogById(req, res, next) {
     try {
+      const blog = await Blog.findOne({
+        _id: req.params.id,
 
-      const blog =
-        await Blog.findOneAndUpdate(
+        status: "published",
 
-          {
+        isDeleted: false,
+      })
 
-            _id:
-              req.params.id,
+        .populate("author", "name profileImage bio")
 
-            status:
-              "published",
+        .populate("category", "name slug")
 
-            isDeleted:
-              false,
-
-          },
-
-          {
-
-            $inc: {
-
-              views:
-                1,
-
-            },
-
-          },
-
-          {
-
-            new:
-              true,
-
-          },
-
-        )
-
-          .populate(
-            "author",
-            "name profileImage bio",
-          )
-
-          .populate(
-            "category",
-            "name slug",
-          )
-
-          .populate(
-            "tags",
-            "name slug",
-          );
-
+        .populate("tags", "name slug");
 
       if (!blog) {
-
         return res.status(404).json({
+          success: false,
 
-          success:
-            false,
-
-          message:
-            "Blog not found",
-
+          message: "Blog not found",
         });
-
       }
 
-      const likeCount =
-        await Like.countDocuments({
-          blog: blog._id,
-        });
+      const likeCount = await Like.countDocuments({
+        blog: blog._id,
+      });
 
       const isLiked = req.user
         ? Boolean(
             await Like.exists({
-              blog: blog._id,
               user: req.user._id,
+              blog: blog._id,
             }),
           )
         : false;
@@ -1213,240 +670,122 @@ class BlogController {
       const blogData = blog.toObject();
 
       blogData.likeCount = likeCount;
+
       blogData.isLiked = isLiked;
 
-
       return res.status(200).json({
+        success: true,
 
-        success:
-          true,
-
-        data:
-          blogData,
-
+        data: blogData,
       });
-
     } catch (error) {
-
       next(error);
-
     }
-
   }
-
 
   // ======================================
   // GET MY BLOGS
   // GET /blog/my-blogs
   // ======================================
 
-  async getMyBlogs(
-    req,
-    res,
-    next,
-  ) {
-
+  async getMyBlogs(req, res, next) {
     try {
-
       const {
-
         status,
 
         page = 1,
 
         limit = 10,
-
       } = req.query;
 
-
       const filter = {
+        author: req.user.id,
 
-        author:
-          req.user.id,
-
-        isDeleted:
-          false,
-
+        isDeleted: false,
       };
 
-
       if (status) {
-
-        filter.status =
-          status;
-
+        filter.status = status;
       }
 
+      const pageNumber = Math.max(Number(page) || 1, 1);
 
-      const pageNumber =
-        Math.max(
-          Number(page) || 1,
-          1,
-        );
+      const limitNumber = Math.min(Math.max(Number(limit) || 10, 1), 100);
 
+      const skip = (pageNumber - 1) * limitNumber;
 
-      const limitNumber =
-        Math.min(
-          Math.max(
-            Number(limit) || 10,
-            1,
-          ),
-          100,
-        );
+      const [blogs, total] = await Promise.all([
+        Blog.find(filter)
 
+          .populate("category", "name slug")
 
-      const skip =
-        (pageNumber - 1) *
-        limitNumber;
+          .populate("tags", "name slug")
 
+          .sort({
+            createdAt: -1,
+          })
 
-      const [
+          .skip(skip)
 
-        blogs,
+          .limit(limitNumber),
 
-        total,
-
-      ] =
-        await Promise.all([
-
-          Blog.find(filter)
-
-            .populate(
-              "category",
-              "name slug",
-            )
-
-            .populate(
-              "tags",
-              "name slug",
-            )
-
-            .sort({
-
-              createdAt:
-                -1,
-
-            })
-
-            .skip(
-              skip,
-            )
-
-            .limit(
-              limitNumber,
-            ),
-
-
-          Blog.countDocuments(
-            filter,
-          ),
-
-        ]);
-
+        Blog.countDocuments(filter),
+      ]);
 
       return res.status(200).json({
-
-        success:
-          true,
+        success: true,
 
         data: {
-
           blogs,
 
           pagination: {
-
             total,
 
-            page:
-              pageNumber,
+            page: pageNumber,
 
-            limit:
-              limitNumber,
+            limit: limitNumber,
 
-            totalPages:
-              Math.ceil(
-                total /
-                limitNumber,
-              ),
-
+            totalPages: Math.ceil(total / limitNumber),
           },
-
         },
-
       });
-
     } catch (error) {
-
       next(error);
-
     }
-
   }
-
 
   // ======================================
   // UPDATE BLOG
   // PATCH /blog/:id/update
   // ======================================
 
-  async updateBlog(
-    req,
-    res,
-    next,
-  ) {
-
+  async updateBlog(req, res, next) {
     try {
+      const blog = await Blog.findOne({
+        _id: req.params.id,
 
-      const blog =
-        await Blog.findOne({
+        author: req.user.id,
 
-          _id:
-            req.params.id,
-
-          author:
-            req.user.id,
-
-          isDeleted:
-            false,
-
-        });
-
+        isDeleted: false,
+      });
 
       if (!blog) {
-
         return res.status(404).json({
+          success: false,
 
-          success:
-            false,
-
-          message:
-            "Blog not found or you do not have permission",
-
+          message: "Blog not found or you do not have permission",
         });
-
       }
 
-
-      if (
-        blog.status ===
-        "published"
-      ) {
-
+      if (blog.status === "published") {
         return res.status(400).json({
+          success: false,
 
-          success:
-            false,
-
-          message:
-            "Published blogs cannot be edited directly",
-
+          message: "Published blogs cannot be edited directly",
         });
-
       }
-
 
       const {
-
         title,
 
         description,
@@ -1454,318 +793,164 @@ class BlogController {
         content,
 
         category,
-
       } = req.body;
 
-
-      const tags =
-        parseTags(
-          req.body.tags,
-        );
-
+      const tags = parseTags(req.body.tags);
 
       // ====================================
       // CATEGORY VALIDATION
       // ====================================
 
       if (category) {
+        const existingCategory = await Category.findOne({
+          _id: category,
 
-        const existingCategory =
-          await Category.findOne({
+          isActive: true,
 
-            _id:
-              category,
-
-            isActive:
-              true,
-
-            isDeleted:
-              false,
-
-          });
-
+          isDeleted: false,
+        });
 
         if (!existingCategory) {
-
           return res.status(400).json({
+            success: false,
 
-            success:
-              false,
-
-            message:
-              "Invalid or inactive category",
-
+            message: "Invalid or inactive category",
           });
-
         }
-
       }
-
 
       // ====================================
       // TAG VALIDATION
       // ====================================
 
       if (tags.length > 0) {
+        const validTags = await Tag.countDocuments({
+          _id: {
+            $in: tags,
+          },
 
-        const validTags =
-          await Tag.countDocuments({
+          isActive: true,
 
-            _id: {
+          isDeleted: false,
+        });
 
-              $in:
-                tags,
-
-            },
-
-            isActive:
-              true,
-
-            isDeleted:
-              false,
-
-          });
-
-
-        if (
-          validTags !==
-          tags.length
-        ) {
-
+        if (validTags !== tags.length) {
           return res.status(400).json({
+            success: false,
 
-            success:
-              false,
-
-            message:
-              "One or more tags are invalid or inactive",
-
+            message: "One or more tags are invalid or inactive",
           });
-
         }
-
       }
-
 
       // ====================================
       // UPDATE BASIC FIELDS
       // ====================================
 
       if (title) {
+        blog.title = title;
 
-        blog.title =
-          title;
-
-
-        blog.slug =
-          generateSlug(
-            title,
-          );
-
+        blog.slug = generateSlug(title);
       }
 
-
-      if (
-        description !==
-        undefined
-      ) {
-
-        blog.description =
-          description;
-
+      if (description !== undefined) {
+        blog.description = description;
       }
 
-
-      if (
-        category !==
-        undefined
-      ) {
-
-        blog.category =
-          category;
-
+      if (category !== undefined) {
+        blog.category = category;
       }
 
-
-      if (
-        req.body.tags !==
-        undefined
-      ) {
-
-        blog.tags =
-          tags;
-
+      if (req.body.tags !== undefined) {
+        blog.tags = tags;
       }
-
 
       // ====================================
       // FEATURED IMAGE
       // ====================================
 
-      const featuredFile =
-        req.files?.featuredImage?.[0];
-
+      const featuredFile = req.files?.featuredImage?.[0];
 
       if (featuredFile) {
+        const newImage = await uploadFeaturedImage(featuredFile);
 
-        const newImage =
-          await uploadFeaturedImage(
-            featuredFile,
-          );
-
-
-        if (
-          blog.featuredImage?.publicId
-        ) {
-
-          await deleteFromCloudinary(
-            blog.featuredImage.publicId,
-          );
-
+        if (blog.featuredImage?.publicId) {
+          await deleteFromCloudinary(blog.featuredImage.publicId);
         }
 
-
-        blog.featuredImage =
-          newImage;
-
+        blog.featuredImage = newImage;
       }
-
 
       // ====================================
       // CONTENT IMAGES
       // ====================================
 
-      const contentFiles =
-        req.files?.contentImages ||
-        [];
+      const contentFiles = req.files?.contentImages || [];
 
+      if (contentFiles.length > 0) {
+        const newContentImages = await uploadContentImages(contentFiles);
 
-      if (
-        contentFiles.length > 0
-      ) {
+        const updatedContent = replaceImagePlaceholders(
+          content || blog.content,
 
-        const newContentImages =
-          await uploadContentImages(
-            contentFiles,
-          );
-
-
-        const updatedContent =
-          replaceImagePlaceholders(
-
-            content ||
-              blog.content,
-
-            newContentImages,
-
-          );
-
-
-        blog.content =
-          updatedContent;
-
-
-        blog.contentImages.push(
-          ...newContentImages,
+          newContentImages,
         );
 
+        blog.content = updatedContent;
+
+        blog.contentImages.push(...newContentImages);
+      } else if (content !== undefined) {
+        blog.content = content;
       }
-
-      else if (
-        content !== undefined
-      ) {
-
-        blog.content =
-          content;
-
-      }
-
 
       await blog.save();
 
-
       return res.status(200).json({
+        success: true,
 
-        success:
-          true,
+        message: "Blog updated successfully",
 
-        message:
-          "Blog updated successfully",
-
-        data:
-          blog,
-
+        data: blog,
       });
-
     } catch (error) {
-
       next(error);
-
     }
-
   }
-
 
   // ======================================
   // SUBMIT BLOG
   // PATCH /blog/:id/submit
   // ======================================
 
-  async submitBlog(
-    req,
-    res,
-    next,
-  ) {
-
+  async submitBlog(req, res, next) {
     try {
+      const blog = await Blog.findOne({
+        _id: req.params.id,
 
-      const blog =
-        await Blog.findOne({
+        author: req.user.id,
 
-          _id:
-            req.params.id,
+        status: "draft",
 
-          author:
-            req.user.id,
-
-          status:
-            "draft",
-
-          isDeleted:
-            false,
-
-        });
-
+        isDeleted: false,
+      });
 
       if (!blog) {
-
         return res.status(400).json({
+          success: false,
 
-          success:
-            false,
-
-          message:
-            "Only draft blogs can be submitted",
-
+          message: "Only draft blogs can be submitted",
         });
-
       }
 
-
-      blog.status =
-        "pending";
-
+      blog.status = "pending";
 
       await blog.save();
 
+      const administrators = await User.find({
+        role: "administration",
 
-      const administrators =
-        await User.find({
-          role: "administration",
-
-          status: "active",
-        }).select("_id");
-
+        status: "active",
+      }).select("_id");
 
       if (administrators.length > 0) {
         await Notification.insertMany(
@@ -1785,333 +970,269 @@ class BlogController {
         );
       }
 
-
       return res.status(200).json({
+        success: true,
 
-        success:
-          true,
+        message: "Blog submitted for approval",
 
-        message:
-          "Blog submitted for approval",
-
-        data:
-          blog,
-
+        data: blog,
       });
-
     } catch (error) {
-
       next(error);
-
     }
-
   }
 
+  // =================================
+  // RECORD BLOG VIEW
+  //
+  // POST /blog/:id/view
+  // =================================
+
+  async recordBlogView(req, res, next) {
+    try {
+      const { id } = req.params;
+
+      // =============================
+      // VALIDATE BLOG ID
+      // =============================
+
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({
+          success: false,
+
+          message: "Invalid blog ID",
+        });
+      }
+
+      // =============================
+      // FIND BLOG
+      // =============================
+
+      const blog = await Blog.findOne({
+        _id: id,
+
+        isDeleted: false,
+
+        status: "published",
+      });
+
+      if (!blog) {
+        return res.status(404).json({
+          success: false,
+
+          message: "Blog not found",
+        });
+      }
+
+      // =============================
+      // OPTIONAL:
+      // DON'T COUNT AUTHOR'S OWN VIEW
+      // =============================
+
+      if (req.user && blog.author.toString() === req.user._id.toString()) {
+        return res.status(200).json({
+          success: true,
+
+          message: "Author view not counted",
+
+          data: {
+            views: blog.views,
+          },
+        });
+      }
+
+      // =============================
+      // CREATE VIEW RECORD
+      // =============================
+
+      await BlogView.create({
+        blog: blog._id,
+
+        user: req.user?._id || null,
+
+        viewedAt: new Date(),
+      });
+
+      // =============================
+      // INCREMENT TOTAL VIEWS
+      // =============================
+
+      blog.views = (blog.views || 0) + 1;
+
+      await blog.save();
+
+      return res.status(200).json({
+        success: true,
+
+        message: "Blog view recorded",
+
+        data: {
+          views: blog.views,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 
   // ======================================
   // PUBLISH BLOG
   // ADMINISTRATION ONLY
   // ======================================
 
-  async publishBlog(
-    req,
-    res,
-    next,
-  ) {
-
+  async publishBlog(req, res, next) {
     try {
+      const blog = await Blog.findOneAndUpdate(
+        {
+          _id: req.params.id,
 
-      const blog =
-        await Blog.findOneAndUpdate(
-
-          {
-
-            _id:
-              req.params.id,
-
-            status: {
-              $in: [
-                "pending",
-                "unpublished",
-              ],
-            },
-
-            isDeleted:
-              false,
-
+          status: {
+            $in: ["pending", "unpublished"],
           },
 
-          {
+          isDeleted: false,
+        },
 
-            status:
-              "published",
+        {
+          status: "published",
 
-            publishedAt:
-              new Date(),
+          publishedAt: new Date(),
+        },
 
-          },
+        {
+          new: true,
+        },
+      )
 
-          {
+        .populate("author", "name email profileImage")
 
-            new:
-              true,
+        .populate("category", "name slug")
 
-          },
-
-        )
-
-          .populate(
-            "author",
-            "name email profileImage",
-          )
-
-          .populate(
-            "category",
-            "name slug",
-          )
-
-          .populate(
-            "tags",
-            "name slug",
-          );
-
+        .populate("tags", "name slug");
 
       if (!blog) {
-
         return res.status(400).json({
+          success: false,
 
-          success:
-            false,
-
-          message:
-            "Blog cannot be published",
-
+          message: "Blog cannot be published",
         });
-
       }
 
-
       return res.status(200).json({
+        success: true,
 
-        success:
-          true,
+        message: "Blog published successfully",
 
-        message:
-          "Blog published successfully",
-
-        data:
-          blog,
-
+        data: blog,
       });
-
     } catch (error) {
-
       next(error);
-
     }
-
   }
-
 
   // ======================================
   // REJECT BLOG
   // ADMINISTRATION ONLY
   // ======================================
 
-  async rejectBlog(
-    req,
-    res,
-    next,
-  ) {
-
+  async rejectBlog(req, res, next) {
     try {
+      const blog = await Blog.findOneAndUpdate(
+        {
+          _id: req.params.id,
 
-      const blog =
-        await Blog.findOneAndUpdate(
+          status: "pending",
 
-          {
+          isDeleted: false,
+        },
 
-            _id:
-              req.params.id,
+        {
+          status: "rejected",
 
-            status:
-              "pending",
+          rejectionReason: req.body.rejectionReason || null,
+        },
 
-            isDeleted:
-              false,
+        {
+          new: true,
+        },
+      )
 
-          },
+        .populate("author", "name email profileImage")
 
-          {
+        .populate("category", "name slug")
 
-            status:
-              "rejected",
-
-            rejectionReason:
-              req.body.rejectionReason ||
-              null,
-
-          },
-
-          {
-
-            new:
-              true,
-
-          },
-
-        )
-
-          .populate(
-            "author",
-            "name email profileImage",
-          )
-
-          .populate(
-            "category",
-            "name slug",
-          )
-
-          .populate(
-            "tags",
-            "name slug",
-          );
-
+        .populate("tags", "name slug");
 
       if (!blog) {
-
         return res.status(400).json({
+          success: false,
 
-          success:
-            false,
-
-          message:
-            "Blog cannot be rejected",
-
+          message: "Blog cannot be rejected",
         });
-
       }
 
-
       return res.status(200).json({
+        success: true,
 
-        success:
-          true,
+        message: "Blog rejected successfully",
 
-        message:
-          "Blog rejected successfully",
-
-        data:
-          blog,
-
+        data: blog,
       });
-
     } catch (error) {
-
       next(error);
-
     }
-
   }
-
 
   // ======================================
   // UNPUBLISH BLOG
   // ADMINISTRATION ONLY
   // ======================================
 
-  async unpublishBlog(
-    req,
-    res,
-    next,
-  ) {
-
+  async unpublishBlog(req, res, next) {
     try {
+      const blog = await Blog.findOneAndUpdate(
+        {
+          _id: req.params.id,
 
-      const blog =
-        await Blog.findOneAndUpdate(
+          status: "published",
 
-          {
+          isDeleted: false,
+        },
 
-            _id:
-              req.params.id,
+        {
+          status: "unpublished",
+        },
 
-            status:
-              "published",
+        {
+          new: true,
+        },
+      )
 
-            isDeleted:
-              false,
+        .populate("author", "name email profileImage")
 
-          },
+        .populate("category", "name slug")
 
-          {
-
-            status:
-              "unpublished",
-
-          },
-
-          {
-
-            new:
-              true,
-
-          },
-
-        )
-
-          .populate(
-            "author",
-            "name email profileImage",
-          )
-
-          .populate(
-            "category",
-            "name slug",
-          )
-
-          .populate(
-            "tags",
-            "name slug",
-          );
-
+        .populate("tags", "name slug");
 
       if (!blog) {
-
         return res.status(400).json({
+          success: false,
 
-          success:
-            false,
-
-          message:
-            "Blog cannot be unpublished",
-
+          message: "Blog cannot be unpublished",
         });
-
       }
 
-
       return res.status(200).json({
+        success: true,
 
-        success:
-          true,
+        message: "Blog unpublished successfully",
 
-        message:
-          "Blog unpublished successfully",
-
-        data:
-          blog,
-
+        data: blog,
       });
-
     } catch (error) {
-
       next(error);
-
     }
-
   }
-
 
   // ======================================
   // DELETE BLOG
@@ -2122,110 +1243,59 @@ class BlogController {
   // DELETE ANY BLOG
   // ======================================
 
-  async deleteBlog(
-    req,
-    res,
-    next,
-  ) {
-
+  async deleteBlog(req, res, next) {
     try {
-
       const filter = {
+        _id: req.params.id,
 
-        _id:
-          req.params.id,
-
-        isDeleted:
-          false,
-
+        isDeleted: false,
       };
-
 
       // ====================================
       // AUTHOR PERMISSION
       // ====================================
 
-      if (
-        req.user.role ===
-        "author"
-      ) {
-
-        filter.author =
-          req.user.id;
-
+      if (req.user.role === "author") {
+        filter.author = req.user.id;
       }
 
+      const blog = await Blog.findOneAndUpdate(
+        filter,
 
-      const blog =
-        await Blog.findOneAndUpdate(
+        {
+          isDeleted: true,
 
-          filter,
+          deletedAt: new Date(),
 
-          {
-
-            isDeleted:
-              true,
-
-            deletedAt:
-              new Date(),
-
-            deletedBy:
-              req.user.id,
-
-          },
-
-          {
-
-            new:
-              true,
-
-          },
-
-        );
-
-
-      if (!blog) {
-
-        return res.status(404).json({
-
-          success:
-            false,
-
-          message:
-            "Blog not found or unauthorized",
-
-        });
-
-      }
-
-
-      return res.status(200).json({
-
-        success:
-          true,
-
-        message:
-          "Blog deleted successfully",
-
-        data: {
-
-          id:
-            blog._id,
-
+          deletedBy: req.user.id,
         },
 
+        {
+          new: true,
+        },
+      );
+
+      if (!blog) {
+        return res.status(404).json({
+          success: false,
+
+          message: "Blog not found or unauthorized",
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+
+        message: "Blog deleted successfully",
+
+        data: {
+          id: blog._id,
+        },
       });
-
     } catch (error) {
-
       next(error);
-
     }
-
   }
-
 }
 
-
-module.exports =
-  new BlogController();
+module.exports = new BlogController();

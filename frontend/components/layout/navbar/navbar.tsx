@@ -219,54 +219,6 @@ export default function Navbar({
     >
 
       {/* =================================
-          SEARCH
-      ================================= */}
-
-      <div
-        className="
-          hidden w-full max-w-md
-          md:block
-        "
-      >
-
-        <div className="relative">
-
-          <Search
-            className="
-              absolute
-              left-4
-              top-1/2
-              h-4 w-4
-              -translate-y-1/2
-              text-slate-500
-            "
-          />
-
-          <input
-            type="text"
-            placeholder="Search blogs, categories..."
-            className="
-              h-11 w-full
-              rounded-xl
-              border border-white/10
-              bg-white/[0.03]
-              pl-11 pr-4
-              text-sm
-              text-white
-              outline-none
-              transition
-              placeholder:text-slate-600
-              focus:border-violet-500/50
-              focus:bg-white/[0.05]
-            "
-          />
-
-        </div>
-
-      </div>
-
-
-      {/* =================================
           RIGHT SIDE
       ================================= */}
 

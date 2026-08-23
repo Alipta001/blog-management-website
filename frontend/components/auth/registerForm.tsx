@@ -122,7 +122,9 @@ export default function RegisterForm() {
       ) {
 
         router.push(
-          "/login"
+          `/verifyOtp?email=${encodeURIComponent(
+            result.payload.email,
+          )}`
         );
 
       }
