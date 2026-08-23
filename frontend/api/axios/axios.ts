@@ -38,8 +38,7 @@ const AxiosInstance =
      * HttpOnly cookies to Render.
      */
 
-    withCredentials:
-      true,
+    withCredentials:true,
 
   });
 
