@@ -11,6 +11,8 @@ const morgan = require("morgan");
 
 ConnectDB();
 const app = express();
+// Add this line in server.js / app.js
+app.set('trust proxy', 1);
 
 app.use(
   cors({
