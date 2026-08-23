@@ -14,30 +14,9 @@ const morgan = require("morgan");
 ConnectDB();
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://blog-management-website-three.vercel.app",
-  process.env.FRONTEND_URL,
-].filter(Boolean);
-
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin) {
-        return callback(null, true);
-      }
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      console.log("❌ CORS rejected:", origin);
-
-      return callback(
-        new Error("Not allowed by CORS")
-      );
-    },
-
+    origin: "https://blog-management-website-three.vercel.app",
     credentials: true,
   })
 );

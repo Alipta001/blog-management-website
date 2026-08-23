@@ -3,6 +3,8 @@ import axios, {
   type InternalAxiosRequestConfig,
 } from "axios";
 
+import { endPoints } from "@/api/endPoints/endPoints";
+
 
 const BASE_URL =
   process.env
@@ -111,7 +113,7 @@ AxiosInstance.interceptors.response.use(
 
     if (
       originalRequest.url?.includes(
-        "/auth/refresh-token"
+        endPoints.auth.refreshToken
       )
     ) {
 
@@ -159,7 +161,7 @@ AxiosInstance.interceptors.response.use(
 
         refreshPromise =
           AxiosInstance.post(
-            "/auth/refresh-token"
+            endPoints.auth.refreshToken,
           );
 
       }

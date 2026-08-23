@@ -458,6 +458,7 @@ const sendRegistrationOtpEmail = require(
 const {
   generateAccessToken,
   generateRefreshToken,
+  verifyRefreshToken,
 } = require("../utils/token");
 
 
@@ -465,20 +466,11 @@ const {
 // COOKIE OPTIONS
 // =================================
 
-const isProduction =
-  process.env.NODE_ENV === "production";
-
-
 const accessCookieOptions = {
 
   httpOnly: true,
-
-  secure: isProduction,
-
-  sameSite:
-    isProduction
-      ? "none"
-      : "lax",
+  secure: true,
+  sameSite: "none",
 
   maxAge:
     15 * 60 * 1000,
@@ -490,12 +482,9 @@ const refreshCookieOptions = {
 
   httpOnly: true,
 
-  secure: isProduction,
+  secure: true,
 
-  sameSite:
-    isProduction
-      ? "none"
-      : "lax",
+  sameSite: "none",
 
   maxAge:
     7 *
@@ -1276,6 +1265,15 @@ class AuthController {
 
       }
 
+      try {
+        verifyRefreshToken(refreshToken);
+      } catch (error) {
+        return res.status(401).json({
+          success: false,
+          message: "Invalid refresh token",
+        });
+      }
+
 
       // =============================
       // FIND USER
@@ -1489,13 +1487,9 @@ class AuthController {
 
           httpOnly: true,
 
-          secure:
-            isProduction,
+          secure: true,
 
-          sameSite:
-            isProduction
-              ? "none"
-              : "lax",
+          sameSite: "none",
 
         },
 
@@ -1514,13 +1508,9 @@ class AuthController {
 
           httpOnly: true,
 
-          secure:
-            isProduction,
+          secure: true,
 
-          sameSite:
-            isProduction
-              ? "none"
-              : "lax",
+          sameSite: "none",
 
         },
 
@@ -1670,13 +1660,9 @@ class AuthController {
 
           httpOnly: true,
 
-          secure:
-            isProduction,
+          secure: true,
 
-          sameSite:
-            isProduction
-              ? "none"
-              : "lax",
+          sameSite: "none",
 
         },
 
@@ -1695,13 +1681,9 @@ class AuthController {
 
           httpOnly: true,
 
-          secure:
-            isProduction,
+          secure: true,
 
-          sameSite:
-            isProduction
-              ? "none"
-              : "lax",
+          sameSite: "none",
 
         },
 
