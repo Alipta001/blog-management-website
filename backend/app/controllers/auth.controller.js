@@ -471,7 +471,7 @@ const accessCookieOptions = {
   httpOnly: true,
   secure: true,
   sameSite: "none",
-
+  path: "/",
   maxAge:
     15 * 60 * 1000,
 
@@ -485,7 +485,7 @@ const refreshCookieOptions = {
   secure: true,
 
   sameSite: "none",
-
+path: "/",
   maxAge:
     7 *
     24 *
@@ -1663,7 +1663,7 @@ class AuthController {
           secure: true,
 
           sameSite: "none",
-
+path: "/",
         },
 
       );
@@ -1684,7 +1684,7 @@ class AuthController {
           secure: true,
 
           sameSite: "none",
-
+path: "/",
         },
 
       );
