@@ -187,6 +187,16 @@ AxiosInstance.interceptors.response.use(
       refreshError
     ) {
 
+      if (
+        typeof window !== "undefined"
+      ) {
+        window.dispatchEvent(
+          new Event("auth:session-expired")
+        );
+
+        window.location.replace("/login");
+      }
+
       return Promise.reject(
         refreshError
       );

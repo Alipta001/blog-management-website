@@ -4,9 +4,7 @@ const ejs = require("ejs");
 const ConnectDB = require("./app/config/db");
 const path = require("path");
 const cors = require("cors");
-const Session = require("express-session");
 const cookieParser = require("cookie-parser");
-const connectflash = require("connect-flash");
 const helmet = require("helmet");
 const Limit = require("./app/utils/limite");
 const morgan = require("morgan");
@@ -16,7 +14,10 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://blog-management-website-three.vercel.app",
+    origin: [
+      "https://blog-management-website-three.vercel.app",
+      "http://localhost:3000",
+    ],
     credentials: true,
   })
 );
@@ -24,18 +25,7 @@ app.use(
 app.use(helmet());
 app.use(Limit);
 app.use(morgan("dev"));
-app.use(
-  Session({
-    secret: process.env.SESSION_SECRECT || "secret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // 1 day
-    },
-  }),
-);
 app.use(cookieParser());
-app.use(connectflash());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

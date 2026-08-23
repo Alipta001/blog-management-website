@@ -3,7 +3,10 @@ import { useEffect, type ReactNode } from 'react';
 import { Provider } from 'react-redux'
 import { store } from "../store/store"
 import { useAppDispatch } from "../hooks";
-import { getCurrentUser } from "../slice/auth/authSlice";
+import {
+  clearAuth,
+  getCurrentUser,
+} from "../slice/auth/authSlice";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -16,6 +19,24 @@ function AuthInitializer({ children }: ProvidersProps) {
 
   useEffect(() => {
     dispatch(getCurrentUser());
+  }, [dispatch]);
+
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      dispatch(clearAuth());
+    };
+
+    window.addEventListener(
+      "auth:session-expired",
+      handleSessionExpired,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "auth:session-expired",
+        handleSessionExpired,
+      );
+    };
   }, [dispatch]);
 
   return children;

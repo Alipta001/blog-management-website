@@ -1,5 +1,11 @@
-const jwt = require("jsonwebtoken");
 const User = require("../models/user");
+const { verifyAccessToken } = require("../utils/token");
+
+const getRequestUser = (user) => ({
+  id: user._id.toString(),
+  _id: user._id,
+  role: user.role,
+});
 
 const authMiddleware = async (
   req,
@@ -21,11 +27,7 @@ const authMiddleware = async (
 
     }
 
-    const decoded =
-      jwt.verify(
-        token,
-        process.env.ACCESS_TOKEN_SECRET
-      );
+    const decoded = verifyAccessToken(token);
 
     const user =
       await User.findById(
@@ -43,8 +45,7 @@ const authMiddleware = async (
 
     }
 
-    req.user =
-      user;
+    req.user = getRequestUser(user);
 
     next();
 
@@ -67,11 +68,11 @@ const optionalAuthMiddleware = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const decoded = verifyAccessToken(token);
     const user = await User.findById(decoded.userId).select("-password -refreshToken");
 
     if (user) {
-      req.user = user;
+      req.user = getRequestUser(user);
     }
   } catch (error) {
     // Public blog reads remain available when an optional session is stale.
