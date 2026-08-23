@@ -60,6 +60,7 @@ import {
 
 import BlogComments from "./blogComments";
 import BlogContent from "./blogContent";
+import BlogContentImages from "./blogContentImages";
 import BlogFeaturedImage from "./blogFeaturedImage";
 import BlogInteractionBar from "./blogInteractionBar";
 import BlogMeta from "./blogMeta";
@@ -826,6 +827,12 @@ export default function BlogViewPage({
 
             <BlogFeaturedImage
               blog={blog}
+            />
+
+
+            <BlogContentImages
+              images={blog.contentImages}
+              title={blog.title}
             />
 
 
