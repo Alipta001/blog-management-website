@@ -11,7 +11,8 @@ import { endPoints } from "@/api/endPoints/endPoints";
 // =================================
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL;
+  process.env.NEXT_PUBLIC_API_BASE_URL ||
+  "https://blog-management-website.onrender.com";
 
 
 // =================================

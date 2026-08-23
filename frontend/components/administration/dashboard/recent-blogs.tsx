@@ -151,7 +151,7 @@ import { useAppSelector } from "@/redux/hooks";
 export default function RecentBlogs() {
 
   const {
-    blogs = [],
+    adminBlogs = [],
     loading,
   } =
     useAppSelector(
@@ -160,7 +160,7 @@ export default function RecentBlogs() {
 
 
   const recentBlogs =
-    [...blogs]
+    [...adminBlogs]
       .sort(
         (a, b) =>
           new Date(

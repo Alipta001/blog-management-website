@@ -81,32 +81,34 @@ export default function StatsGrid() {
       (state) => state.blog
     );
 
+  const commentState =
+    useAppSelector(
+      (state) => state.comment
+    );
+
 
   const totalUsers =
     userState.pagination?.total ??
     userState.users.length;
 
 
-  const blogs =
-    blogState.blogs ?? [];
-
-
   const totalBlogs =
-    blogState.pagination?.total ??
-    blogs.length;
+    blogState.adminBlogStats?.total ??
+    blogState.adminBlogsPagination?.total ??
+    blogState.adminBlogs.length;
 
 
   const publishedBlogs =
-    blogs.filter(
-      (blog) =>
-        blog.status === "published"
+    blogState.adminBlogStats?.published ??
+    blogState.adminBlogs.filter(
+      (blog) => blog.status === "published"
     ).length;
 
 
   const pendingBlogs =
-    blogs.filter(
-      (blog) =>
-        blog.status === "pending"
+    blogState.adminBlogStats?.pending ??
+    blogState.adminBlogs.filter(
+      (blog) => blog.status === "pending"
     ).length;
 
 
@@ -145,8 +147,8 @@ export default function StatsGrid() {
 
       <StatCard
         title="Total Comments"
-        value="—"
-        description="Analytics endpoint required"
+        value={commentState.pagination?.total ?? commentState.comments.length}
+        description="All platform comments"
         icon={
           <MessageSquare className="h-6 w-6" />
         }
