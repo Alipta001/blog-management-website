@@ -1,21 +1,35 @@
-// // src/redux/slices/auth.slice.ts
-
-// import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+// import {
+//   createAsyncThunk,
+//   createSlice,
+// } from "@reduxjs/toolkit";
 
 // import AxiosInstance from "@/api/axios/axios";
-// import { endPoints } from "@/api/endPoints/endPoints";
+
+// import {
+//   endPoints,
+// } from "@/api/endPoints/endPoints";
+
+// import type {
+//   User,
+//   UserRole,
+// } from "@/types/user.types";
+
 
 // // =================================
 // // TYPES
 // // =================================
 
 // interface LoginPayload {
+
 //   email: string;
 
 //   password: string;
+
 // }
 
+
 // interface RegisterPayload {
+
 //   name: string;
 
 //   email: string;
@@ -24,55 +38,81 @@
 
 //   password: string;
 
-//   role: "administrator" | "author" | "user";
+//   role?: UserRole;
+
 // }
 
+
 // interface ChangePasswordPayload {
+
 //   currentPassword: string;
 
 //   newPassword: string;
+
 // }
 
-// interface User {
-//   _id: string;
-
-//   name: string;
-
-//   email: string;
-
-//   role: "administrator" | "author" | "user";
-// }
 
 // interface LoginResponse {
+
 //   user: User;
 
-//   accessToken: string;
-
-//   refreshToken: string;
-
 //   message: string;
+
 // }
+
 
 // interface RegisterResponse {
-//   user: User;
+//   email: string;
 
 //   message: string;
+
 // }
+
+
+// interface VerifyRegistrationOtpPayload {
+//   email: string;
+
+//   otp: string;
+// }
+
 
 // interface BasicResponse {
+
 //   message: string;
+
 // }
+
+// interface AuthApiUser extends Omit<User, "_id" | "profileImage"> {
+//   _id?: string;
+
+//   id?: string;
+
+//   profileImage:
+//     | string
+//     | null
+//     | {
+//         url: string | null;
+//         publicId?: string | null;
+//       };
+// }
+
+// const normalizeAuthUser = (user: AuthApiUser): User => ({
+//   ...user,
+//   _id: user._id || user.id || "",
+//   profileImage:
+//     typeof user.profileImage === "string"
+//       ? user.profileImage
+//       : user.profileImage?.url || null,
+// });
+
 
 // // =================================
 // // STATE
 // // =================================
 
 // interface AuthState {
+
 //   user: User | null;
-
-//   accessToken: string | null;
-
-//   refreshToken: string | null;
 
 //   loading: boolean;
 
@@ -81,14 +121,29 @@
 //   successMessage: string | null;
 
 //   isAuthenticated: boolean;
+
+//   /*
+//    * Important:
+//    *
+//    * false means "not authenticated"
+//    * only after initialization has completed.
+//    *
+//    * During page reload this remains false
+//    * until /auth/me has been checked.
+//    */
+
+//   authInitialized: boolean;
+
 // }
 
+
+// // =================================
+// // INITIAL STATE
+// // =================================
+
 // const initialState: AuthState = {
+
 //   user: null,
-
-//   accessToken: null,
-
-//   refreshToken: null,
 
 //   loading: false,
 
@@ -97,346 +152,1002 @@
 //   successMessage: null,
 
 //   isAuthenticated: false,
+
+//   authInitialized: false,
+
 // };
+
 
 // // =================================
 // // REGISTER
-// // POST /auth/register
 // // =================================
 
-// export const registerUser = createAsyncThunk<
-//   RegisterResponse,
-//   RegisterPayload,
-//   {
-//     rejectValue: string;
-//   }
-// >(
-//   "auth/register user",
-
-//   async (data, { rejectWithValue }) => {
-//     try {
-//       const response = await AxiosInstance.post(endPoints.auth.register, data);
-
-//       return {
-//         user: response.data.data.user,
-
-//         message: response.data.message,
-//       };
-//     } catch (error: any) {
-//       return rejectWithValue(
-//         error?.response?.data?.message || "Registration failed",
-//       );
+// export const registerUser =
+//   createAsyncThunk<
+//     RegisterResponse,
+//     RegisterPayload,
+//     {
+//       rejectValue: string;
 //     }
-//   },
-// );
+//   >(
+//     "auth/register",
+
+//     async (
+//       data,
+//       {
+//         rejectWithValue,
+//       }
+//     ) => {
+
+//       try {
+
+//         const response =
+//           await AxiosInstance.post(
+//             endPoints.auth.sendRegistrationOtp,
+//             data,
+//           );
+
+
+//         return {
+
+//           email: response.data.data.email,
+
+//           message:
+//             response.data.message,
+
+//         };
+
+//       } catch (error: any) {
+
+//         return rejectWithValue(
+
+//           error?.response?.data?.message ||
+
+//           "Registration failed"
+
+//         );
+
+//       }
+
+//     }
+
+//   );
+
+
+// // =================================
+// // VERIFY REGISTRATION OTP
+// // =================================
+
+// export const verifyRegistrationOtp =
+//   createAsyncThunk<
+//     RegisterResponse & { user: User },
+//     VerifyRegistrationOtpPayload,
+//     {
+//       rejectValue: string;
+//     }
+//   >(
+//     "auth/verifyRegistrationOtp",
+
+//     async (
+//       data,
+//       {
+//         rejectWithValue,
+//       }
+//     ) => {
+//       try {
+//         const response =
+//           await AxiosInstance.post(
+//             endPoints.auth.verifyRegistrationOtp,
+//             data,
+//           );
+
+//         return {
+//           user: normalizeAuthUser(
+//             response.data.data.user,
+//           ),
+
+//           message:
+//             response.data.message,
+
+//           email: data.email,
+//         };
+
+//       } catch (error: any) {
+//         return rejectWithValue(
+//           error?.response?.data?.message ||
+//           "OTP verification failed"
+//         );
+//       }
+//     }
+//   );
+
 
 // // =================================
 // // LOGIN
-// // POST /auth/login
 // // =================================
 
-// export const loginUser = createAsyncThunk<
-//   LoginResponse,
-//   LoginPayload,
-//   {
-//     rejectValue: string;
-//   }
-// >(
-//   "auth/login user",
-
-//   async (data, { rejectWithValue }) => {
-//     try {
-//       const response = await AxiosInstance.post(endPoints.auth.login, data);
-
-//       return {
-//         user: response.data.data.user,
-
-//         accessToken: response.data.data.accessToken,
-
-//         refreshToken: response.data.data.refreshToken,
-
-//         message: response.data.message,
-//       };
-//     } catch (error: any) {
-//       return rejectWithValue(error?.response?.data?.message || "Login failed");
+// export const loginUser =
+//   createAsyncThunk<
+//     LoginResponse,
+//     LoginPayload,
+//     {
+//       rejectValue: string;
 //     }
-//   },
-// );
+//   >(
+//     "auth/login",
+
+//     async (
+//       data,
+//       {
+//         rejectWithValue,
+//       }
+//     ) => {
+
+//       try {
+
+//         const response =
+//           await AxiosInstance.post(
+
+//             endPoints.auth.login,
+
+//             data,
+
+//           );
+
+
+//         return {
+
+//           user: normalizeAuthUser(
+//             response.data.data.user,
+//           ),
+
+//           message:
+//             response.data.message,
+
+//         };
+
+//       } catch (error: any) {
+
+//         return rejectWithValue(
+
+//           error?.response?.data?.message ||
+
+//           "Login failed"
+
+//         );
+
+//       }
+
+//     }
+
+//   );
+
+
+// // =================================
+// // GET CURRENT USER
+// // GET /auth/me
+// // =================================
+
+// export const getCurrentUser =
+//   createAsyncThunk<
+//     LoginResponse,
+//     void,
+//     {
+//       rejectValue: string;
+//     }
+//   >(
+//     "auth/getCurrentUser",
+
+//     async (
+//       _,
+//       {
+//         rejectWithValue,
+//       }
+//     ) => {
+
+//       try {
+
+//         const response =
+//           await AxiosInstance.get(
+
+//             endPoints.auth.me,
+
+//           );
+
+
+//         return {
+
+//           user: normalizeAuthUser(
+//             response.data.data.user,
+//           ),
+
+//           message:
+//             response.data.message,
+
+//         };
+
+//       } catch (error: any) {
+
+//         return rejectWithValue(
+
+//           error?.response?.data?.message ||
+
+//           "Failed to restore session"
+
+//         );
+
+//       }
+
+//     }
+
+//   );
+
 
 // // =================================
 // // LOGOUT
-// // POST /auth/logout
 // // =================================
 
-// export const logoutUser = createAsyncThunk<
-//   BasicResponse,
-//   void,
-//   {
-//     rejectValue: string;
-//   }
-// >(
-//   "auth/logout user",
-
-//   async (_, { rejectWithValue }) => {
-//     try {
-//       const response = await AxiosInstance.post(endPoints.auth.logout);
-
-//       return {
-//         message: response.data.message,
-//       };
-//     } catch (error: any) {
-//       return rejectWithValue(error?.response?.data?.message || "Logout failed");
+// export const logoutUser =
+//   createAsyncThunk<
+//     BasicResponse,
+//     void,
+//     {
+//       rejectValue: string;
 //     }
-//   },
-// );
+//   >(
+//     "auth/logout",
+
+//     async (
+//       _,
+//       {
+//         rejectWithValue,
+//       }
+//     ) => {
+
+//       try {
+
+//         const response =
+//           await AxiosInstance.post(
+
+//             endPoints.auth.logout,
+
+//           );
+
+
+//         return {
+
+//           message:
+//             response.data.message,
+
+//         };
+
+//       } catch (error: any) {
+
+//         return rejectWithValue(
+
+//           error?.response?.data?.message ||
+
+//           "Logout failed"
+
+//         );
+
+//       }
+
+//     }
+
+//   );
+
 
 // // =================================
 // // CHANGE PASSWORD
-// // PATCH /auth/change-password
 // // =================================
 
-// export const changePassword = createAsyncThunk<
-//   BasicResponse,
-//   ChangePasswordPayload,
-//   {
-//     rejectValue: string;
-//   }
-// >(
-//   "auth/changePassword",
-
-//   async (data, { rejectWithValue }) => {
-//     try {
-//       const response = await AxiosInstance.patch(
-//         endPoints.auth.changePassword,
-//         data,
-//       );
-
-//       return {
-//         message: response.data.message,
-//       };
-//     } catch (error: any) {
-//       return rejectWithValue(
-//         error?.response?.data?.message || "Failed to change password",
-//       );
+// export const changePassword =
+//   createAsyncThunk<
+//     BasicResponse,
+//     ChangePasswordPayload,
+//     {
+//       rejectValue: string;
 //     }
-//   },
-// );
+//   >(
+//     "auth/changePassword",
+
+//     async (
+//       data,
+//       {
+//         rejectWithValue,
+//       }
+//     ) => {
+
+//       try {
+
+//         const response =
+//           await AxiosInstance.patch(
+
+//             endPoints.auth.changePassword,
+
+//             data,
+
+//           );
+
+
+//         return {
+
+//           message:
+//             response.data.message,
+
+//         };
+
+//       } catch (error: any) {
+
+//         return rejectWithValue(
+
+//           error?.response?.data?.message ||
+
+//           "Failed to change password"
+
+//         );
+
+//       }
+
+//     }
+
+//   );
+
 
 // // =================================
-// // AUTH SLICE
+// // REFRESH TOKEN
 // // =================================
 
-// const authSlice = createSlice({
-//   name: "auth",
+// export const refreshAccessToken =
+//   createAsyncThunk<
+//     BasicResponse,
+//     void,
+//     {
+//       rejectValue: string;
+//     }
+//   >(
+//     "auth/refreshToken",
 
-//   initialState,
+//     async (
+//       _,
+//       {
+//         rejectWithValue,
+//       }
+//     ) => {
 
-//   reducers: {
-//     // =============================
-//     // CLEAR ERROR
-//     // =============================
+//       try {
 
-//     clearAuthError: (state) => {
-//       state.error = null;
-//     },
+//         const response =
+//           await AxiosInstance.post(
 
-//     // =============================
-//     // CLEAR SUCCESS MESSAGE
-//     // =============================
+//             endPoints.auth.refreshToken,
 
-//     clearAuthSuccessMessage: (state) => {
-//       state.successMessage = null;
-//     },
+//           );
 
-//     // =============================
-//     // SET AUTH DATA
-//     // Useful when restoring
-//     // authentication manually
-//     // =============================
 
-//     setAuthData: (state, action) => {
-//       state.user = action.payload.user;
+//         return {
 
-//       state.accessToken = action.payload.accessToken;
+//           message:
+//             response.data.message,
 
-//       state.refreshToken = action.payload.refreshToken;
+//         };
 
-//       state.isAuthenticated = true;
-//     },
+//       } catch (error: any) {
 
-//     // =============================
-//     // CLEAR AUTH
-//     // =============================
+//         return rejectWithValue(
 
-//     clearAuth: (state) => {
-//       state.user = null;
+//           error?.response?.data?.message ||
 
-//       state.accessToken = null;
+//           "Session expired"
 
-//       state.refreshToken = null;
+//         );
 
-//       state.isAuthenticated = false;
+//       }
 
-//       state.error = null;
+//     }
 
-//       state.successMessage = null;
-//     },
-//   },
+//   );
 
-//   // =================================
-//   // EXTRA REDUCERS
-//   // =================================
-
-//   extraReducers: (builder) => {
-//     builder
-
-//       // =============================
-//       // REGISTER
-//       // =============================
-
-//       .addCase(registerUser.pending, (state) => {
-//         state.loading = true;
-
-//         state.error = null;
-
-//         state.successMessage = null;
-//       })
-
-//       .addCase(registerUser.fulfilled, (state, action) => {
-//         state.loading = false;
-
-//         state.successMessage = action.payload.message;
-//       })
-
-//       .addCase(registerUser.rejected, (state, action) => {
-//         state.loading = false;
-
-//         state.error = action.payload || "Registration failed";
-//       })
-
-//       // =============================
-//       // LOGIN
-//       // =============================
-
-//       .addCase(loginUser.pending, (state) => {
-//         state.loading = true;
-
-//         state.error = null;
-
-//         state.successMessage = null;
-//       })
-
-//       .addCase(loginUser.fulfilled, (state, action) => {
-//         state.loading = false;
-
-//         state.user = action.payload.user;
-
-//         state.accessToken = action.payload.accessToken;
-
-//         state.refreshToken = action.payload.refreshToken;
-
-//         state.isAuthenticated = true;
-
-//         state.successMessage = action.payload.message;
-//       })
-
-//       .addCase(loginUser.rejected, (state, action) => {
-//         state.loading = false;
-
-//         state.error = action.payload || "Login failed";
-
-//         state.isAuthenticated = false;
-//       })
-
-//       // =============================
-//       // LOGOUT
-//       // =============================
-
-//       .addCase(logoutUser.pending, (state) => {
-//         state.loading = true;
-
-//         state.error = null;
-//       })
-
-//       .addCase(logoutUser.fulfilled, (state, action) => {
-//         state.loading = false;
-
-//         state.user = null;
-
-//         state.accessToken = null;
-
-//         state.refreshToken = null;
-
-//         state.isAuthenticated = false;
-
-//         state.successMessage = action.payload.message;
-//       })
-
-//       .addCase(logoutUser.rejected, (state, action) => {
-//         state.loading = false;
-
-//         state.error = action.payload || "Logout failed";
-//       })
-
-//       // =============================
-//       // CHANGE PASSWORD
-//       // =============================
-
-//       .addCase(changePassword.pending, (state) => {
-//         state.loading = true;
-
-//         state.error = null;
-
-//         state.successMessage = null;
-//       })
-
-//       .addCase(changePassword.fulfilled, (state, action) => {
-//         state.loading = false;
-
-//         /*
-//               Your backend removes
-//               refreshToken after changing
-//               the password.
-
-//               Therefore clear local auth
-//               state and force login again.
-//             */
-
-//         state.user = null;
-
-//         state.accessToken = null;
-
-//         state.refreshToken = null;
-
-//         state.isAuthenticated = false;
-
-//         state.successMessage = action.payload.message;
-//       })
-
-//       .addCase(changePassword.rejected, (state, action) => {
-//         state.loading = false;
-
-//         state.error = action.payload || "Failed to change password";
-//       });
-//   },
-// });
 
 // // =================================
-// // EXPORT ACTIONS
+// // SLICE
+// // =================================
+
+// const authSlice =
+//   createSlice({
+
+//     name:
+//       "auth",
+
+//     initialState,
+
+//     reducers: {
+
+
+//       // ===============================
+//       // CLEAR ERROR
+//       // ===============================
+
+//       clearAuthError: (
+//         state,
+//       ) => {
+
+//         state.error = null;
+
+//       },
+
+
+//       // ===============================
+//       // CLEAR SUCCESS MESSAGE
+//       // ===============================
+
+//       clearAuthSuccessMessage: (
+//         state,
+//       ) => {
+
+//         state.successMessage =
+//           null;
+
+//       },
+
+
+//       // ===============================
+//       // SET AUTH DATA
+//       // ===============================
+
+//       setAuthData: (
+//         state,
+//         action,
+//       ) => {
+
+//         state.user =
+//           action.payload.user;
+
+//         state.isAuthenticated =
+//           true;
+
+//         state.authInitialized =
+//           true;
+
+//       },
+
+
+//       setAuthUser: (
+//         state,
+//         action,
+//       ) => {
+
+//         state.user =
+//           action.payload;
+
+//         state.isAuthenticated =
+//           true;
+
+//       },
+
+
+//       // ===============================
+//       // CLEAR AUTH
+//       // ===============================
+
+//       clearAuth: (
+//         state,
+//       ) => {
+
+//         state.user =
+//           null;
+
+//         state.isAuthenticated =
+//           false;
+
+//         state.authInitialized =
+//           true;
+
+//         state.error =
+//           null;
+
+//         state.successMessage =
+//           null;
+
+//       },
+
+//     },
+
+
+//     extraReducers: (
+//       builder,
+//     ) => {
+
+//       builder
+
+
+//         // =================================
+//         // REGISTER
+//         // =================================
+
+//         .addCase(
+
+//           registerUser.pending,
+
+//           (state) => {
+
+//             state.loading =
+//               true;
+
+//             state.error =
+//               null;
+
+//             state.successMessage =
+//               null;
+
+//           }
+
+//         )
+
+
+//         .addCase(
+
+//           registerUser.fulfilled,
+
+//           (state, action) => {
+
+//             state.loading =
+//               false;
+
+//             state.successMessage =
+//               action.payload.message;
+
+//           }
+
+//         )
+
+
+//         .addCase(
+
+//           registerUser.rejected,
+
+//           (state, action) => {
+
+//             state.loading =
+//               false;
+
+//             state.error =
+//               action.payload ||
+//               "Registration failed";
+
+//           }
+
+//         )
+
+
+//         // =================================
+//         // VERIFY REGISTRATION OTP
+//         // =================================
+
+//         .addCase(
+
+//           verifyRegistrationOtp.pending,
+
+//           (state) => {
+
+//             state.loading =
+//               true;
+
+//             state.error =
+//               null;
+
+//             state.successMessage =
+//               null;
+
+//           }
+
+//         )
+
+//         .addCase(
+
+//           verifyRegistrationOtp.fulfilled,
+
+//           (state, action) => {
+
+//             state.loading =
+//               false;
+
+//             state.successMessage =
+//               action.payload.message;
+
+//           }
+
+//         )
+
+//         .addCase(
+
+//           verifyRegistrationOtp.rejected,
+
+//           (state, action) => {
+
+//             state.loading =
+//               false;
+
+//             state.error =
+//               action.payload ||
+//               "OTP verification failed";
+
+//           }
+
+//         )
+
+
+//         // =================================
+//         // LOGIN
+//         // =================================
+
+//         .addCase(
+
+//           loginUser.pending,
+
+//           (state) => {
+
+//             state.loading =
+//               true;
+
+//             state.error =
+//               null;
+
+//             state.successMessage =
+//               null;
+
+//           }
+
+//         )
+
+
+//         .addCase(
+
+//           loginUser.fulfilled,
+
+//           (state, action) => {
+
+//             state.loading =
+//               false;
+
+//             state.user =
+//               action.payload.user;
+
+//             state.isAuthenticated =
+//               true;
+
+//             state.authInitialized =
+//               true;
+
+//             state.successMessage =
+//               action.payload.message;
+
+//           }
+
+//         )
+
+
+//         .addCase(
+
+//           loginUser.rejected,
+
+//           (state, action) => {
+
+//             state.loading =
+//               false;
+
+//             state.error =
+//               action.payload ||
+//               "Login failed";
+
+//             state.isAuthenticated =
+//               false;
+
+//             state.authInitialized =
+//               true;
+
+//           }
+
+//         )
+
+
+//         // =================================
+//         // GET CURRENT USER
+//         // =================================
+
+//         .addCase(
+
+//           getCurrentUser.pending,
+
+//           (state) => {
+
+//             state.loading =
+//               true;
+
+//             state.error =
+//               null;
+
+//           }
+
+//         )
+
+
+//         .addCase(
+
+//           getCurrentUser.fulfilled,
+
+//           (state, action) => {
+
+//             state.loading =
+//               false;
+
+//             state.user =
+//               action.payload.user;
+
+//             state.isAuthenticated =
+//               true;
+
+//             state.authInitialized =
+//               true;
+
+//           }
+
+//         )
+
+
+//         .addCase(
+
+//           getCurrentUser.rejected,
+
+//           (state, action) => {
+
+//             state.loading =
+//               false;
+
+//             state.user =
+//               null;
+
+//             state.isAuthenticated =
+//               false;
+
+//             state.authInitialized =
+//               true;
+
+//             state.error =
+//               action.payload ||
+//               "Failed to restore session";
+
+//           }
+
+//         )
+
+
+//         // =================================
+//         // LOGOUT
+//         // =================================
+
+//         .addCase(
+
+//           logoutUser.pending,
+
+//           (state) => {
+
+//             state.loading =
+//               true;
+
+//             state.error =
+//               null;
+
+//           }
+
+//         )
+
+
+//         .addCase(
+
+//           logoutUser.fulfilled,
+
+//           (state, action) => {
+
+//             state.loading =
+//               false;
+
+//             state.user =
+//               null;
+
+//             state.isAuthenticated =
+//               false;
+
+//             state.authInitialized =
+//               true;
+
+//             state.successMessage =
+//               action.payload.message;
+
+//           }
+
+//         )
+
+
+//         .addCase(
+
+//           logoutUser.rejected,
+
+//           (state, action) => {
+
+//             state.loading =
+//               false;
+
+//             state.error =
+//               action.payload ||
+//               "Logout failed";
+
+//           }
+
+//         )
+
+
+//         // =================================
+//         // CHANGE PASSWORD
+//         // =================================
+
+//         .addCase(
+
+//           changePassword.pending,
+
+//           (state) => {
+
+//             state.loading =
+//               true;
+
+//             state.error =
+//               null;
+
+//           }
+
+//         )
+
+
+//         .addCase(
+
+//           changePassword.fulfilled,
+
+//           (state, action) => {
+
+//             state.loading =
+//               false;
+
+//             state.user =
+//               null;
+
+//             state.isAuthenticated =
+//               false;
+
+//             state.authInitialized =
+//               true;
+
+//             state.successMessage =
+//               action.payload.message;
+
+//           }
+
+//         )
+
+
+//         .addCase(
+
+//           changePassword.rejected,
+
+//           (state, action) => {
+
+//             state.loading =
+//               false;
+
+//             state.error =
+//               action.payload ||
+//               "Failed to change password";
+
+//           }
+
+//         )
+
+
+//         // =================================
+//         // REFRESH TOKEN
+//         // =================================
+
+//         .addCase(
+
+//           refreshAccessToken.pending,
+
+//           (state) => {
+
+//             state.error =
+//               null;
+
+//           }
+
+//         )
+
+
+//         .addCase(
+
+//           refreshAccessToken.fulfilled,
+
+//           (state) => {
+
+//             /*
+//              * Do not set user here.
+//              *
+//              * Refresh endpoint only creates
+//              * a new access token.
+//              *
+//              * /auth/me restores the user.
+//              */
+
+//             state.isAuthenticated =
+//               true;
+
+//           }
+
+//         )
+
+
+//         .addCase(
+
+//           refreshAccessToken.rejected,
+
+//           (state, action) => {
+
+//             state.user =
+//               null;
+
+//             state.isAuthenticated =
+//               false;
+
+//             state.authInitialized =
+//               true;
+
+//             state.error =
+//               action.payload ||
+//               "Session expired";
+
+//           }
+
+//         );
+
+//     },
+
+//   });
+
+
+// // =================================
+// // ACTIONS
 // // =================================
 
 // export const {
+
 //   clearAuthError,
+
 //   clearAuthSuccessMessage,
+
 //   setAuthData,
+
+//   setAuthUser,
+
 //   clearAuth,
+
 // } = authSlice.actions;
 
+
 // // =================================
-// // EXPORT REDUCER
+// // REDUCER
 // // =================================
 
 // export default authSlice.reducer;
+
+
 
 
 import {
@@ -461,73 +1172,45 @@ import type {
 // =================================
 
 interface LoginPayload {
-
   email: string;
-
   password: string;
-
 }
-
 
 interface RegisterPayload {
-
   name: string;
-
   email: string;
-
   phone?: string;
-
   password: string;
-
   role?: UserRole;
-
 }
-
 
 interface ChangePasswordPayload {
-
   currentPassword: string;
-
   newPassword: string;
-
 }
-
 
 interface LoginResponse {
-
   user: User;
-
   message: string;
-
 }
-
 
 interface RegisterResponse {
   email: string;
-
   message: string;
-
 }
-
 
 interface VerifyRegistrationOtpPayload {
   email: string;
-
   otp: string;
 }
 
-
 interface BasicResponse {
-
   message: string;
-
 }
 
 interface AuthApiUser extends Omit<User, "_id" | "profileImage"> {
   _id?: string;
-
   id?: string;
-
   profileImage:
     | string
     | null
@@ -552,29 +1235,12 @@ const normalizeAuthUser = (user: AuthApiUser): User => ({
 // =================================
 
 interface AuthState {
-
   user: User | null;
-
   loading: boolean;
-
   error: string | null;
-
   successMessage: string | null;
-
   isAuthenticated: boolean;
-
-  /*
-   * Important:
-   *
-   * false means "not authenticated"
-   * only after initialization has completed.
-   *
-   * During page reload this remains false
-   * until /auth/me has been checked.
-   */
-
   authInitialized: boolean;
-
 }
 
 
@@ -583,19 +1249,12 @@ interface AuthState {
 // =================================
 
 const initialState: AuthState = {
-
   user: null,
-
   loading: false,
-
   error: null,
-
   successMessage: null,
-
   isAuthenticated: false,
-
   authInitialized: false,
-
 };
 
 
@@ -612,46 +1271,23 @@ export const registerUser =
     }
   >(
     "auth/register",
-
-    async (
-      data,
-      {
-        rejectWithValue,
-      }
-    ) => {
-
+    async (data, { rejectWithValue }) => {
       try {
-
-        const response =
-          await AxiosInstance.post(
-            endPoints.auth.sendRegistrationOtp,
-            data,
-          );
-
-
-        return {
-
-          email: response.data.data.email,
-
-          message:
-            response.data.message,
-
-        };
-
-      } catch (error: any) {
-
-        return rejectWithValue(
-
-          error?.response?.data?.message ||
-
-          "Registration failed"
-
+        const response = await AxiosInstance.post(
+          endPoints.auth.sendRegistrationOtp,
+          data,
         );
 
+        return {
+          email: response.data.data.email,
+          message: response.data.message,
+        };
+      } catch (error: any) {
+        return rejectWithValue(
+          error?.response?.data?.message || "Registration failed"
+        );
       }
-
     }
-
   );
 
 
@@ -668,35 +1304,21 @@ export const verifyRegistrationOtp =
     }
   >(
     "auth/verifyRegistrationOtp",
-
-    async (
-      data,
-      {
-        rejectWithValue,
-      }
-    ) => {
+    async (data, { rejectWithValue }) => {
       try {
-        const response =
-          await AxiosInstance.post(
-            endPoints.auth.verifyRegistrationOtp,
-            data,
-          );
+        const response = await AxiosInstance.post(
+          endPoints.auth.verifyRegistrationOtp,
+          data,
+        );
 
         return {
-          user: normalizeAuthUser(
-            response.data.data.user,
-          ),
-
-          message:
-            response.data.message,
-
+          user: normalizeAuthUser(response.data.data.user),
+          message: response.data.message,
           email: data.email,
         };
-
       } catch (error: any) {
         return rejectWithValue(
-          error?.response?.data?.message ||
-          "OTP verification failed"
+          error?.response?.data?.message || "OTP verification failed"
         );
       }
     }
@@ -716,51 +1338,23 @@ export const loginUser =
     }
   >(
     "auth/login",
-
-    async (
-      data,
-      {
-        rejectWithValue,
-      }
-    ) => {
-
+    async (data, { rejectWithValue }) => {
       try {
-
-        const response =
-          await AxiosInstance.post(
-
-            endPoints.auth.login,
-
-            data,
-
-          );
-
-
-        return {
-
-          user: normalizeAuthUser(
-            response.data.data.user,
-          ),
-
-          message:
-            response.data.message,
-
-        };
-
-      } catch (error: any) {
-
-        return rejectWithValue(
-
-          error?.response?.data?.message ||
-
-          "Login failed"
-
+        const response = await AxiosInstance.post(
+          endPoints.auth.login,
+          data,
         );
 
+        return {
+          user: normalizeAuthUser(response.data.data.user),
+          message: response.data.message,
+        };
+      } catch (error: any) {
+        return rejectWithValue(
+          error?.response?.data?.message || "Login failed"
+        );
       }
-
     }
-
   );
 
 
@@ -778,49 +1372,20 @@ export const getCurrentUser =
     }
   >(
     "auth/getCurrentUser",
-
-    async (
-      _,
-      {
-        rejectWithValue,
-      }
-    ) => {
-
+    async (_, { rejectWithValue }) => {
       try {
-
-        const response =
-          await AxiosInstance.get(
-
-            endPoints.auth.me,
-
-          );
-
+        const response = await AxiosInstance.get(endPoints.auth.me);
 
         return {
-
-          user: normalizeAuthUser(
-            response.data.data.user,
-          ),
-
-          message:
-            response.data.message,
-
+          user: normalizeAuthUser(response.data.data.user),
+          message: response.data.message,
         };
-
       } catch (error: any) {
-
         return rejectWithValue(
-
-          error?.response?.data?.message ||
-
-          "Failed to restore session"
-
+          error?.response?.data?.message || "Failed to restore session"
         );
-
       }
-
     }
-
   );
 
 
@@ -837,45 +1402,19 @@ export const logoutUser =
     }
   >(
     "auth/logout",
-
-    async (
-      _,
-      {
-        rejectWithValue,
-      }
-    ) => {
-
+    async (_, { rejectWithValue }) => {
       try {
-
-        const response =
-          await AxiosInstance.post(
-
-            endPoints.auth.logout,
-
-          );
-
+        const response = await AxiosInstance.post(endPoints.auth.logout);
 
         return {
-
-          message:
-            response.data.message,
-
+          message: response.data.message,
         };
-
       } catch (error: any) {
-
         return rejectWithValue(
-
-          error?.response?.data?.message ||
-
-          "Logout failed"
-
+          error?.response?.data?.message || "Logout failed"
         );
-
       }
-
     }
-
   );
 
 
@@ -892,47 +1431,22 @@ export const changePassword =
     }
   >(
     "auth/changePassword",
-
-    async (
-      data,
-      {
-        rejectWithValue,
-      }
-    ) => {
-
+    async (data, { rejectWithValue }) => {
       try {
-
-        const response =
-          await AxiosInstance.patch(
-
-            endPoints.auth.changePassword,
-
-            data,
-
-          );
-
-
-        return {
-
-          message:
-            response.data.message,
-
-        };
-
-      } catch (error: any) {
-
-        return rejectWithValue(
-
-          error?.response?.data?.message ||
-
-          "Failed to change password"
-
+        const response = await AxiosInstance.patch(
+          endPoints.auth.changePassword,
+          data,
         );
 
+        return {
+          message: response.data.message,
+        };
+      } catch (error: any) {
+        return rejectWithValue(
+          error?.response?.data?.message || "Failed to change password"
+        );
       }
-
     }
-
   );
 
 
@@ -949,45 +1463,21 @@ export const refreshAccessToken =
     }
   >(
     "auth/refreshToken",
-
-    async (
-      _,
-      {
-        rejectWithValue,
-      }
-    ) => {
-
+    async (_, { rejectWithValue }) => {
       try {
-
-        const response =
-          await AxiosInstance.post(
-
-            endPoints.auth.refreshToken,
-
-          );
-
-
-        return {
-
-          message:
-            response.data.message,
-
-        };
-
-      } catch (error: any) {
-
-        return rejectWithValue(
-
-          error?.response?.data?.message ||
-
-          "Session expired"
-
+        const response = await AxiosInstance.post(
+          endPoints.auth.refreshToken,
         );
 
+        return {
+          message: response.data.message,
+        };
+      } catch (error: any) {
+        return rejectWithValue(
+          error?.response?.data?.message || "Session expired"
+        );
       }
-
     }
-
   );
 
 
@@ -995,595 +1485,166 @@ export const refreshAccessToken =
 // SLICE
 // =================================
 
-const authSlice =
-  createSlice({
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    clearAuthError: (state) => {
+      state.error = null;
+    },
 
-    name:
-      "auth",
+    clearAuthSuccessMessage: (state) => {
+      state.successMessage = null;
+    },
 
-    initialState,
+    setAuthData: (state, action) => {
+      state.user = action.payload.user;
+      state.isAuthenticated = true;
+      state.authInitialized = true;
+    },
 
-    reducers: {
+    setAuthUser: (state, action) => {
+      state.user = action.payload;
+      state.isAuthenticated = true;
+    },
 
+    clearAuth: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
+      state.authInitialized = true;
+      state.error = null;
+      state.successMessage = null;
+    },
+  },
 
-      // ===============================
-      // CLEAR ERROR
-      // ===============================
-
-      clearAuthError: (
-        state,
-      ) => {
-
+  extraReducers: (builder) => {
+    builder
+      // REGISTER
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
         state.error = null;
-
-      },
-
-
-      // ===============================
-      // CLEAR SUCCESS MESSAGE
-      // ===============================
-
-      clearAuthSuccessMessage: (
-        state,
-      ) => {
-
-        state.successMessage =
-          null;
-
-      },
-
-
-      // ===============================
-      // SET AUTH DATA
-      // ===============================
-
-      setAuthData: (
-        state,
-        action,
-      ) => {
-
-        state.user =
-          action.payload.user;
-
-        state.isAuthenticated =
-          true;
-
-        state.authInitialized =
-          true;
-
-      },
-
-
-      setAuthUser: (
-        state,
-        action,
-      ) => {
-
-        state.user =
-          action.payload;
-
-        state.isAuthenticated =
-          true;
-
-      },
-
-
-      // ===============================
-      // CLEAR AUTH
-      // ===============================
-
-      clearAuth: (
-        state,
-      ) => {
-
-        state.user =
-          null;
-
-        state.isAuthenticated =
-          false;
-
-        state.authInitialized =
-          true;
-
-        state.error =
-          null;
-
-        state.successMessage =
-          null;
-
-      },
-
-    },
-
-
-    extraReducers: (
-      builder,
-    ) => {
-
-      builder
-
-
-        // =================================
-        // REGISTER
-        // =================================
-
-        .addCase(
-
-          registerUser.pending,
-
-          (state) => {
-
-            state.loading =
-              true;
-
-            state.error =
-              null;
-
-            state.successMessage =
-              null;
-
-          }
-
-        )
-
-
-        .addCase(
-
-          registerUser.fulfilled,
-
-          (state, action) => {
-
-            state.loading =
-              false;
-
-            state.successMessage =
-              action.payload.message;
-
-          }
-
-        )
-
-
-        .addCase(
-
-          registerUser.rejected,
-
-          (state, action) => {
-
-            state.loading =
-              false;
-
-            state.error =
-              action.payload ||
-              "Registration failed";
-
-          }
-
-        )
-
-
-        // =================================
-        // VERIFY REGISTRATION OTP
-        // =================================
-
-        .addCase(
-
-          verifyRegistrationOtp.pending,
-
-          (state) => {
-
-            state.loading =
-              true;
-
-            state.error =
-              null;
-
-            state.successMessage =
-              null;
-
-          }
-
-        )
-
-        .addCase(
-
-          verifyRegistrationOtp.fulfilled,
-
-          (state, action) => {
-
-            state.loading =
-              false;
-
-            state.successMessage =
-              action.payload.message;
-
-          }
-
-        )
-
-        .addCase(
-
-          verifyRegistrationOtp.rejected,
-
-          (state, action) => {
-
-            state.loading =
-              false;
-
-            state.error =
-              action.payload ||
-              "OTP verification failed";
-
-          }
-
-        )
-
-
-        // =================================
-        // LOGIN
-        // =================================
-
-        .addCase(
-
-          loginUser.pending,
-
-          (state) => {
-
-            state.loading =
-              true;
-
-            state.error =
-              null;
-
-            state.successMessage =
-              null;
-
-          }
-
-        )
-
-
-        .addCase(
-
-          loginUser.fulfilled,
-
-          (state, action) => {
-
-            state.loading =
-              false;
-
-            state.user =
-              action.payload.user;
-
-            state.isAuthenticated =
-              true;
-
-            state.authInitialized =
-              true;
-
-            state.successMessage =
-              action.payload.message;
-
-          }
-
-        )
-
-
-        .addCase(
-
-          loginUser.rejected,
-
-          (state, action) => {
-
-            state.loading =
-              false;
-
-            state.error =
-              action.payload ||
-              "Login failed";
-
-            state.isAuthenticated =
-              false;
-
-            state.authInitialized =
-              true;
-
-          }
-
-        )
-
-
-        // =================================
-        // GET CURRENT USER
-        // =================================
-
-        .addCase(
-
-          getCurrentUser.pending,
-
-          (state) => {
-
-            state.loading =
-              true;
-
-            state.error =
-              null;
-
-          }
-
-        )
-
-
-        .addCase(
-
-          getCurrentUser.fulfilled,
-
-          (state, action) => {
-
-            state.loading =
-              false;
-
-            state.user =
-              action.payload.user;
-
-            state.isAuthenticated =
-              true;
-
-            state.authInitialized =
-              true;
-
-          }
-
-        )
-
-
-        .addCase(
-
-          getCurrentUser.rejected,
-
-          (state, action) => {
-
-            state.loading =
-              false;
-
-            state.user =
-              null;
-
-            state.isAuthenticated =
-              false;
-
-            state.authInitialized =
-              true;
-
-            state.error =
-              action.payload ||
-              "Failed to restore session";
-
-          }
-
-        )
-
-
-        // =================================
-        // LOGOUT
-        // =================================
-
-        .addCase(
-
-          logoutUser.pending,
-
-          (state) => {
-
-            state.loading =
-              true;
-
-            state.error =
-              null;
-
-          }
-
-        )
-
-
-        .addCase(
-
-          logoutUser.fulfilled,
-
-          (state, action) => {
-
-            state.loading =
-              false;
-
-            state.user =
-              null;
-
-            state.isAuthenticated =
-              false;
-
-            state.authInitialized =
-              true;
-
-            state.successMessage =
-              action.payload.message;
-
-          }
-
-        )
-
-
-        .addCase(
-
-          logoutUser.rejected,
-
-          (state, action) => {
-
-            state.loading =
-              false;
-
-            state.error =
-              action.payload ||
-              "Logout failed";
-
-          }
-
-        )
-
-
-        // =================================
-        // CHANGE PASSWORD
-        // =================================
-
-        .addCase(
-
-          changePassword.pending,
-
-          (state) => {
-
-            state.loading =
-              true;
-
-            state.error =
-              null;
-
-          }
-
-        )
-
-
-        .addCase(
-
-          changePassword.fulfilled,
-
-          (state, action) => {
-
-            state.loading =
-              false;
-
-            state.user =
-              null;
-
-            state.isAuthenticated =
-              false;
-
-            state.authInitialized =
-              true;
-
-            state.successMessage =
-              action.payload.message;
-
-          }
-
-        )
-
-
-        .addCase(
-
-          changePassword.rejected,
-
-          (state, action) => {
-
-            state.loading =
-              false;
-
-            state.error =
-              action.payload ||
-              "Failed to change password";
-
-          }
-
-        )
-
-
-        // =================================
-        // REFRESH TOKEN
-        // =================================
-
-        .addCase(
-
-          refreshAccessToken.pending,
-
-          (state) => {
-
-            state.error =
-              null;
-
-          }
-
-        )
-
-
-        .addCase(
-
-          refreshAccessToken.fulfilled,
-
-          (state) => {
-
-            /*
-             * Do not set user here.
-             *
-             * Refresh endpoint only creates
-             * a new access token.
-             *
-             * /auth/me restores the user.
-             */
-
-            state.isAuthenticated =
-              true;
-
-          }
-
-        )
-
-
-        .addCase(
-
-          refreshAccessToken.rejected,
-
-          (state, action) => {
-
-            state.user =
-              null;
-
-            state.isAuthenticated =
-              false;
-
-            state.authInitialized =
-              true;
-
-            state.error =
-              action.payload ||
-              "Session expired";
-
-          }
-
-        );
-
-    },
-
-  });
-
-
-// =================================
-// ACTIONS
-// =================================
+        state.successMessage = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.successMessage = action.payload.message;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Registration failed";
+      })
+
+      // VERIFY REGISTRATION OTP
+      .addCase(verifyRegistrationOtp.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.successMessage = null;
+      })
+      .addCase(verifyRegistrationOtp.fulfilled, (state, action) => {
+        state.loading = false;
+        state.successMessage = action.payload.message;
+      })
+      .addCase(verifyRegistrationOtp.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "OTP verification failed";
+      })
+
+      // LOGIN
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.successMessage = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+        state.authInitialized = true;
+        state.successMessage = action.payload.message;
+      })
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Login failed";
+        state.isAuthenticated = false;
+        state.authInitialized = true;
+      })
+
+      // GET CURRENT USER (/auth/me)
+      .addCase(getCurrentUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getCurrentUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+        state.isAuthenticated = true;
+        state.authInitialized = true;
+      })
+      .addCase(getCurrentUser.rejected, (state) => {
+        state.loading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+        state.authInitialized = true;
+        state.error = null; // Quietly handle unauthenticated state without UI error
+      })
+
+      // LOGOUT
+      .addCase(logoutUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(logoutUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+        state.authInitialized = true;
+        state.successMessage = action.payload.message;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Logout failed";
+      })
+
+      // CHANGE PASSWORD
+      .addCase(changePassword.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = null;
+        state.isAuthenticated = false;
+        state.authInitialized = true;
+        state.successMessage = action.payload.message;
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to change password";
+      })
+
+      // REFRESH TOKEN
+      .addCase(refreshAccessToken.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(refreshAccessToken.fulfilled, (state) => {
+        state.isAuthenticated = true;
+      })
+      .addCase(refreshAccessToken.rejected, (state) => {
+        state.user = null;
+        state.isAuthenticated = false;
+        state.authInitialized = true;
+        state.error = null; // Quietly handle background token refresh failures
+      });
+  },
+});
 
 export const {
-
   clearAuthError,
-
   clearAuthSuccessMessage,
-
   setAuthData,
-
   setAuthUser,
-
   clearAuth,
-
 } = authSlice.actions;
 
-
-// =================================
-// REDUCER
-// =================================
-
 export default authSlice.reducer;
+
