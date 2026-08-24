@@ -2,6 +2,7 @@ export const endPoints = {
   auth: {
     // Registration OTP flow
     sendRegistrationOtp: "/auth/send-registration-otp",
+    resendRegistrationOtp: "/auth/resend-registration-otp",
     verifyRegistrationOtp: "/auth/verify-registration-otp",
     // Authentication
     login: "/auth/login",

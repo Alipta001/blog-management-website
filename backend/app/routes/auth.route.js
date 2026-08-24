@@ -29,6 +29,19 @@ router.post(
 
 
 // ---------------------------------
+// RESEND REGISTRATION OTP
+// ---------------------------------
+
+router.post(
+
+  "/resend-registration-otp",
+
+  authController.resendRegistrationOtp
+
+);
+
+
+// ---------------------------------
 // VERIFY REGISTRATION OTP
 // ---------------------------------
 

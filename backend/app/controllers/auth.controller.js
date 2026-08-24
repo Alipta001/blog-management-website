@@ -58,6 +58,97 @@ path: "/",
 class AuthController {
 
 
+  // RESEND REGISTRATION OTP
+  //
+  // POST /auth/resend-registration-otp
+
+  async resendRegistrationOtp(
+    req,
+    res,
+    next,
+  ) {
+
+    try {
+
+      const {
+        email,
+      } = req.body;
+
+      const normalizedEmail =
+        email.toLowerCase().trim();
+
+      const otpRecord =
+        await Otp.findOne({
+          email:
+            normalizedEmail,
+          purpose:
+            "registration",
+        });
+
+      if (
+        !otpRecord ||
+        otpRecord.expiresAt < new Date()
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "OTP not found or expired",
+        });
+      }
+
+      const otp =
+        crypto
+          .randomInt(
+            100000,
+            1000000,
+          )
+          .toString();
+
+      const hashedOtp =
+        await bcrypt.hash(
+          otp,
+          10,
+        );
+
+      const expiresAt =
+        new Date(
+          Date.now() +
+          10 *
+          60 *
+          1000,
+        );
+
+      otpRecord.otp = hashedOtp;
+      otpRecord.expiresAt = expiresAt;
+      otpRecord.attempts = 0;
+
+      await otpRecord.save();
+
+      await sendRegistrationOtpEmail({
+        email: normalizedEmail,
+        name: otpRecord.name,
+        otp,
+      });
+
+      return res.status(200).json({
+        success: true,
+        message:
+          "OTP resent successfully",
+        data: {
+          email:
+            normalizedEmail,
+          expiresIn:
+            600,
+        },
+      });
+
+    } catch (error) {
+      next(error);
+    }
+
+  }
+
+
    
   // SEND REGISTRATION OTP
   //

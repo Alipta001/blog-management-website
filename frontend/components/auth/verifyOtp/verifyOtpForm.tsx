@@ -30,6 +30,7 @@ import {
 } from "@/redux/hooks";
 
 import {
+  resendRegistrationOtp,
   verifyRegistrationOtp,
 } from "@/redux/slice/auth/authSlice";
 
@@ -173,9 +174,28 @@ export default function VerifyOtpForm({
       return;
     }
 
-    toast.info(
-      "Please go back to registration to request a new OTP.",
-    );
+    try {
+      setResending(true);
+
+      await dispatch(
+        resendRegistrationOtp({
+          email,
+        }),
+      ).unwrap();
+
+      setTimeLeft(10 * 60);
+      setOtp(Array(6).fill(""));
+      toast.success("A new OTP has been sent.");
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Failed to resend OTP";
+
+      toast.error(message);
+    } finally {
+      setResending(false);
+    }
   };
 
 

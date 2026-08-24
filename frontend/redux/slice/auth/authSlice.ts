@@ -52,6 +52,10 @@ interface VerifyRegistrationOtpPayload {
   otp: string;
 }
 
+interface ResendRegistrationOtpPayload {
+  email: string;
+}
+
 interface BasicResponse {
   message: string;
 }
@@ -204,6 +208,37 @@ export const loginUser =
       }
     }
   );
+
+      // RESEND REGISTRATION OTP
+
+
+      export const resendRegistrationOtp =
+        createAsyncThunk<
+          BasicResponse,
+          ResendRegistrationOtpPayload,
+          {
+            rejectValue: string;
+          }
+        >(
+          "auth/resendRegistrationOtp",
+          async (data, { rejectWithValue }) => {
+            try {
+              const response = await AxiosInstance.post(
+                endPoints.auth.resendRegistrationOtp,
+                data,
+              );
+
+              return {
+                message: response.data.message,
+              };
+            } catch (error: any) {
+              return rejectWithValue(
+                error?.response?.data?.message || "Failed to resend OTP"
+              );
+            }
+          }
+        );
+
 
 
  
