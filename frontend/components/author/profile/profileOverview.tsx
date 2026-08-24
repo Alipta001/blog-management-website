@@ -23,9 +23,9 @@ export default function ProfileOverview({
   user,
 }: ProfileOverviewProps) {
 
-  // =================================
+   
   // GET INITIALS
-  // =================================
+   
 
   const initials =
     user.name
@@ -40,9 +40,9 @@ export default function ProfileOverview({
     "U";
 
 
-  // =================================
+   
   // STATUS STYLE
-  // =================================
+   
 
   const statusStyles = {
     active:
@@ -75,9 +75,9 @@ export default function ProfileOverview({
       "
     >
 
-      {/* =================================
+      {/*                             =====
           PROFILE AVATAR
-      ================================= */}
+                                  ===== */}
 
       <div
         className="
@@ -140,9 +140,9 @@ export default function ProfileOverview({
         </p>
 
 
-        {/* =================================
+        {/*                             =====
             STATUS
-        ================================= */}
+                                    ===== */}
 
         <span
           className={`
@@ -163,9 +163,9 @@ export default function ProfileOverview({
       </div>
 
 
-      {/* =================================
+      {/*                             =====
           ACCOUNT DETAILS
-      ================================= */}
+                                  ===== */}
 
       <div
         className="

@@ -6,18 +6,18 @@ import axios, {
 import { endPoints } from "@/api/endPoints/endPoints";
 
 
-// =================================
+ 
 // BASE URL
-// =================================
+ 
 
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL ||
   "https://blog-management-website.onrender.com";
 
 
-// =================================
+ 
 // AXIOS INSTANCE
-// =================================
+ 
 
 const AxiosInstance =
   axios.create({
@@ -44,9 +44,9 @@ const AxiosInstance =
   });
 
 
-// =================================
+ 
 // REQUEST INTERCEPTOR
-// =================================
+ 
 //
 // Let browser set multipart boundary
 // automatically for FormData.
@@ -82,25 +82,25 @@ AxiosInstance.interceptors.request.use(
 );
 
 
-// =================================
+ 
 // REFRESH STATE
-// =================================
+ 
 
 let refreshPromise:
   Promise<void> | null =
   null;
 
 
-// =================================
+ 
 // RESPONSE INTERCEPTOR
-// =================================
+ 
 
 AxiosInstance.interceptors.response.use(
 
   /*
-   * ================================
+   *                             ====
    * SUCCESS
-   * ================================
+   *                             ====
    */
 
   (response) => {
@@ -111,9 +111,9 @@ AxiosInstance.interceptors.response.use(
 
 
   /*
-   * ================================
+   *                             ====
    * ERROR
-   * ================================
+   *                             ====
    */
 
   async (
@@ -128,9 +128,9 @@ AxiosInstance.interceptors.response.use(
         | undefined;
 
 
-    // =================================
+     
     // NO REQUEST CONFIG
-    // =================================
+     
 
     if (!originalRequest) {
 
@@ -141,9 +141,9 @@ AxiosInstance.interceptors.response.use(
     }
 
 
-    // =================================
+     
     // ONLY HANDLE 401
-    // =================================
+     
 
     if (
       error.response?.status !== 401
@@ -156,17 +156,17 @@ AxiosInstance.interceptors.response.use(
     }
 
 
-    // =================================
+     
     // REQUEST URL
-    // =================================
+     
 
     const requestUrl =
       originalRequest.url || "";
 
 
-    // =================================
+     
     // NEVER REFRESH LOGIN REQUEST
-    // =================================
+     
 
     if (
       requestUrl.includes(
@@ -181,9 +181,9 @@ AxiosInstance.interceptors.response.use(
     }
 
 
-    // =================================
+     
     // NEVER REFRESH REFRESH-TOKEN
-    // =================================
+     
     //
     // This is extremely important.
     //
@@ -213,10 +213,10 @@ AxiosInstance.interceptors.response.use(
     }
 
 
-    // =================================
+     
     // DO NOT RETRY SAME REQUEST
     // MORE THAN ONCE
-    // =================================
+     
 
     if (
       originalRequest._retry
@@ -233,9 +233,9 @@ AxiosInstance.interceptors.response.use(
       true;
 
 
-    // =================================
+     
     // REFRESH ACCESS TOKEN
-    // =================================
+     
 
     try {
 
@@ -280,16 +280,16 @@ AxiosInstance.interceptors.response.use(
       }
 
 
-      // =================================
+       
       // WAIT FOR REFRESH
-      // =================================
+       
 
       await refreshPromise;
 
 
-      // =================================
+       
       // RETRY ORIGINAL REQUEST
-      // =================================
+       
 
       return AxiosInstance(
         originalRequest
@@ -301,9 +301,9 @@ AxiosInstance.interceptors.response.use(
       refreshError
     ) {
 
-      // =================================
+       
       // REFRESH FAILED
-      // =================================
+       
       //
       // Do NOT call window.location here.
       //
@@ -334,8 +334,8 @@ AxiosInstance.interceptors.response.use(
 );
 
 
-// =================================
+ 
 // EXPORT
-// =================================
+ 
 
 export default AxiosInstance;

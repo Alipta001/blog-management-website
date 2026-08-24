@@ -3,9 +3,9 @@ import type {
 } from "./blog.types";
 
 
-// =================================
+ 
 // CREATE BLOG PAYLOAD
-// =================================
+ 
 
 export interface CreateBlogPayload {
   title: string;
@@ -26,9 +26,9 @@ export interface CreateBlogPayload {
 }
 
 
-// =================================
+ 
 // UPDATE BLOG PAYLOAD
-// =================================
+ 
 
 export interface UpdateBlogPayload {
   id: string;
@@ -51,9 +51,9 @@ export interface UpdateBlogPayload {
 }
 
 
-// =================================
+ 
 // GET BLOGS
-// =================================
+ 
 
 export interface GetBlogsParams {
   page?: number;
@@ -72,9 +72,9 @@ export interface GetBlogsParams {
 }
 
 
-// =================================
+ 
 // GET MY BLOGS
-// =================================
+ 
 
 export interface GetMyBlogsParams {
   page?: number;
@@ -87,9 +87,9 @@ export interface GetMyBlogsParams {
 }
 
 
-// =================================
+ 
 // GET ADMIN BLOGS
-// =================================
+ 
 
 export interface GetAdminBlogsParams {
   search?: string;
@@ -104,9 +104,9 @@ export interface GetAdminBlogsParams {
 }
 
 
-// =================================
+ 
 // REJECT BLOG
-// =================================
+ 
 
 export interface RejectBlogPayload {
   id: string;

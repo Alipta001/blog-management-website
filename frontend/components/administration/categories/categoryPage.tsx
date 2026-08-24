@@ -45,9 +45,9 @@ import {
 import CategoryFormModal from "./categoryFormModal";
 
 
-// =================================
+ 
 // CATEGORY FORM DATA
-// =================================
+ 
 
 interface CategoryFormData {
 
@@ -60,9 +60,9 @@ interface CategoryFormData {
 }
 
 
-// =================================
+ 
 // CATEGORY PAGE
-// =================================
+ 
 
 export default function CategoryPage() {
 
@@ -82,9 +82,9 @@ export default function CategoryPage() {
     );
 
 
-  // =================================
+   
   // LOCAL STATE
-  // =================================
+   
 
   const [search, setSearch] =
     useState("");
@@ -119,9 +119,9 @@ export default function CategoryPage() {
     );
 
 
-  // =================================
+   
   // FETCH CATEGORIES
-  // =================================
+   
 
   useEffect(() => {
 
@@ -132,9 +132,9 @@ export default function CategoryPage() {
   }, [dispatch]);
 
 
-  // =================================
+   
   // HANDLE ERROR
-  // =================================
+   
 
   useEffect(() => {
 
@@ -158,9 +158,9 @@ export default function CategoryPage() {
   ]);
 
 
-  // =================================
+   
   // HANDLE SUCCESS
-  // =================================
+   
 
   useEffect(() => {
 
@@ -184,9 +184,9 @@ export default function CategoryPage() {
   ]);
 
 
-  // =================================
+   
   // STATISTICS
-  // =================================
+   
 
   const total =
     categories?.length || 0;
@@ -206,9 +206,9 @@ export default function CategoryPage() {
     ).length || 0;
 
 
-  // =================================
+   
   // FILTERED CATEGORIES
-  // =================================
+   
 
   const filteredCategories =
     useMemo(() => {
@@ -265,9 +265,9 @@ export default function CategoryPage() {
     ]);
 
 
-  // =================================
+   
   // OPEN CREATE MODAL
-  // =================================
+   
 
   const handleCreate = () => {
 
@@ -282,9 +282,9 @@ export default function CategoryPage() {
   };
 
 
-  // =================================
+   
   // OPEN EDIT MODAL
-  // =================================
+   
 
   const handleEdit = (
     category: Category,
@@ -301,9 +301,9 @@ export default function CategoryPage() {
   };
 
 
-  // =================================
+   
   // CLOSE MODAL
-  // =================================
+   
 
   const handleCloseModal = () => {
 
@@ -323,9 +323,9 @@ export default function CategoryPage() {
   };
 
 
-  // =================================
+   
   // CREATE / UPDATE CATEGORY
-  // =================================
+   
 
   const handleCategorySubmit =
     async (
@@ -384,9 +384,9 @@ export default function CategoryPage() {
     };
 
 
-  // =================================
+   
   // ACTIVATE / DEACTIVATE
-  // =================================
+   
 
   const handleToggleStatus =
     async (
@@ -433,9 +433,9 @@ export default function CategoryPage() {
     };
 
 
-  // =================================
+   
   // DELETE CATEGORY
-  // =================================
+   
 
   const handleDelete =
     async (
@@ -499,9 +499,9 @@ export default function CategoryPage() {
     >
 
 
-      {/* ============================= */}
+      {/*                             = */}
       {/* HEADER */}
-      {/* ============================= */}
+      {/*                             = */}
 
       <div
         className="
@@ -583,9 +583,9 @@ export default function CategoryPage() {
       </div>
 
 
-      {/* ============================= */}
+      {/*                             = */}
       {/* STATS */}
-      {/* ============================= */}
+      {/*                             = */}
 
       <div
         className="
@@ -790,9 +790,9 @@ export default function CategoryPage() {
       </div>
 
 
-      {/* ============================= */}
+      {/*                             = */}
       {/* CONTENT */}
-      {/* ============================= */}
+      {/*                             = */}
 
       <div
         className="
@@ -805,9 +805,9 @@ export default function CategoryPage() {
       >
 
 
-        {/* =========================== */}
+        {/*                      ====== */}
         {/* FILTER BAR */}
-        {/* =========================== */}
+        {/*                      ====== */}
 
         <div
           className="
@@ -945,9 +945,9 @@ export default function CategoryPage() {
         </div>
 
 
-        {/* =========================== */}
+        {/*                      ====== */}
         {/* LOADING */}
-        {/* =========================== */}
+        {/*                      ====== */}
 
         {loading &&
 
@@ -975,9 +975,9 @@ export default function CategoryPage() {
 
         ) : filteredCategories.length === 0 ? (
 
-          /* ========================= */
+          /*                      ==== */
           /* EMPTY STATE */
-          /* ========================= */
+          /*                      ==== */
 
           <div
             className="
@@ -1063,9 +1063,9 @@ export default function CategoryPage() {
 
         ) : (
 
-          /* ========================= */
+          /*                      ==== */
           /* CATEGORY TABLE */
-          /* ========================= */
+          /*                      ==== */
 
           <div className="overflow-x-auto">
 
@@ -1486,9 +1486,9 @@ export default function CategoryPage() {
       </div>
 
 
-      {/* ============================= */}
+      {/*                             = */}
       {/* CATEGORY FORM MODAL */}
-      {/* ============================= */}
+      {/*                             = */}
 
       <CategoryFormModal
 

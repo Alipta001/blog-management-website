@@ -45,9 +45,9 @@ import {
 } from "@/redux/hooks";
 
 
-// =================================
+ 
 // PROPS
-// =================================
+ 
 
 interface NavbarProps {
   role: UserRole;
@@ -56,9 +56,9 @@ interface NavbarProps {
 }
 
 
-// =================================
+ 
 // ROLE PROFILE ROUTES
-// =================================
+ 
 
 const profileRoutes: Record<
   UserRole,
@@ -78,9 +78,9 @@ const profileRoutes: Record<
 };
 
 
-// =================================
+ 
 // NAVBAR
-// =================================
+ 
 
 export default function Navbar({
   role,
@@ -126,18 +126,18 @@ export default function Navbar({
   }, [appDispatch, isNotificationsOpen]);
 
 
-  // =================================
+   
   // ROLE LABEL
-  // =================================
+   
 
   const roleLabel =
     role.charAt(0).toUpperCase() +
     role.slice(1);
 
 
-  // =================================
+   
   // USER INITIALS
-  // =================================
+   
 
   const initials =
     user?.name
@@ -152,9 +152,9 @@ export default function Navbar({
     || "U";
 
 
-  // =================================
+   
   // LOGOUT
-  // =================================
+   
 
   const handleLogout =
     async () => {
@@ -185,9 +185,9 @@ export default function Navbar({
     };
 
 
-  // =================================
+   
   // GO TO PROFILE
-  // =================================
+   
 
   const handleProfile =
     () => {
@@ -218,9 +218,9 @@ export default function Navbar({
       "
     >
 
-      {/* =================================
+      {/*                             =====
           RIGHT SIDE
-      ================================= */}
+                                  ===== */}
 
       <div
         className="
@@ -229,9 +229,9 @@ export default function Navbar({
         "
       >
 
-        {/* =================================
+        {/*                             =====
             NOTIFICATION
-        ================================= */}
+                                    ===== */}
 
         <div className="relative">
           <button
@@ -326,15 +326,15 @@ export default function Navbar({
         </div>
 
 
-        {/* =================================
+        {/*                             =====
             PROFILE DROPDOWN
-        ================================= */}
+                                    ===== */}
 
         <div className="relative">
 
-          {/* =================================
+          {/*                             =====
               PROFILE TRIGGER
-          ================================= */}
+                                      ===== */}
 
           <button
             type="button"
@@ -436,9 +436,9 @@ export default function Navbar({
           </button>
 
 
-          {/* =================================
+          {/*                             =====
               DROPDOWN MENU
-          ================================= */}
+                                      ===== */}
 
           {isProfileOpen && (
 
@@ -457,9 +457,9 @@ export default function Navbar({
               "
             >
 
-              {/* =================================
+              {/*                             =====
                   DROPDOWN HEADER
-              ================================= */}
+                                          ===== */}
 
               <div
                 className="
@@ -494,9 +494,9 @@ export default function Navbar({
               </div>
 
 
-              {/* =================================
+              {/*                             =====
                   MENU ITEMS
-              ================================= */}
+                                          ===== */}
 
               <div className="p-1.5">
 

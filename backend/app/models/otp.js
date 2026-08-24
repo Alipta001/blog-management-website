@@ -4,9 +4,9 @@ const mongoose = require("mongoose");
 const otpSchema = new mongoose.Schema(
   {
 
-    // =================================
+     
     // EMAIL
-    // =================================
+     
 
     email: {
       type: String,
@@ -21,10 +21,10 @@ const otpSchema = new mongoose.Schema(
     },
 
 
-    // =================================
+     
     // OTP
     // Store HASHED OTP, never plain OTP
-    // =================================
+     
 
     otp: {
       type: String,
@@ -35,9 +35,9 @@ const otpSchema = new mongoose.Schema(
     },
 
 
-    // =================================
+     
     // OTP EXPIRATION
-    // =================================
+     
 
     expiresAt: {
       type: Date,
@@ -46,10 +46,10 @@ const otpSchema = new mongoose.Schema(
     },
 
 
-    // =================================
+     
     // OTP PURPOSE
     // Useful for future features
-    // =================================
+     
 
     purpose: {
       type: String,
@@ -64,9 +64,9 @@ const otpSchema = new mongoose.Schema(
     },
 
 
-    // =================================
+     
     // TEMPORARY REGISTRATION DATA
-    // =================================
+     
 
     name: {
       type: String,
@@ -102,10 +102,10 @@ const otpSchema = new mongoose.Schema(
     },
 
 
-    // =================================
+     
     // SECURITY
     // Prevent unlimited OTP attempts
-    // =================================
+     
 
     attempts: {
       type: Number,
@@ -127,11 +127,11 @@ const otpSchema = new mongoose.Schema(
 );
 
 
-// =================================
+ 
 // TTL INDEX
 // MongoDB automatically deletes
 // expired OTP documents
-// =================================
+ 
 
 otpSchema.index(
   {
@@ -144,9 +144,9 @@ otpSchema.index(
 );
 
 
-// =================================
+ 
 // ONE OTP PER EMAIL + PURPOSE
-// =================================
+ 
 
 otpSchema.index(
   {

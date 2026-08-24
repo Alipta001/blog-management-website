@@ -9,9 +9,9 @@ import { endPoints } from "@/api/endPoints/endPoints";
 import AxiosInstance from "@/api/axios/axios";
 
 
-// =================================
+ 
 // REQUEST TYPES
-// =================================
+ 
 
 interface CreateTagPayload {
   name: string;
@@ -24,9 +24,9 @@ interface UpdateTagPayload {
 }
 
 
-// =================================
+ 
 // STATE
-// =================================
+ 
 
 interface TagState {
   tags: Tag[];
@@ -55,10 +55,10 @@ const initialState: TagState = {
 
 
 
-// =================================
+ 
 // GET ALL TAGS
 // GET /tag
-// =================================
+ 
 
 export const getTags = createAsyncThunk(
   "tag/getTags",
@@ -83,10 +83,10 @@ export const getTags = createAsyncThunk(
 
 
 
-// =================================
+ 
 // GET TAG BY ID
 // GET /tag/:id
-// =================================
+ 
 
 export const getTagById = createAsyncThunk(
   "tag/getTagById",
@@ -118,11 +118,11 @@ export const getTagById = createAsyncThunk(
 
 
 
-// =================================
+ 
 // CREATE TAG
 // POST /tag/create
 // ADMINISTRATION ONLY
-// =================================
+ 
 
 export const createTag = createAsyncThunk(
   "tag/createTag",
@@ -154,11 +154,11 @@ export const createTag = createAsyncThunk(
 
 
 
-// =================================
+ 
 // UPDATE TAG
 // PATCH /tag/:id/update
 // ADMINISTRATION ONLY
-// =================================
+ 
 
 export const updateTag = createAsyncThunk(
   "tag/updateTag",
@@ -202,11 +202,11 @@ export const updateTag = createAsyncThunk(
 
 
 
-// =================================
+ 
 // DELETE TAG
 // DELETE /tag/:id/delete
 // ADMINISTRATION ONLY
-// =================================
+ 
 
 export const deleteTag = createAsyncThunk(
   "tag/deleteTag",
@@ -241,9 +241,9 @@ export const deleteTag = createAsyncThunk(
 
 
 
-// =================================
+ 
 // TAG SLICE
-// =================================
+ 
 
 const tagSlice = createSlice({
   name: "tag",
@@ -253,36 +253,36 @@ const tagSlice = createSlice({
   reducers: {
 
 
-    // =============================
+    //                             =
     // CLEAR ERROR
-    // =============================
+    //                             =
 
     clearTagError: (state) => {
       state.error = null;
     },
 
 
-    // =============================
+    //                             =
     // CLEAR SUCCESS MESSAGE
-    // =============================
+    //                             =
 
     clearTagSuccessMessage: (state) => {
       state.successMessage = null;
     },
 
 
-    // =============================
+    //                             =
     // CLEAR SELECTED TAG
-    // =============================
+    //                             =
 
     clearSelectedTag: (state) => {
       state.selectedTag = null;
     },
 
 
-    // =============================
+    //                             =
     // CLEAR TAGS
-    // =============================
+    //                             =
 
     clearTags: (state) => {
       state.tags = [];
@@ -297,9 +297,9 @@ const tagSlice = createSlice({
     builder
 
 
-      // =============================
+      //                             =
       // GET ALL TAGS
-      // =============================
+      //                             =
 
       .addCase(
         getTags.pending,
@@ -336,9 +336,9 @@ const tagSlice = createSlice({
 
 
 
-      // =============================
+      //                             =
       // GET TAG BY ID
-      // =============================
+      //                             =
 
       .addCase(
         getTagById.pending,
@@ -375,9 +375,9 @@ const tagSlice = createSlice({
 
 
 
-      // =============================
+      //                             =
       // CREATE TAG
-      // =============================
+      //                             =
 
       .addCase(
         createTag.pending,
@@ -426,9 +426,9 @@ const tagSlice = createSlice({
 
 
 
-      // =============================
+      //                             =
       // UPDATE TAG
-      // =============================
+      //                             =
 
       .addCase(
         updateTag.pending,
@@ -497,9 +497,9 @@ const tagSlice = createSlice({
 
 
 
-      // =============================
+      //                             =
       // DELETE TAG
-      // =============================
+      //                             =
 
       .addCase(
         deleteTag.pending,
@@ -555,9 +555,9 @@ const tagSlice = createSlice({
 
 
 
-// =================================
+ 
 // EXPORT ACTIONS
-// =================================
+ 
 
 export const {
   clearTagError,

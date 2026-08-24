@@ -27,18 +27,18 @@ const ReadingHistorySchema = new mongoose.Schema(
 );
 
 
-// =================================
+ 
 // GET  user'S RECENTLY VIEWED BLOGS
-// =================================
+ 
 ReadingHistorySchema.index({
    user: 1,
   viewedAt: -1,
 });
 
 
-// =================================
+ 
 // PREVENT DUPLICATE  user + BLOG
-// =================================
+ 
 ReadingHistorySchema.index(
   {
      user: 1,

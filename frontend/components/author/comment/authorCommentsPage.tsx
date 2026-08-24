@@ -47,9 +47,9 @@ export default function AuthorCommentsPage() {
   );
 
 
-  // =================================
+   
   // LOAD COMMENTS
-  // =================================
+   
 
   useEffect(() => {
     dispatch(
@@ -68,9 +68,9 @@ export default function AuthorCommentsPage() {
   }, [dispatch]);
 
 
-  // =================================
+   
   // FILTERED COMMENTS
-  // =================================
+   
 
   const filteredComments =
     useMemo(() => {
@@ -115,9 +115,9 @@ export default function AuthorCommentsPage() {
     ]);
 
 
-  // =================================
+   
   // GET UNIQUE BLOGS
-  // =================================
+   
 
   const blogs =
     useMemo(() => {

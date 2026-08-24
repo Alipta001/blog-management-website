@@ -20,9 +20,9 @@ const {
   deleteFromCloudinary,
 } = require("../utils/cloudinaryUpload");
 
-// ========================================
+//                                    =====
 // HELPER: PARSE TAGS
-// ========================================
+//                                    =====
 
 const parseTags = (tags) => {
   if (!tags) {
@@ -42,9 +42,9 @@ const parseTags = (tags) => {
   }
 };
 
-// ========================================
+//                                    =====
 // HELPER: GENERATE SLUG
-// ========================================
+//                                    =====
 
 const generateSlug = (title) => {
   const baseSlug = title
@@ -62,9 +62,9 @@ const generateSlug = (title) => {
   return `${baseSlug}-${Date.now()}`;
 };
 
-// ========================================
+//                                    =====
 // HELPER: UPLOAD FEATURED IMAGE
-// ========================================
+//                                    =====
 
 const uploadFeaturedImage = async (file) => {
   if (!file) {
@@ -85,9 +85,9 @@ const uploadFeaturedImage = async (file) => {
   };
 };
 
-// ========================================
+//                                    =====
 // HELPER: UPLOAD CONTENT IMAGES
-// ========================================
+//                                    =====
 
 const uploadContentImages = async (files) => {
   if (!files || files.length === 0) {
@@ -114,9 +114,9 @@ const uploadContentImages = async (files) => {
   return uploadedImages;
 };
 
-// ========================================
+//                                    =====
 // HELPER: REPLACE IMAGE PLACEHOLDERS
-// ========================================
+//                                    =====
 
 const replaceImagePlaceholders = (content, uploadedImages) => {
   let finalContent = content;
@@ -140,17 +140,14 @@ const replaceImagePlaceholders = (content, uploadedImages) => {
   return finalContent;
 };
 
-// ========================================
+//                                    =====
 // BLOG CONTROLLER
-// ========================================
+//                                    =====
 
 class BlogController {
-  // ======================================
-  // CREATE BLOG
+        // CREATE BLOG
   // POST /blog/create
-  // ======================================
-
-  async createBlog(req, res, next) {
+         async createBlog(req, res, next) {
     let uploadedFeaturedImage = null;
 
     let uploadedContentImages = [];
@@ -160,10 +157,8 @@ class BlogController {
 
       const tags = parseTags(req.body.tags);
 
-      // ====================================
-      // BASIC VALIDATION
-      // ====================================
-
+          // BASIC VALIDATION
+    
       if (
         !title?.trim() ||
         !description?.trim() ||
@@ -180,10 +175,8 @@ class BlogController {
         });
       }
 
-      // ====================================
-      // VALIDATE CATEGORY OBJECT ID
-      // ====================================
-
+          // VALIDATE CATEGORY OBJECT ID
+    
       if (!mongoose.Types.ObjectId.isValid(category)) {
         return res.status(400).json({
           success: false,
@@ -192,10 +185,8 @@ class BlogController {
         });
       }
 
-      // ====================================
-      // CATEGORY VALIDATION
-      // ====================================
-
+          // CATEGORY VALIDATION
+    
       const existingCategory = await Category.findOne({
         _id: category,
 
@@ -212,10 +203,8 @@ class BlogController {
         });
       }
 
-      // ====================================
-      // VALIDATE TAG IDS
-      // ====================================
-
+          // VALIDATE TAG IDS
+    
       if (tags.length > 0) {
         const invalidTag = tags.find(
           (tagId) => !mongoose.Types.ObjectId.isValid(tagId),
@@ -248,43 +237,33 @@ class BlogController {
         }
       }
 
-      // ====================================
-      // FEATURED IMAGE
-      // ====================================
-
+          // FEATURED IMAGE
+    
       const featuredFile = req.files?.featuredImage?.[0];
 
       if (featuredFile) {
         uploadedFeaturedImage = await uploadFeaturedImage(featuredFile);
       }
 
-      // ====================================
-      // CONTENT IMAGES
-      // ====================================
-
+          // CONTENT IMAGES
+    
       const contentFiles = req.files?.contentImages || [];
 
       uploadedContentImages = await uploadContentImages(contentFiles);
 
-      // ====================================
-      // REPLACE IMAGE PLACEHOLDERS
-      // ====================================
-
+          // REPLACE IMAGE PLACEHOLDERS
+    
       const finalContent = replaceImagePlaceholders(
         content,
         uploadedContentImages,
       );
 
-      // ====================================
-      // GENERATE SLUG
-      // ====================================
-
+          // GENERATE SLUG
+    
       const slug = generateSlug(title);
 
-      // ====================================
-      // CREATE BLOG
-      // ====================================
-
+          // CREATE BLOG
+    
       const blog = await Blog.create({
         title: title.trim(),
 
@@ -333,12 +312,9 @@ class BlogController {
     }
   }
 
-  // ======================================
-  // GET ALL PUBLISHED BLOGS
+        // GET ALL PUBLISHED BLOGS
   // GET /blog
-  // ======================================
-
-  async getBlogs(req, res, next) {
+         async getBlogs(req, res, next) {
     try {
       const {
         search,
@@ -362,44 +338,34 @@ class BlogController {
         isDeleted: false,
       };
 
-      // ====================================
-      // CATEGORY
-      // ====================================
-
+          // CATEGORY
+    
       if (category) {
         filter.category = category;
       }
 
-      // ====================================
-      // AUTHOR
-      // ====================================
-
+          // AUTHOR
+    
       if (author) {
         filter.author = author;
       }
 
-      // ====================================
-      // TAG
-      // ====================================
-
+          // TAG
+    
       if (tag) {
         filter.tags = tag;
       }
 
-      // ====================================
-      // SEARCH
-      // ====================================
-
+          // SEARCH
+    
       if (search) {
         filter.$text = {
           $search: search,
         };
       }
 
-      // ====================================
-      // SORT
-      // ====================================
-
+          // SORT
+    
       let sortOption = {
         createdAt: -1,
       };
@@ -416,10 +382,8 @@ class BlogController {
         };
       }
 
-      // ====================================
-      // PAGINATION
-      // ====================================
-
+          // PAGINATION
+    
       const pageNumber = Math.max(Number(page) || 1, 1);
 
       const limitNumber = Math.min(Math.max(Number(limit) || 10, 1), 100);
@@ -466,12 +430,9 @@ class BlogController {
     }
   }
 
-  // ======================================
-  // GET ALL BLOGS FOR ADMINISTRATION
+        // GET ALL BLOGS FOR ADMINISTRATION
   // GET /blog/admin/all
-  // ======================================
-
-  async getAdminBlogs(req, res, next) {
+         async getAdminBlogs(req, res, next) {
     try {
       const {
         search,
@@ -485,54 +446,42 @@ class BlogController {
         limit = 10,
       } = req.query;
 
-      // ====================================
-      // BASE FILTER
-      // ====================================
-
+          // BASE FILTER
+    
       const filter = {
         isDeleted: false,
       };
 
-      // ====================================
-      // STATUS FILTER
-      // ====================================
-
+          // STATUS FILTER
+    
       if (status) {
         filter.status = status;
       }
 
-      // ====================================
-      // CATEGORY FILTER
-      // ====================================
-
+          // CATEGORY FILTER
+    
       if (category) {
         filter.category = category;
       }
 
-      // ====================================
-      // SEARCH
-      // ====================================
-
+          // SEARCH
+    
       if (search) {
         filter.$text = {
           $search: search,
         };
       }
 
-      // ====================================
-      // PAGINATION
-      // ====================================
-
+          // PAGINATION
+    
       const pageNumber = Math.max(Number(page) || 1, 1);
 
       const limitNumber = Math.min(Math.max(Number(limit) || 10, 1), 100);
 
       const skip = (pageNumber - 1) * limitNumber;
 
-      // ====================================
-      // GET BLOGS + COUNT + STATS
-      // ====================================
-
+          // GET BLOGS + COUNT + STATS
+    
       const [blogs, total, stats] = await Promise.all([
         Blog.find(filter)
 
@@ -571,10 +520,8 @@ class BlogController {
         ]),
       ]);
 
-      // ====================================
-      // FORMAT STATISTICS
-      // ====================================
-
+          // FORMAT STATISTICS
+    
       const blogStats = {
         total: 0,
 
@@ -597,10 +544,8 @@ class BlogController {
         blogStats.total += item.count;
       });
 
-      // ====================================
-      // RESPONSE
-      // ====================================
-
+          // RESPONSE
+    
       return res.status(200).json({
         success: true,
 
@@ -625,12 +570,9 @@ class BlogController {
     }
   }
 
-  // ======================================
-  // GET BLOG BY ID
+        // GET BLOG BY ID
   // GET /blog/:id
-  // ======================================
-
-  async getBlogById(req, res, next) {
+         async getBlogById(req, res, next) {
     try {
       const blog = await Blog.findOne({
         _id: req.params.id,
@@ -683,12 +625,9 @@ class BlogController {
     }
   }
 
-  // ======================================
-  // GET MY BLOGS
+        // GET MY BLOGS
   // GET /blog/my-blogs
-  // ======================================
-
-  async getMyBlogs(req, res, next) {
+         async getMyBlogs(req, res, next) {
     try {
       const {
         status,
@@ -754,12 +693,9 @@ class BlogController {
     }
   }
 
-  // ======================================
-  // UPDATE BLOG
+        // UPDATE BLOG
   // PATCH /blog/:id/update
-  // ======================================
-
-  async updateBlog(req, res, next) {
+         async updateBlog(req, res, next) {
     try {
       const blog = await Blog.findOne({
         _id: req.params.id,
@@ -797,10 +733,8 @@ class BlogController {
 
       const tags = parseTags(req.body.tags);
 
-      // ====================================
-      // CATEGORY VALIDATION
-      // ====================================
-
+          // CATEGORY VALIDATION
+    
       if (category) {
         const existingCategory = await Category.findOne({
           _id: category,
@@ -819,10 +753,8 @@ class BlogController {
         }
       }
 
-      // ====================================
-      // TAG VALIDATION
-      // ====================================
-
+          // TAG VALIDATION
+    
       if (tags.length > 0) {
         const validTags = await Tag.countDocuments({
           _id: {
@@ -843,10 +775,8 @@ class BlogController {
         }
       }
 
-      // ====================================
-      // UPDATE BASIC FIELDS
-      // ====================================
-
+          // UPDATE BASIC FIELDS
+    
       if (title) {
         blog.title = title;
 
@@ -865,10 +795,8 @@ class BlogController {
         blog.tags = tags;
       }
 
-      // ====================================
-      // FEATURED IMAGE
-      // ====================================
-
+          // FEATURED IMAGE
+    
       const featuredFile = req.files?.featuredImage?.[0];
 
       if (featuredFile) {
@@ -881,10 +809,8 @@ class BlogController {
         blog.featuredImage = newImage;
       }
 
-      // ====================================
-      // CONTENT IMAGES
-      // ====================================
-
+          // CONTENT IMAGES
+    
       const contentFiles = req.files?.contentImages || [];
 
       if (contentFiles.length > 0) {
@@ -917,12 +843,9 @@ class BlogController {
     }
   }
 
-  // ======================================
-  // SUBMIT BLOG
+        // SUBMIT BLOG
   // PATCH /blog/:id/submit
-  // ======================================
-
-  async submitBlog(req, res, next) {
+         async submitBlog(req, res, next) {
     try {
       const blog = await Blog.findOne({
         _id: req.params.id,
@@ -982,19 +905,19 @@ class BlogController {
     }
   }
 
-  // =================================
+  //                             =====
   // RECORD BLOG VIEW
   //
   // POST /blog/:id/view
-  // =================================
+  //                             =====
 
   async recordBlogView(req, res, next) {
     try {
       const { id } = req.params;
 
-      // =============================
+      //                             =
       // VALIDATE BLOG ID
-      // =============================
+      //                             =
 
       if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({
@@ -1004,9 +927,9 @@ class BlogController {
         });
       }
 
-      // =============================
+      //                             =
       // FIND BLOG
-      // =============================
+      //                             =
 
       const blog = await Blog.findOne({
         _id: id,
@@ -1024,10 +947,10 @@ class BlogController {
         });
       }
 
-      // =============================
+      //                             =
       // OPTIONAL:
       // DON'T COUNT AUTHOR'S OWN VIEW
-      // =============================
+      //                             =
 
       if (req.user && blog.author.toString() === req.user._id.toString()) {
         return res.status(200).json({
@@ -1041,9 +964,9 @@ class BlogController {
         });
       }
 
-      // =============================
+      //                             =
       // CREATE VIEW RECORD
-      // =============================
+      //                             =
 
       await BlogView.create({
         blog: blog._id,
@@ -1053,9 +976,9 @@ class BlogController {
         viewedAt: new Date(),
       });
 
-      // =============================
+      //                             =
       // INCREMENT TOTAL VIEWS
-      // =============================
+      //                             =
 
       blog.views = (blog.views || 0) + 1;
 
@@ -1075,12 +998,9 @@ class BlogController {
     }
   }
 
-  // ======================================
-  // PUBLISH BLOG
+        // PUBLISH BLOG
   // ADMINISTRATION ONLY
-  // ======================================
-
-  async publishBlog(req, res, next) {
+         async publishBlog(req, res, next) {
     try {
       const blog = await Blog.findOneAndUpdate(
         {
@@ -1130,12 +1050,9 @@ class BlogController {
     }
   }
 
-  // ======================================
-  // REJECT BLOG
+        // REJECT BLOG
   // ADMINISTRATION ONLY
-  // ======================================
-
-  async rejectBlog(req, res, next) {
+         async rejectBlog(req, res, next) {
     try {
       const blog = await Blog.findOneAndUpdate(
         {
@@ -1183,12 +1100,9 @@ class BlogController {
     }
   }
 
-  // ======================================
-  // UNPUBLISH BLOG
+        // UNPUBLISH BLOG
   // ADMINISTRATION ONLY
-  // ======================================
-
-  async unpublishBlog(req, res, next) {
+         async unpublishBlog(req, res, next) {
     try {
       const blog = await Blog.findOneAndUpdate(
         {
@@ -1234,16 +1148,13 @@ class BlogController {
     }
   }
 
-  // ======================================
-  // DELETE BLOG
+        // DELETE BLOG
   // AUTHOR:
   // DELETE OWN BLOG ONLY
   //
   // ADMINISTRATOR:
   // DELETE ANY BLOG
-  // ======================================
-
-  async deleteBlog(req, res, next) {
+         async deleteBlog(req, res, next) {
     try {
       const filter = {
         _id: req.params.id,
@@ -1251,10 +1162,8 @@ class BlogController {
         isDeleted: false,
       };
 
-      // ====================================
-      // AUTHOR PERMISSION
-      // ====================================
-
+          // AUTHOR PERMISSION
+    
       if (req.user.role === "author") {
         filter.author = req.user.id;
       }

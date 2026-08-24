@@ -4,9 +4,9 @@ const Blog = require("../models/blog");
 
 class LikeController {
 
-  // =================================
+   
   // LIKE BLOG
-  // =================================
+   
 
   async likeBlog(req, res, next) {
     try {
@@ -68,9 +68,9 @@ class LikeController {
   }
 
 
-  // =================================
+   
   // UNLIKE BLOG
-  // =================================
+   
 
   async unlikeBlog(req, res, next) {
     try {
@@ -112,10 +112,10 @@ class LikeController {
   }
 
 
-  // =================================
+   
   // GET BLOG LIKE COUNT
   // PUBLIC
-  // =================================
+   
 
   async getBlogLikes(req, res, next) {
     try {
@@ -139,10 +139,10 @@ class LikeController {
   }
 
 
-  // =================================
+   
   // GET LIKE STATUS
   // AUTHENTICATED  user
-  // =================================
+   
 
   async getLikeStatus(req, res, next) {
     try {

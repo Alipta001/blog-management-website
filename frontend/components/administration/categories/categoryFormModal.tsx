@@ -62,9 +62,9 @@ export default function CategoryFormModal({
     useState<string | null>(null);
 
 
-  // =================================
+   
   // POPULATE FORM FOR EDIT
-  // =================================
+   
 
   useEffect(() => {
 
@@ -98,9 +98,9 @@ export default function CategoryFormModal({
   }, [category, open]);
 
 
-  // =================================
+   
   // CLOSE
-  // =================================
+   
 
   const handleClose = () => {
 
@@ -115,9 +115,9 @@ export default function CategoryFormModal({
   };
 
 
-  // =================================
+   
   // SUBMIT
-  // =================================
+   
 
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>,
@@ -222,9 +222,9 @@ export default function CategoryFormModal({
         "
       >
 
-        {/* ========================= */}
+        {/*                      ==== */}
         {/* HEADER */}
-        {/* ========================= */}
+        {/*                      ==== */}
 
         <div
           className="
@@ -325,9 +325,9 @@ export default function CategoryFormModal({
         </div>
 
 
-        {/* ========================= */}
+        {/*                      ==== */}
         {/* FORM */}
-        {/* ========================= */}
+        {/*                      ==== */}
 
         <form
           onSubmit={handleSubmit}
@@ -543,9 +543,9 @@ export default function CategoryFormModal({
           </div>
 
 
-          {/* ========================= */}
+          {/*                      ==== */}
           {/* ACTIONS */}
-          {/* ========================= */}
+          {/*                      ==== */}
 
           <div
             className="

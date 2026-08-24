@@ -8,10 +8,9 @@ const {
 
 class UserController {
 
-  // =================================
+   
   // GET ALL USERS
   // ADMINISTRATION ONLY
-  // =================================
 
   async getUsers(req, res, next) {
     try {
@@ -132,10 +131,10 @@ class UserController {
 
 
 
-  // =================================
+   
   // GET USER BY ID
   // ADMINISTRATION ONLY
-  // =================================
+   
 
   async getUserById(req, res, next) {
     try {
@@ -171,10 +170,10 @@ class UserController {
 
 
 
-  // =================================
+   
   // UPDATE USER
   // ADMINISTRATION ONLY
-  // =================================
+   
 
   async updateUser(req, res, next) {
     try {
@@ -250,10 +249,10 @@ class UserController {
 
 
 
-  // =================================
+   
   // ACTIVATE USER
   // ADMINISTRATION ONLY
-  // =================================
+   
 
   async activateUser(req, res, next) {
     try {
@@ -303,10 +302,10 @@ class UserController {
 
 
 
-  // =================================
+   
   // DEACTIVATE USER
   // ADMINISTRATION ONLY
-  // =================================
+   
 
   async deactivateUser(req, res, next) {
     try {
@@ -358,10 +357,10 @@ class UserController {
 
 
 
-  // =================================
+   
   // BLOCK USER
   // ADMINISTRATION ONLY
-  // =================================
+   
 
   async blockUser(req, res, next) {
     try {
@@ -413,10 +412,10 @@ class UserController {
 
 
 
-  // =================================
+   
   // DELETE USER
   // ADMINISTRATION ONLY
-  // =================================
+   
 
   async deleteUser(req, res, next) {
     try {
@@ -455,9 +454,9 @@ class UserController {
 
 
 
-  // =================================
+   
   // GET MY PROFILE
-  // =================================
+   
 
   async getMyProfile(req, res, next) {
     try {
@@ -494,9 +493,9 @@ class UserController {
 
 
 
-  // =================================
+   
   // UPDATE MY PROFILE
-  // =================================
+   
 async updateMyProfile(
   req,
   res,

@@ -1,11 +1,10 @@
 const Tag = require("../models/tag");
 
-
 class TagController {
 
-  // =================================
+   
   // CREATE TAG
-  // =================================
+   
 
   async createTag(req, res, next) {
     try {
@@ -55,9 +54,9 @@ class TagController {
 
 
 
-  // =================================
+   
   // GET ALL TAGS
-  // =================================
+   
 
   async getTags(req, res, next) {
     try {
@@ -84,9 +83,9 @@ class TagController {
 
 
 
-  // =================================
+   
   // GET TAG BY ID
-  // =================================
+   
 
   async getTagById(req, res, next) {
     try {
@@ -119,9 +118,9 @@ class TagController {
 
 
 
-  // =================================
+   
   // GET ALL TAGS FOR ADMINISTRATION
-  // =================================
+   
 
   async getAllTagsForAdministration(
     req,
@@ -151,9 +150,9 @@ class TagController {
 
 
 
-  // =================================
+   
   // UPDATE TAG
-  // =================================
+   
 
   async updateTag(req, res, next) {
     try {
@@ -252,9 +251,9 @@ class TagController {
 
 
 
-  // =================================
+   
   // ACTIVATE TAG
-  // =================================
+   
 
   async activateTag(req, res, next) {
     try {
@@ -301,9 +300,9 @@ class TagController {
 
 
 
-  // =================================
+   
   // DEACTIVATE TAG
-  // =================================
+   
 
   async deactivateTag(req, res, next) {
     try {
@@ -350,10 +349,10 @@ class TagController {
 
 
 
-  // =================================
+   
   // DELETE TAG
   // SOFT DELETE
-  // =================================
+   
 
   async deleteTag(req, res, next) {
     try {

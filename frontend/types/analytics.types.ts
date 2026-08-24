@@ -5,9 +5,9 @@ export type AnalyticsRange =
   | "all";
 
 
-// =================================
+ 
 // OVERVIEW STATS
-// =================================
+ 
 
 export interface AuthorAnalyticsStats {
 
@@ -26,9 +26,9 @@ export interface AuthorAnalyticsStats {
 }
 
 
-// =================================
+ 
 // BLOG STATUS
-// =================================
+ 
 
 export interface BlogStatusAnalytics {
 
@@ -46,9 +46,9 @@ export interface BlogStatusAnalytics {
 }
 
 
-// =================================
+ 
 // TOP BLOG
-// =================================
+ 
 
 export interface TopBlogAnalytics {
 
@@ -87,9 +87,9 @@ export interface TopBlogAnalytics {
 }
 
 
-// =================================
+ 
 // PERFORMANCE
-// =================================
+ 
 
 export interface PerformanceAnalytics {
 
@@ -104,9 +104,9 @@ export interface PerformanceAnalytics {
 }
 
 
-// =================================
+ 
 // COMPLETE RESPONSE
-// =================================
+ 
 
 export interface AuthorAnalytics {
 

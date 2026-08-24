@@ -32,9 +32,9 @@ const getErrorMessage = (
   return fallback;
 };
 
-// =================================
+ 
 // TYPES
-// =================================
+ 
 
 interface LikeState {
   totalLikes: number;
@@ -62,10 +62,10 @@ const initialState: LikeState = {
 };
 
 
-// =================================
+ 
 // GET BLOG LIKE COUNT
 // GET /like/:blogId/like-count
-// =================================
+ 
 
 export const getBlogLikeCount =
   createAsyncThunk(
@@ -96,10 +96,10 @@ export const getBlogLikeCount =
   );
 
 
-// =================================
+ 
 // LIKE BLOG
 // POST /like/:blogId/like
-// =================================
+ 
 
 export const likeBlog =
   createAsyncThunk(
@@ -141,10 +141,10 @@ export const likeBlog =
   );
 
 
-// =================================
+ 
 // UNLIKE BLOG
 // DELETE /like/:blogId/unlike
-// =================================
+ 
 
 export const unlikeBlog =
   createAsyncThunk(
@@ -186,9 +186,9 @@ export const unlikeBlog =
   );
 
 
-// =================================
+ 
 // LIKE SLICE
-// =================================
+ 
 
 const likeSlice = createSlice({
   name: "like",
@@ -197,18 +197,18 @@ const likeSlice = createSlice({
 
   reducers: {
 
-    // =============================
+    //                             =
     // CLEAR ERROR
-    // =============================
+    //                             =
 
     clearLikeError: (state) => {
       state.error = null;
     },
 
 
-    // =============================
+    //                             =
     // CLEAR SUCCESS MESSAGE
-    // =============================
+    //                             =
 
     clearLikeSuccessMessage: (
       state
@@ -217,9 +217,9 @@ const likeSlice = createSlice({
     },
 
 
-    // =============================
+    //                             =
     // RESET LIKE STATE
-    // =============================
+    //                             =
 
     resetLikeState: (state) => {
       state.totalLikes = 0;
@@ -232,10 +232,10 @@ const likeSlice = createSlice({
     },
 
 
-    // =============================
+    //                             =
     // SET LIKE STATUS
     // Useful when loading blog data
-    // =============================
+    //                             =
 
     setIsLiked: (
       state,
@@ -251,9 +251,9 @@ const likeSlice = createSlice({
     builder
 
 
-      // =============================
+      //                             =
       // GET BLOG LIKE COUNT
-      // =============================
+      //                             =
 
       .addCase(
         getBlogLikeCount.pending,
@@ -286,9 +286,9 @@ const likeSlice = createSlice({
       )
 
 
-      // =============================
+      //                             =
       // LIKE BLOG
-      // =============================
+      //                             =
 
       .addCase(
         likeBlog.pending,
@@ -328,9 +328,9 @@ const likeSlice = createSlice({
       )
 
 
-      // =============================
+      //                             =
       // UNLIKE BLOG
-      // =============================
+      //                             =
 
       .addCase(
         unlikeBlog.pending,
@@ -372,9 +372,9 @@ const likeSlice = createSlice({
 });
 
 
-// =================================
+ 
 // EXPORT ACTIONS
-// =================================
+ 
 
 export const {
   clearLikeError,

@@ -49,9 +49,9 @@ import {
 } from "@/redux/slice/blog/blogSlice";
 
 
-// =================================
+ 
 // VALIDATION
-// =================================
+ 
 
 const createBlogSchema = yup.object({
   title: yup
@@ -84,17 +84,17 @@ const createBlogSchema = yup.object({
 });
 
 
-// =================================
+ 
 // COMPONENT
-// =================================
+ 
 
 export default function CreateBlogForm() {
   const dispatch = useAppDispatch();
 
 
-  // =================================
+   
   // FEATURED IMAGE
-  // =================================
+   
 
   const [
     featuredImage,
@@ -102,9 +102,9 @@ export default function CreateBlogForm() {
   ] = useState<File | null>(null);
 
 
-  // =================================
+   
   // CONTENT IMAGES
-  // =================================
+   
 
   const [
     contentImages,
@@ -112,9 +112,9 @@ export default function CreateBlogForm() {
   ] = useState<File[]>([]);
 
 
-  // =================================
+   
   // TAGS
-  // =================================
+   
 
   const [
     selectedTags,
@@ -122,9 +122,9 @@ export default function CreateBlogForm() {
   ] = useState<string[]>([]);
 
 
-  // =================================
+   
   // REDUX STATE
-  // =================================
+   
 
   const {
     loading: blogLoading,
@@ -151,9 +151,9 @@ export default function CreateBlogForm() {
   );
 
 
-  // =================================
+   
   // FORM
-  // =================================
+   
 
   const {
     register,
@@ -176,9 +176,9 @@ export default function CreateBlogForm() {
   });
 
 
-  // =================================
+   
   // LOAD DATA
-  // =================================
+   
 
   useEffect(() => {
     dispatch(
@@ -201,9 +201,9 @@ export default function CreateBlogForm() {
   }, [dispatch]);
 
 
- // =================================
+  
 // BUILD BLOG PAYLOAD
-// =================================
+ 
 
 const buildBlogPayload = (
   data: CreateBlogFormValues,
@@ -226,9 +226,9 @@ const buildBlogPayload = (
 };
 
 
-// =================================
+ 
 // SAVE DRAFT
-// =================================
+ 
 
 const onSaveDraft = async (
   data: CreateBlogFormValues,
@@ -259,9 +259,9 @@ const onSaveDraft = async (
 };
 
 
-// =================================
+ 
 // CREATE + SUBMIT BLOG
-// =================================
+ 
 
 const onSubmit = async (
   data: CreateBlogFormValues,
@@ -300,9 +300,9 @@ const onSubmit = async (
 };
 
 
-  // =================================
+   
   // RENDER
-  // =================================
+   
 
   return (
     <form
@@ -311,9 +311,9 @@ const onSubmit = async (
       )}
       className="space-y-6"
     >
-      {/* =============================
+      {/*                             =
           HEADER
-      ============================= */}
+                                  = */}
 
       <CreateBlogHeader
         onSaveDraft={() =>
@@ -332,9 +332,9 @@ const onSubmit = async (
       />
 
 
-      {/* =============================
+      {/*                             =
           ERROR
-      ============================= */}
+                                  = */}
 
       {blogError && (
         <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
@@ -343,9 +343,9 @@ const onSubmit = async (
       )}
 
 
-      {/* =============================
+      {/*                             =
           SUCCESS
-      ============================= */}
+                                  = */}
 
       {successMessage && (
         <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
@@ -354,15 +354,15 @@ const onSubmit = async (
       )}
 
 
-      {/* =============================
+      {/*                             =
           MAIN CONTENT
-      ============================= */}
+                                  = */}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
 
-        {/* =========================
+        {/*                      ====
             LEFT SIDE
-        ========================= */}
+                             ==== */}
 
         <div className="space-y-6">
 
@@ -385,9 +385,9 @@ const onSubmit = async (
         </div>
 
 
-        {/* =========================
+        {/*                      ====
             RIGHT SIDE
-        ========================= */}
+                             ==== */}
 
         <div className="space-y-6">
 

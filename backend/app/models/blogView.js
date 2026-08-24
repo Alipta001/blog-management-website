@@ -36,9 +36,9 @@ const blogViewSchema = new mongoose.Schema(
 );
 
 
-// =================================
+ 
 // INDEX FOR ANALYTICS
-// =================================
+ 
 
 blogViewSchema.index({
   blog: 1,

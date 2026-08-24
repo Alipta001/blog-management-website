@@ -24,9 +24,9 @@ this.getAuthorAnalytics =
 
 }
 
-// =================================
+ 
 // GET DATE RANGE
-// =================================
+ 
 
 getDateRange(range) {
 
@@ -94,7 +94,7 @@ return startDate;
 
 }
 
-// =================================
+ 
 // GET AUTHOR ANALYTICS
 //
 // GET /analytics/author
@@ -102,7 +102,7 @@ return startDate;
 // GET /analytics/author?range=30d
 // GET /analytics/author?range=90d
 // GET /analytics/author?range=all
-// =================================
+ 
 
 async getAuthorAnalytics(
 req,
@@ -213,9 +213,9 @@ try {
 
 }
 
-// =================================
+ 
 // AUTHOR STATISTICS
-// =================================
+ 
 
 async getAuthorStats(
 authorId,
@@ -308,9 +308,9 @@ const [
   await Promise.all([
 
 
-    // =============================
+    //                             =
     // TOTAL LIKES
-    // =============================
+    //                             =
 
     Like.countDocuments({
 
@@ -323,9 +323,9 @@ const [
     }),
 
 
-    // =============================
+    //                             =
     // TOTAL COMMENTS
-    // =============================
+    //                             =
 
     Comment.countDocuments({
 
@@ -338,9 +338,9 @@ const [
     }),
 
 
-    // =============================
+    //                             =
     // UNIQUE READERS
-    // =============================
+    //                             =
 
     ReadingHistory.aggregate([
 
@@ -404,9 +404,9 @@ return {
 };
 }
 
-// =================================
+ 
 // BLOG STATUS DISTRIBUTION
-// =================================
+ 
 
 async getBlogStatus(
 authorId
@@ -529,9 +529,9 @@ return [
 
 }
 
-// =================================
+ 
 // TOP BLOGS
-// =================================
+ 
 
 async getTopBlogs(
 authorId
@@ -551,9 +551,9 @@ const blogs =
     },
 
 
-    // =============================
+    //                             =
     // LIKE COUNT
-    // =============================
+    //                             =
 
     {
       $lookup: {
@@ -597,9 +597,9 @@ const blogs =
     },
 
 
-    // =============================
+    //                             =
     // COMMENT COUNT
-    // =============================
+    //                             =
 
     {
       $lookup: {
@@ -643,9 +643,9 @@ const blogs =
     },
 
 
-    // =============================
+    //                             =
     // UNIQUE READERS
-    // =============================
+    //                             =
 
     {
       $lookup: {
@@ -698,9 +698,9 @@ const blogs =
     },
 
 
-    // =============================
+    //                             =
     // PROJECT
-    // =============================
+    //                             =
 
     {
       $project: {
@@ -775,9 +775,9 @@ const blogs =
     },
 
 
-    // =============================
+    //                             =
     // PERFORMANCE SCORE
-    // =============================
+    //                             =
 
     {
       $addFields: {
@@ -832,13 +832,13 @@ return blogs;
 
 }
 
-// =================================
+ 
 // PERFORMANCE DATA
 //
 // LIKES
 // COMMENTS
 // UNIQUE READERS
-// =================================
+ 
 
 async getPerformanceData(
 authorId,
@@ -888,9 +888,9 @@ const [
   await Promise.all([
 
 
-    // =============================
+    //                             =
     // LIKES BY DATE
-    // =============================
+    //                             =
 
     Like.aggregate([
 
@@ -938,9 +938,9 @@ const [
     ]),
 
 
-    // =============================
+    //                             =
     // COMMENTS BY DATE
-    // =============================
+    //                             =
 
     Comment.aggregate([
 
@@ -988,9 +988,9 @@ const [
     ]),
 
 
-    // =============================
+    //                             =
     // UNIQUE READERS BY DATE
-    // =============================
+    //                             =
 
     ReadingHistory.aggregate([
 
@@ -1090,9 +1090,9 @@ const ensureDate =
   };
 
 
-// =============================
+//                             =
 // LIKES
-// =============================
+//                             =
 
 likes.forEach(
   (item) => {
@@ -1110,9 +1110,9 @@ likes.forEach(
 );
 
 
-// =============================
+//                             =
 // COMMENTS
-// =============================
+//                             =
 
 comments.forEach(
   (item) => {
@@ -1130,9 +1130,9 @@ comments.forEach(
 );
 
 
-// =============================
+//                             =
 // READERS
-// =============================
+//                             =
 
 readers.forEach(
   (item) => {

@@ -8,9 +8,9 @@ export default function CommentSkeleton() {
           key={index}
           className="animate-pulse rounded-2xl border border-white/10 bg-[#09090b] p-5"
         >
-          {/* =============================
+          {/*                             =
               HEADER
-          ============================= */}
+                                      = */}
 
           <div className="flex items-start justify-between gap-4">
 
@@ -44,9 +44,9 @@ export default function CommentSkeleton() {
           </div>
 
 
-          {/* =============================
+          {/*                             =
               BLOG
-          ============================= */}
+                                      = */}
 
           <div className="mt-5">
 
@@ -57,9 +57,9 @@ export default function CommentSkeleton() {
           </div>
 
 
-          {/* =============================
+          {/*                             =
               COMMENT CONTENT
-          ============================= */}
+                                      = */}
 
           <div className="mt-5 space-y-2">
 
@@ -72,9 +72,9 @@ export default function CommentSkeleton() {
           </div>
 
 
-          {/* =============================
+          {/*                             =
               FOOTER
-          ============================= */}
+                                      = */}
 
           <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-4">
 

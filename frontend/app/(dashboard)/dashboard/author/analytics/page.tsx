@@ -13,9 +13,9 @@
 
 // import type { PerformanceData, TopBlog } from "@/components/author/analytics";
 
-// // =================================
+//  
 // // DUMMY PERFORMANCE DATA
-// // =================================
+//  
 
 // const performanceData: PerformanceData[] = [
 //   {
@@ -62,9 +62,9 @@
 //   },
 // ];
 
-// // =================================
+//  
 // // DUMMY BLOG STATUS DATA
-// // =================================
+//  
 
 // const blogStatusData = [
 //   {
@@ -89,9 +89,9 @@
 //   },
 // ];
 
-// // =================================
+//  
 // // DUMMY TOP BLOGS
-// // =================================
+//  
 
 // const topBlogs: TopBlog[] = [
 //   {
@@ -136,16 +136,16 @@
 //   },
 // ];
 
-// // =================================
+//  
 // // ANALYTICS PAGE
-// // =================================
+//  
 
 // export default function AuthorAnalyticsPage() {
 //   const [isRefreshing, setIsRefreshing] = useState(false);
 
-//   // =================================
+//    
 //   // REFRESH
-//   // =================================
+//    
 
 //   const handleRefresh = useCallback(async () => {
 //     setIsRefreshing(true);
@@ -159,15 +159,15 @@
 //     setIsRefreshing(false);
 //   }, []);
 
-//   // =================================
+//    
 //   // TEMPORARY LOADING STATE
-//   // =================================
+//    
 
 //   const loading = false;
 
-//   // =================================
+//    
 //   // LOADING
-//   // =================================
+//    
 
 //   if (loading) {
 //     return (
@@ -177,9 +177,9 @@
 //     );
 //   }
 
-//   // =================================
+//    
 //   // PAGE
-//   // =================================
+//    
 
 //   return (
 //     <main
@@ -199,18 +199,18 @@
 //           lg:p-8
 //         "
 //       >
-//         {/* =============================
+//         {/*                             =
 //             HEADER
-//         ============================= */}
+//                                     = */}
 
 //         <AnalyticsHeader
 //           onRefresh={handleRefresh}
 //           isRefreshing={isRefreshing}
 //         />
 
-//         {/* =============================
+//         {/*                             =
 //             REFRESH INDICATOR
-//         ============================= */}
+//                                     = */}
 
 //         {isRefreshing && (
 //           <div
@@ -238,9 +238,9 @@
 //           </div>
 //         )}
 
-//         {/* =============================
+//         {/*                             =
 //             STATISTICS
-//         ============================= */}
+//                                     = */}
 
 //         <AnalyticsStats
 //           totalBlogs={24}
@@ -249,9 +249,9 @@
 //           totalComments={186}
 //         />
 
-//         {/* =============================
+//         {/*                             =
 //             CHARTS
-//         ============================= */}
+//                                     = */}
 
 //         <div
 //           className="
@@ -276,9 +276,9 @@
 //           <BlogStatusChart data={blogStatusData} />
 //         </div>
 
-//         {/* =============================
+//         {/*                             =
 //             TOP BLOGS
-//         ============================= */}
+//                                     = */}
 
 //         <TopBlogsTable blogs={topBlogs} />
 //       </div>
@@ -318,9 +318,9 @@ import {
 import type { AnalyticsRange } from "@/types/analytics.types";
 
 
-// =================================
+ 
 // AUTHOR ANALYTICS PAGE
-// =================================
+ 
 
 export default function AuthorAnalyticsPage() {
 
@@ -331,9 +331,9 @@ export default function AuthorAnalyticsPage() {
     useState<AnalyticsRange>("30d");
 
 
-  // =================================
+   
   // REDUX STATE
-  // =================================
+   
 
   const {
     authorAnalytics,
@@ -347,9 +347,9 @@ export default function AuthorAnalyticsPage() {
   const analytics = authorAnalytics;
 
 
-  // =================================
+   
   // FETCH ANALYTICS
-  // =================================
+   
 
   useEffect(() => {
 
@@ -363,9 +363,9 @@ export default function AuthorAnalyticsPage() {
   ]);
 
 
-  // =================================
+   
   // REFRESH
-  // =================================
+   
 
   const handleRefresh =
     useCallback(
@@ -396,9 +396,9 @@ export default function AuthorAnalyticsPage() {
     );
 
 
-  // =================================
+   
   // INITIAL LOADING
-  // =================================
+   
 
   if (
     loading &&
@@ -416,9 +416,9 @@ export default function AuthorAnalyticsPage() {
   }
 
 
-  // =================================
+   
   // ERROR STATE
-  // =================================
+   
 
   if (
     error &&
@@ -493,18 +493,18 @@ export default function AuthorAnalyticsPage() {
   }
 
 
-  // =================================
+   
   // SAFETY CHECK
-  // =================================
+   
 
   if (!analytics) {
     return null;
   }
 
 
-  // =================================
+   
   // PAGE
-  // =================================
+   
 
   return (
 
@@ -527,9 +527,9 @@ export default function AuthorAnalyticsPage() {
         "
       >
 
-        {/* =============================
+        {/*                             =
             HEADER
-        ============================= */}
+                                    = */}
 
         <AnalyticsHeader
           onRefresh={
@@ -543,9 +543,9 @@ export default function AuthorAnalyticsPage() {
         />
 
 
-        {/* =============================
+        {/*                             =
             REFRESH INDICATOR
-        ============================= */}
+                                    = */}
 
         {loading && analytics && (
 
@@ -580,9 +580,9 @@ export default function AuthorAnalyticsPage() {
         )}
 
 
-        {/* =============================
+        {/*                             =
             STATISTICS
-        ============================= */}
+                                    = */}
 
         <AnalyticsStats
 
@@ -609,9 +609,9 @@ export default function AuthorAnalyticsPage() {
         />
 
 
-        {/* =============================
+        {/*                             =
             CHARTS
-        ============================= */}
+                                    = */}
 
         <div
           className="
@@ -622,9 +622,9 @@ export default function AuthorAnalyticsPage() {
           "
         >
 
-          {/* =========================
+          {/*                      ====
               PERFORMANCE CHART
-          ========================= */}
+                               ==== */}
 
           <div
             className="
@@ -641,9 +641,9 @@ export default function AuthorAnalyticsPage() {
           </div>
 
 
-          {/* =========================
+          {/*                      ====
               BLOG STATUS CHART
-          ========================= */}
+                               ==== */}
 
           <BlogStatusChart
             data={
@@ -668,9 +668,9 @@ export default function AuthorAnalyticsPage() {
         </div>
 
 
-        {/* =============================
+        {/*                             =
             TOP BLOGS
-        ============================= */}
+                                    = */}
 
         <TopBlogsTable
           blogs={

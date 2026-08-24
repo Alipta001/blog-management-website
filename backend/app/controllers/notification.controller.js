@@ -4,9 +4,9 @@ const Notification =
 
 class NotificationController {
 
-  // =================================
+   
   // GET MY NOTIFICATIONS
-  // =================================
+   
 
   async getMyNotifications(req, res, next) {
     try {
@@ -108,9 +108,9 @@ class NotificationController {
 
 
 
-  // =================================
+   
   // MARK ONE NOTIFICATION AS READ
-  // =================================
+   
 
   async markAsRead(req, res, next) {
     try {
@@ -180,9 +180,9 @@ class NotificationController {
 
 
 
-  // =================================
+   
   // MARK ALL NOTIFICATIONS AS READ
-  // =================================
+   
 
   async markAllAsRead(req, res, next) {
     try {
@@ -236,9 +236,9 @@ class NotificationController {
 
 
 
-  // =================================
+   
   // DELETE NOTIFICATION
-  // =================================
+   
 
   async deleteNotification(
     req,

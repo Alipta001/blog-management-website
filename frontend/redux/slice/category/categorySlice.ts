@@ -9,9 +9,9 @@ import type { Category } from "@/types/category.types";
 import AxiosInstance from "@/api/axios/axios";
 import { endPoints } from "@/api/endPoints/endPoints";
 
-// =================================
+ 
 // PAYLOAD TYPES
-// =================================
+ 
 
 export interface CreateCategoryPayload {
   name: string;
@@ -29,9 +29,9 @@ export interface UpdateCategoryPayload {
   };
 }
 
-// =================================
+ 
 // STATE
-// =================================
+ 
 
 interface CategoryState {
   categories: Category[];
@@ -57,10 +57,10 @@ const initialState: CategoryState = {
   successMessage: null,
 };
 
-// =================================
+ 
 // GET ALL CATEGORIES
 // GET /category
-// =================================
+ 
 
 export const getCategories = createAsyncThunk<
   Category[],
@@ -84,10 +84,10 @@ export const getCategories = createAsyncThunk<
   },
 );
 
-// =================================
+ 
 // GET CATEGORY BY ID
 // GET /category/:id
-// =================================
+ 
 
 export const getCategoryById = createAsyncThunk<
   Category,
@@ -111,10 +111,10 @@ export const getCategoryById = createAsyncThunk<
   },
 );
 
-// =================================
+ 
 // CREATE CATEGORY
 // POST /category/create
-// =================================
+ 
 
 export const createCategory = createAsyncThunk<
   {
@@ -145,10 +145,10 @@ export const createCategory = createAsyncThunk<
   },
 );
 
-// =================================
+ 
 // UPDATE CATEGORY
 // PATCH /category/:id/update
-// =================================
+ 
 
 export const updateCategory = createAsyncThunk<
   {
@@ -178,10 +178,10 @@ export const updateCategory = createAsyncThunk<
   },
 );
 
-// =================================
+ 
 // ACTIVATE CATEGORY
 // PATCH /category/:id/activate
-// =================================
+ 
 
 export const activateCategory = createAsyncThunk<
   {
@@ -211,10 +211,10 @@ export const activateCategory = createAsyncThunk<
   },
 );
 
-// =================================
+ 
 // DEACTIVATE CATEGORY
 // PATCH /category/:id/deactivate
-// =================================
+ 
 
 export const deactivateCategory = createAsyncThunk<
   {
@@ -244,10 +244,10 @@ export const deactivateCategory = createAsyncThunk<
   },
 );
 
-// =================================
+ 
 // DELETE CATEGORY
 // DELETE /category/:id
-// =================================
+ 
 
 export const deleteCategory = createAsyncThunk<
   {
@@ -277,9 +277,9 @@ export const deleteCategory = createAsyncThunk<
   },
 );
 
-// =================================
+ 
 // SLICE
-// =================================
+ 
 
 const categorySlice = createSlice({
   name: "category",
@@ -303,9 +303,9 @@ const categorySlice = createSlice({
   extraReducers: (builder) => {
     builder
 
-      // =========================
+      //                      ====
       // GET ALL CATEGORIES
-      // =========================
+      //                      ====
 
       .addCase(getCategories.pending, (state) => {
         state.loading = true;
@@ -323,9 +323,9 @@ const categorySlice = createSlice({
         state.error = action.payload || "Failed to fetch categories";
       })
 
-      // =========================
+      //                      ====
       // GET CATEGORY BY ID
-      // =========================
+      //                      ====
 
       .addCase(getCategoryById.pending, (state) => {
         state.loading = true;
@@ -344,9 +344,9 @@ const categorySlice = createSlice({
         state.error = action.payload || "Failed to fetch category";
       })
 
-      // =========================
+      //                      ====
       // CREATE CATEGORY
-      // =========================
+      //                      ====
 
       .addCase(createCategory.pending, (state) => {
         state.loading = true;
@@ -368,9 +368,9 @@ const categorySlice = createSlice({
         state.error = action.payload || "Failed to create category";
       })
 
-      // =========================
+      //                      ====
       // UPDATE CATEGORY
-      // =========================
+      //                      ====
 
       .addCase(updateCategory.pending, (state) => {
         state.loading = true;
@@ -401,9 +401,9 @@ const categorySlice = createSlice({
         state.error = action.payload || "Failed to update category";
       })
 
-      // =========================
+      //                      ====
       // ACTIVATE CATEGORY
-      // =========================
+      //                      ====
 
       .addCase(activateCategory.pending, (state) => {
         state.loading = true;
@@ -434,9 +434,9 @@ const categorySlice = createSlice({
         state.error = action.payload || "Failed to activate category";
       })
 
-      // =========================
+      //                      ====
       // DEACTIVATE CATEGORY
-      // =========================
+      //                      ====
 
       .addCase(deactivateCategory.pending, (state) => {
         state.loading = true;
@@ -467,9 +467,9 @@ const categorySlice = createSlice({
         state.error = action.payload || "Failed to deactivate category";
       })
 
-      // =========================
+      //                      ====
       // DELETE CATEGORY
-      // =========================
+      //                      ====
 
       .addCase(deleteCategory.pending, (state) => {
         state.loading = true;

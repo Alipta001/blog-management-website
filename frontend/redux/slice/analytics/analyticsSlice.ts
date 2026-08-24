@@ -16,9 +16,9 @@ import type {
 } from "@/types/analytics.types";
 
 
-// =================================
+ 
 // REQUEST TYPES
-// =================================
+ 
 
 interface GetAuthorAnalyticsParams {
 
@@ -27,9 +27,9 @@ interface GetAuthorAnalyticsParams {
 }
 
 
-// =================================
+ 
 // STATE
-// =================================
+ 
 
 interface AnalyticsState {
 
@@ -43,9 +43,9 @@ interface AnalyticsState {
 }
 
 
-// =================================
+ 
 // INITIAL STATE
-// =================================
+ 
 
 const initialState:
   AnalyticsState = {
@@ -62,11 +62,11 @@ const initialState:
   };
 
 
-// =================================
+ 
 // GET AUTHOR ANALYTICS
 //
 // GET /analytics/author
-// =================================
+ 
 
 export const getAuthorAnalytics =
   createAsyncThunk<
@@ -124,9 +124,9 @@ export const getAuthorAnalytics =
   );
 
 
-// =================================
+ 
 // ANALYTICS SLICE
-// =================================
+ 
 
 const analyticsSlice =
   createSlice({
@@ -140,9 +140,9 @@ const analyticsSlice =
     reducers: {
 
 
-      // =============================
+      //                             =
       // CLEAR ERROR
-      // =============================
+      //                             =
 
       clearAnalyticsError: (
         state
@@ -154,9 +154,9 @@ const analyticsSlice =
       },
 
 
-      // =============================
+      //                             =
       // CLEAR ANALYTICS
-      // =============================
+      //                             =
 
       clearAuthorAnalytics: (
         state
@@ -177,9 +177,9 @@ const analyticsSlice =
       builder
 
 
-        // =============================
+        //                             =
         // GET AUTHOR ANALYTICS
-        // =============================
+        //                             =
 
         .addCase(
           getAuthorAnalytics
@@ -244,9 +244,9 @@ const analyticsSlice =
   });
 
 
-// =================================
+ 
 // ACTIONS
-// =================================
+ 
 
 export const {
 
@@ -258,9 +258,9 @@ export const {
   analyticsSlice.actions;
 
 
-// =================================
+ 
 // REDUCER
-// =================================
+ 
 
 export default
   analyticsSlice.reducer;

@@ -43,9 +43,9 @@ export default function BlogContentEditor({
     setPreviews,
   ] = useState<string[]>([]);
 
-  // =================================
+   
   // HANDLE IMAGE SELECTION
-  // =================================
+   
 
   const handleImageChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -67,9 +67,9 @@ export default function BlogContentEditor({
     event.target.value = "";
   };
 
-  // =================================
+   
   // REMOVE IMAGE
-  // =================================
+   
 
   const removeImage = (
     index: number,
@@ -85,9 +85,9 @@ export default function BlogContentEditor({
     );
   };
 
-  // =================================
+   
   // CREATE PREVIEWS
-  // =================================
+   
 
   useEffect(() => {
 
@@ -108,9 +108,9 @@ export default function BlogContentEditor({
 
   }, [contentImages]);
 
-  // =================================
+   
   // RENDER
-  // =================================
+   
 
   return (
     <section className="rounded-2xl border border-white/10 bg-[#09090b] p-6">
@@ -144,9 +144,9 @@ export default function BlogContentEditor({
         </p>
       )}
 
-      {/* =================================
+      {/*                             =====
           CONTENT IMAGES
-      ================================= */}
+                                  ===== */}
 
       <div className="mt-6">
 

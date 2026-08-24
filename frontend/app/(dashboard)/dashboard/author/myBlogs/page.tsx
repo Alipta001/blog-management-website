@@ -50,9 +50,9 @@ export default function MyBlogsPage() {
   const limit = 10;
 
 
-  // =================================
+   
   // FETCH MY BLOGS
-  // =================================
+   
 
   useEffect(() => {
     const params: {
@@ -78,9 +78,9 @@ export default function MyBlogsPage() {
   ]);
 
 
-  // =================================
+   
   // STATUS CHANGE
-  // =================================
+   
 
   const handleStatusChange = (
     value:
@@ -94,9 +94,9 @@ export default function MyBlogsPage() {
   };
 
 
-  // =================================
+   
   // PAGE CHANGE
-  // =================================
+   
 
   const handlePageChange = (
     selectedPage: number,
@@ -105,9 +105,9 @@ export default function MyBlogsPage() {
   };
 
 
-  // =================================
+   
   // SUBMIT BLOG
-  // =================================
+   
 
   const handleSubmit = async (
     id: string,
@@ -136,9 +136,9 @@ export default function MyBlogsPage() {
   };
 
 
-  // =================================
+   
   // DELETE BLOG
-  // =================================
+   
 
   const handleDelete = async (
     id: string,
@@ -176,9 +176,9 @@ export default function MyBlogsPage() {
   };
 
 
-  // =================================
+   
   // CLEAR ERROR
-  // =================================
+   
 
   useEffect(() => {
     if (!error) {
@@ -199,16 +199,16 @@ export default function MyBlogsPage() {
   return (
     <div className="space-y-6">
 
-      {/* ============================= */}
+      {/*                             = */}
       {/* HEADER */}
-      {/* ============================= */}
+      {/*                             = */}
 
       <MyBlogsHeader />
 
 
-      {/* ============================= */}
+      {/*                             = */}
       {/* FILTERS */}
-      {/* ============================= */}
+      {/*                             = */}
 
       <MyBlogsFilters
         status={status}
@@ -218,9 +218,9 @@ export default function MyBlogsPage() {
       />
 
 
-      {/* ============================= */}
+      {/*                             = */}
       {/* BLOG TABLE */}
-      {/* ============================= */}
+      {/*                             = */}
 
       <MyBlogsTable
         blogs={myBlogs}
@@ -235,9 +235,9 @@ export default function MyBlogsPage() {
       />
 
 
-      {/* ============================= */}
+      {/*                             = */}
       {/* PAGINATION */}
-      {/* ============================= */}
+      {/*                             = */}
 
       {myBlogsPagination && (
         <div className="flex justify-center">

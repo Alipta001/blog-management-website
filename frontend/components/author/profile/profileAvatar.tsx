@@ -38,9 +38,9 @@ export default function ProfileAvatar({
   return (
     <section className="h-fit rounded-2xl border border-white/10 bg-[#09090b] p-6">
 
-      {/* =================================
+      {/*                             =====
           AVATAR
-      ================================= */}
+                                  ===== */}
 
       <div className="flex flex-col items-center text-center">
 
@@ -88,9 +88,9 @@ export default function ProfileAvatar({
       </div>
 
 
-      {/* =================================
+      {/*                             =====
           DETAILS
-      ================================= */}
+                                  ===== */}
 
       <div className="mt-6 space-y-4 border-t border-white/10 pt-6">
 

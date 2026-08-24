@@ -1,14 +1,10 @@
 const multer = require("multer");
 
-// ========================================
 // MEMORY STORAGE
-// ========================================
 
 const storage = multer.memoryStorage();
 
-// ========================================
 // FILE FILTER
-// ========================================
 
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image/")) {
@@ -20,9 +16,7 @@ const fileFilter = (req, file, cb) => {
   cb(new Error("Only image files are allowed"));
 };
 
-// ========================================
 // MULTER
-// ========================================
 
 const upload = multer({
   storage,
@@ -36,10 +30,8 @@ const upload = multer({
   },
 });
 
-// ========================================
+ 
 // BLOG IMAGE UPLOAD
-// ========================================
-
 const blogImageUpload = upload.fields([
   {
     name: "featuredImage",

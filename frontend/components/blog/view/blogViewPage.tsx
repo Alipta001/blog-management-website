@@ -71,9 +71,9 @@ import BlogViewHeader from "./blogViewHeader";
 import BlogViewSkeleton from "./blogViewSkeleton";
 
 
-// =================================
+ 
 // PROPS
-// =================================
+ 
 
 interface BlogViewPageProps {
   id: string;
@@ -85,9 +85,9 @@ interface BlogViewPageProps {
 }
 
 
-// =================================
+ 
 // COMPONENT
-// =================================
+ 
 
 export default function BlogViewPage({
   id,
@@ -101,17 +101,17 @@ export default function BlogViewPage({
     useRouter();
 
 
-  // =================================
+   
   // PREVENT DUPLICATE VIEW RECORDING
-  // =================================
+   
 
   const hasRecordedView =
     useRef(false);
 
 
-  // =================================
+   
   // REDUX STATE
-  // =================================
+   
 
   const blogState =
     useAppSelector(
@@ -138,9 +138,9 @@ export default function BlogViewPage({
     blogState.selectedBlog;
 
 
-  // =================================
+   
   // ROLE
-  // =================================
+   
 
   const role =
     auth.user?.role ||
@@ -153,9 +153,9 @@ export default function BlogViewPage({
     );
 
 
-  // =================================
+   
   // CHECK BLOG OWNER
-  // =================================
+   
 
   const isOwner =
     Boolean(
@@ -166,11 +166,11 @@ export default function BlogViewPage({
     );
 
 
-  // =================================
+   
   // LOAD BLOG
   // COMMENTS
   // CURRENT USER
-  // =================================
+   
 
   useEffect(() => {
 
@@ -233,9 +233,9 @@ export default function BlogViewPage({
   ]);
 
 
-  // =================================
+   
   // RECORD BLOG VIEW
-  // =================================
+   
 
   useEffect(() => {
 
@@ -282,10 +282,10 @@ export default function BlogViewPage({
   ]);
 
 
-  // =================================
+   
   // ADD READING HISTORY
   // AUTHENTICATED USERS ONLY
-  // =================================
+   
 
   useEffect(() => {
 
@@ -314,9 +314,9 @@ export default function BlogViewPage({
   ]);
 
 
-  // =================================
+   
   // LOAD RELATED BLOGS
-  // =================================
+   
 
   useEffect(() => {
 
@@ -354,9 +354,9 @@ export default function BlogViewPage({
   ]);
 
 
-  // =================================
+   
   // BLOG ERROR
-  // =================================
+   
 
   useEffect(() => {
 
@@ -382,9 +382,9 @@ export default function BlogViewPage({
   ]);
 
 
-  // =================================
+   
   // GENERIC ACTION HANDLER
-  // =================================
+   
 
   const action = async (
     operation: Promise<unknown>,
@@ -414,9 +414,9 @@ export default function BlogViewPage({
   };
 
 
-  // =================================
+   
   // SUBMIT BLOG
-  // =================================
+   
 
   const submit = () =>
 
@@ -429,9 +429,9 @@ export default function BlogViewPage({
     );
 
 
-  // =================================
+   
   // PUBLISH BLOG
-  // =================================
+   
 
   const publish = () =>
 
@@ -444,9 +444,9 @@ export default function BlogViewPage({
     );
 
 
-  // =================================
+   
   // REJECT BLOG
-  // =================================
+   
 
   const reject = (
     reason: string,
@@ -470,9 +470,9 @@ export default function BlogViewPage({
     );
 
 
-  // =================================
+   
   // UNPUBLISH BLOG
-  // =================================
+   
 
   const unpublish = () =>
 
@@ -485,9 +485,9 @@ export default function BlogViewPage({
     );
 
 
-  // =================================
+   
   // DELETE BLOG
-  // =================================
+   
 
   const remove =
     async () => {
@@ -537,9 +537,9 @@ export default function BlogViewPage({
     };
 
 
-  // =================================
+   
   // CREATE COMMENT
-  // =================================
+   
 
   const postComment = async (
     content: string,
@@ -564,9 +564,9 @@ export default function BlogViewPage({
   };
 
 
-  // =================================
+   
   // TOGGLE LIKE
-  // =================================
+   
 
   const toggleLike =
     async () => {
@@ -625,9 +625,9 @@ export default function BlogViewPage({
     };
 
 
-  // =================================
+   
   // LOADING
-  // =================================
+   
 
   if (
 
@@ -643,9 +643,9 @@ export default function BlogViewPage({
   }
 
 
-  // =================================
+   
   // NOT FOUND
-  // =================================
+   
 
   if (!blog) {
 
@@ -665,9 +665,9 @@ export default function BlogViewPage({
   }
 
 
-  // =================================
+   
   // RELATED BLOGS
-  // =================================
+   
 
   const relatedBlogs =
     blogState.blogs
@@ -714,9 +714,9 @@ export default function BlogViewPage({
       );
 
 
-  // =================================
+   
   // RENDER
-  // =================================
+   
 
   return (
 
@@ -725,9 +725,9 @@ export default function BlogViewPage({
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
 
 
-        {/* =========================
+        {/*                      ====
             ARTICLE HEADER
-        ========================= */}
+                             ==== */}
 
         <div className="mx-auto max-w-6xl">
 
@@ -747,9 +747,9 @@ export default function BlogViewPage({
         </div>
 
 
-        {/* =========================
+        {/*                      ====
             ROLE ACTIONS
-        ========================= */}
+                             ==== */}
 
         {context !== "public" && (
 
@@ -798,9 +798,9 @@ export default function BlogViewPage({
         )}
 
 
-        {/* =========================
+        {/*                      ====
             MAIN ARTICLE LAYOUT
-        ========================= */}
+                             ==== */}
 
         <div
 
@@ -816,9 +816,9 @@ export default function BlogViewPage({
         >
 
 
-          {/* =====================
+          {/*                      
               ARTICLE
-          ===================== */}
+                                */}
 
           <article className="min-w-0">
 
@@ -908,9 +908,9 @@ export default function BlogViewPage({
             </div>
 
 
-            {/* =====================
+            {/*                      
                 RELATED BLOGS
-            ===================== */}
+                                  */}
 
             {relatedBlogs.length > 0 && (
 
@@ -990,9 +990,9 @@ export default function BlogViewPage({
           </article>
 
 
-          {/* =====================
+          {/*                      
               SIDEBAR
-          ===================== */}
+                                */}
 
           <aside className="lg:sticky lg:top-24 lg:self-start">
 

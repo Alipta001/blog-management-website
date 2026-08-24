@@ -14,10 +14,10 @@ const authMiddleware =
   );
 
 
-// =================================
+ 
 // ALL NOTIFICATION ROUTES
 // REQUIRE AUTHENTICATION
-// =================================
+ 
 
 
 // GET MY NOTIFICATIONS

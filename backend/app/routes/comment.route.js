@@ -6,34 +6,34 @@
 
 // const authorize = require("../middleware/authorize.middleware");
 
-// // =================================
+//  
 // // GET APPROVED COMMENTS OF A BLOG
-// // =================================
+//  
 
 // router.get("/blog/:blogId", commentController.getBlogComments);
 
-// // =================================
+//  
 // // CREATE COMMENT
-// // =================================
+//  
 
 // router.post("/blog/:blogId/create", authMiddleware, commentController.createComment);
 
-// // =================================
+//  
 // // UPDATE OWN COMMENT
-// // =================================
+//  
 
 // router.patch("/:id/update", authMiddleware, commentController.updateComment);
 
-// // =================================
+//  
 // // DELETE OWN COMMENT
-// // =================================
+//  
 
 // router.delete("/:id/delete", authMiddleware, commentController.deleteComment);
 
-// // =================================
+//  
 // // MODERATE COMMENT
 // // ADMINISTRATION ONLY
-// // =================================
+//  
 
 // router.patch(
 //   "/:id/moderate",
@@ -61,9 +61,9 @@ const authorize = require(
 );
 
 
-// =================================
+ 
 // GET COMMENTS FOR CURRENT AUTHOR
-// =================================
+ 
 
 router.get(
   "/author",
@@ -88,9 +88,9 @@ router.get(
 );
 
 
-// =================================
+ 
 // GET APPROVED COMMENTS OF A BLOG
-// =================================
+ 
 
 router.get(
   "/blog/:blogId",
@@ -99,9 +99,9 @@ router.get(
 );
 
 
-// =================================
+ 
 // CREATE COMMENT
-// =================================
+ 
 
 router.post(
   "/blog/:blogId/create",
@@ -112,9 +112,9 @@ router.post(
 );
 
 
-// =================================
+ 
 // UPDATE OWN COMMENT
-// =================================
+ 
 
 router.patch(
   "/:id/update",
@@ -125,9 +125,9 @@ router.patch(
 );
 
 
-// =================================
+ 
 // DELETE OWN COMMENT
-// =================================
+ 
 
 router.delete(
   "/:id/delete",
@@ -138,10 +138,10 @@ router.delete(
 );
 
 
-// =================================
+ 
 // MODERATE COMMENT
 // ADMINISTRATION ONLY
-// =================================
+ 
 
 router.patch(
   "/:id/moderate",

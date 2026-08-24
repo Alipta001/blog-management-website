@@ -62,9 +62,9 @@ export default function VerifyOtpForm({
     useState(10 * 60);
 
 
-  // =================================
+   
   // COUNTDOWN
-  // =================================
+   
 
   useEffect(() => {
     if (timeLeft <= 0) {
@@ -84,9 +84,9 @@ export default function VerifyOtpForm({
   }, [timeLeft]);
 
 
-  // =================================
+   
   // FORMAT TIME
-  // =================================
+   
 
   const formatTime = (
     seconds: number,
@@ -108,9 +108,9 @@ export default function VerifyOtpForm({
   };
 
 
-  // =================================
+   
   // VERIFY OTP
-  // =================================
+   
 
   const handleVerify = async (
     event:
@@ -164,9 +164,9 @@ export default function VerifyOtpForm({
   };
 
 
-  // =================================
+   
   // RESEND OTP
-  // =================================
+   
 
   const handleResend = async () => {
     if (resending) {

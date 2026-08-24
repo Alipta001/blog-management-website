@@ -8,10 +8,10 @@ const authorize = require("../middleware/authorize.middleware");
 
 const {upload} = require('../middleware/upload.middleware')
 
-// =================================
+ 
 // MY PROFILE
 // Must come before "/:id"
-// =================================
+ 
 
 router.get("/profile", authMiddleware, userController.getMyProfile);
 
@@ -25,9 +25,9 @@ router.patch(
   userController.updateMyProfile,
 );
 
-// =================================
+ 
 // ADMINISTRATION - USER MANAGEMENT
-// =================================
+ 
 
 router.get(
   "/all-user",

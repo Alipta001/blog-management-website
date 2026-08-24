@@ -40,9 +40,9 @@ const getErrorMessage = (
 };
 
 
-// =================================
+ 
 // TYPES
-// =================================
+ 
 
 export interface Pagination {
   total: number;
@@ -85,9 +85,9 @@ interface DeleteNotificationResponse {
 }
 
 
-// =================================
+ 
 // STATE
-// =================================
+ 
 
 interface NotificationState {
   notifications: Notification[];
@@ -123,10 +123,10 @@ const initialState: NotificationState = {
 };
 
 
-// =================================
+ 
 // GET MY NOTIFICATIONS
 // GET /notification
-// =================================
+ 
 
 export const getMyNotifications =
   createAsyncThunk<
@@ -178,10 +178,10 @@ export const getMyNotifications =
   );
 
 
-// =================================
+ 
 // MARK ONE NOTIFICATION AS READ
 // PATCH /notification/:id/read
-// =================================
+ 
 
 export const markNotificationAsRead =
   createAsyncThunk<
@@ -230,10 +230,10 @@ export const markNotificationAsRead =
   );
 
 
-// =================================
+ 
 // MARK ALL NOTIFICATIONS AS READ
 // PATCH /notification/read-all
-// =================================
+ 
 
 export const markAllNotificationsAsRead =
   createAsyncThunk<
@@ -277,10 +277,10 @@ export const markAllNotificationsAsRead =
   );
 
 
-// =================================
+ 
 // DELETE NOTIFICATION
 // DELETE /notification/:id/delete
-// =================================
+ 
 
 export const deleteNotification =
   createAsyncThunk<
@@ -329,9 +329,9 @@ export const deleteNotification =
   );
 
 
-// =================================
+ 
 // NOTIFICATION SLICE
-// =================================
+ 
 
 const notificationSlice =
   createSlice({
@@ -342,9 +342,9 @@ const notificationSlice =
     reducers: {
 
 
-      // =============================
+      //                             =
       // CLEAR ERROR
-      // =============================
+      //                             =
 
       clearNotificationError: (
         state
@@ -353,9 +353,9 @@ const notificationSlice =
       },
 
 
-      // =============================
+      //                             =
       // CLEAR SUCCESS MESSAGE
-      // =============================
+      //                             =
 
       clearNotificationSuccessMessage: (
         state
@@ -364,9 +364,9 @@ const notificationSlice =
       },
 
 
-      // =============================
+      //                             =
       // CLEAR NOTIFICATIONS
-      // =============================
+      //                             =
 
       clearNotifications: (
         state
@@ -387,9 +387,9 @@ const notificationSlice =
     },
 
 
-    // =================================
+     
     // EXTRA REDUCERS
-    // =================================
+     
 
     extraReducers: (
       builder
@@ -398,9 +398,9 @@ const notificationSlice =
       builder
 
 
-        // =============================
+        //                             =
         // GET MY NOTIFICATIONS
-        // =============================
+        //                             =
 
         .addCase(
           getMyNotifications.pending,
@@ -445,9 +445,9 @@ const notificationSlice =
         )
 
 
-        // =============================
+        //                             =
         // MARK ONE AS READ
-        // =============================
+        //                             =
 
         .addCase(
           markNotificationAsRead.pending,
@@ -530,9 +530,9 @@ const notificationSlice =
         )
 
 
-        // =============================
+        //                             =
         // MARK ALL AS READ
-        // =============================
+        //                             =
 
         .addCase(
           markAllNotificationsAsRead.pending,
@@ -614,9 +614,9 @@ const notificationSlice =
         )
 
 
-        // =============================
+        //                             =
         // DELETE NOTIFICATION
-        // =============================
+        //                             =
 
         .addCase(
           deleteNotification.pending,
@@ -704,9 +704,9 @@ const notificationSlice =
   });
 
 
-// =================================
+ 
 // EXPORT ACTIONS
-// =================================
+ 
 
 export const {
   clearNotificationError,
@@ -716,8 +716,8 @@ export const {
   notificationSlice.actions;
 
 
-// =================================
+ 
 // EXPORT REDUCER
-// =================================
+ 
 
 export default notificationSlice.reducer;

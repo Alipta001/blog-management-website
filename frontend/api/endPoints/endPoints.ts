@@ -83,9 +83,9 @@ export const endPoints = {
     deleteTag: "/tag/:id",
   },
 
-  // =================================
+   
   // USER
-  // =================================
+   
 
   user: {
     // Profile

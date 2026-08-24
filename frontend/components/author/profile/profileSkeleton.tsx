@@ -2,9 +2,9 @@ export default function ProfileSkeleton() {
   return (
     <div className="space-y-6">
 
-      {/* =================================
+      {/*                             =====
           HEADER
-      ================================= */}
+                                  ===== */}
 
       <div className="flex items-center gap-4 border-b border-white/10 pb-6">
 
@@ -22,16 +22,16 @@ export default function ProfileSkeleton() {
       </div>
 
 
-      {/* =================================
+      {/*                             =====
           CONTENT
-      ================================= */}
+                                  ===== */}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
 
 
-        {/* =================================
+        {/*                             =====
             PROFILE OVERVIEW
-        ================================= */}
+                                    ===== */}
 
         <div className="rounded-2xl border border-white/10 bg-[#09090b] p-6">
 
@@ -80,9 +80,9 @@ export default function ProfileSkeleton() {
         </div>
 
 
-        {/* =================================
+        {/*                             =====
             FORM
-        ================================= */}
+                                    ===== */}
 
         <div className="rounded-2xl border border-white/10 bg-[#09090b]">
 

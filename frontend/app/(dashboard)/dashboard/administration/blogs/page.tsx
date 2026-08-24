@@ -47,9 +47,9 @@ export default function AdministrationBlogsPage() {
     useRouter();
 
 
-  // =================================
+   
   // BLOG STATE
-  // =================================
+   
 
   const {
 
@@ -68,9 +68,9 @@ export default function AdministrationBlogsPage() {
     );
 
 
-  // =================================
+   
   // CATEGORY STATE
-  // =================================
+   
 
   const {
 
@@ -83,9 +83,9 @@ export default function AdministrationBlogsPage() {
     );
 
 
-  // =================================
+   
   // FILTER STATE
-  // =================================
+   
 
   const [
 
@@ -137,9 +137,9 @@ export default function AdministrationBlogsPage() {
     useState(1);
 
 
-  // =================================
+   
   // FETCH CATEGORIES
-  // =================================
+   
 
   useEffect(
     () => {
@@ -155,9 +155,9 @@ export default function AdministrationBlogsPage() {
   );
 
 
-  // =================================
+   
   // DEBOUNCE SEARCH
-  // =================================
+   
 
   useEffect(
     () => {
@@ -190,9 +190,9 @@ export default function AdministrationBlogsPage() {
   );
 
 
-  // =================================
+   
   // FETCH BLOGS
-  // =================================
+   
 
   const fetchBlogs =
     useCallback(
@@ -247,9 +247,9 @@ export default function AdministrationBlogsPage() {
     );
 
 
-  // =================================
+   
   // FETCH WHEN FILTER CHANGES
-  // =================================
+   
 
   useEffect(
     () => {
@@ -263,9 +263,9 @@ export default function AdministrationBlogsPage() {
   );
 
 
-  // =================================
+   
   // SEARCH
-  // =================================
+   
 
   const handleSearchChange =
     (
@@ -283,9 +283,9 @@ export default function AdministrationBlogsPage() {
     };
 
 
-  // =================================
+   
   // STATUS
-  // =================================
+   
 
   const handleStatusChange =
     (
@@ -303,9 +303,9 @@ export default function AdministrationBlogsPage() {
     };
 
 
-  // =================================
+   
   // CATEGORY
-  // =================================
+   
 
   const handleCategoryChange =
     (
@@ -323,9 +323,9 @@ export default function AdministrationBlogsPage() {
     };
 
 
-  // =================================
+   
   // CLEAR FILTERS
-  // =================================
+   
 
   const handleClear =
     () => {
@@ -345,9 +345,9 @@ export default function AdministrationBlogsPage() {
     };
 
 
-  // =================================
+   
   // PAGE CHANGE
-  // =================================
+   
 
   const handlePageChange =
     (
@@ -377,9 +377,9 @@ export default function AdministrationBlogsPage() {
     };
 
 
-  // =================================
+   
   // REFRESH
-  // =================================
+   
 
   const handleRefresh =
     () => {
@@ -391,9 +391,9 @@ export default function AdministrationBlogsPage() {
     };
 
 
-  // =================================
+   
   // VIEW BLOG
-  // =================================
+   
 
   const handleView =
     (
@@ -407,9 +407,9 @@ export default function AdministrationBlogsPage() {
     };
 
 
-  // =================================
+   
   // PUBLISH BLOG
-  // =================================
+   
 
   const handlePublish =
     async (
@@ -441,9 +441,9 @@ export default function AdministrationBlogsPage() {
     };
 
 
-  // =================================
+   
   // REJECT BLOG
-  // =================================
+   
 
   const handleReject =
     async (
@@ -481,9 +481,9 @@ export default function AdministrationBlogsPage() {
     };
 
 
-  // =================================
+   
   // UNPUBLISH BLOG
-  // =================================
+   
 
   const handleUnpublish =
     async (
@@ -515,9 +515,9 @@ export default function AdministrationBlogsPage() {
     };
 
 
-  // =================================
+   
   // DELETE BLOG
-  // =================================
+   
 
   const handleDelete =
     async (
@@ -561,9 +561,9 @@ export default function AdministrationBlogsPage() {
     >
 
 
-      {/* =============================
+      {/*                             =
           HEADER
-      ============================== */}
+                                  == */}
 
       <BlogsHeader
 
@@ -578,9 +578,9 @@ export default function AdministrationBlogsPage() {
       />
 
 
-      {/* =============================
+      {/*                             =
           STATISTICS
-      ============================== */}
+                                  == */}
 
       <BlogsStats
 
@@ -591,9 +591,9 @@ export default function AdministrationBlogsPage() {
       />
 
 
-      {/* =============================
+      {/*                             =
           CONTENT
-      ============================== */}
+                                  == */}
 
       <section
         className="
@@ -606,9 +606,9 @@ export default function AdministrationBlogsPage() {
       >
 
 
-        {/* =============================
+        {/*                             =
             FILTERS
-        ============================== */}
+                                    == */}
 
         <BlogsFilters
 
@@ -647,9 +647,9 @@ export default function AdministrationBlogsPage() {
         />
 
 
-        {/* =============================
+        {/*                             =
             TABLE
-        ============================== */}
+                                    == */}
 
         <BlogsTable
 
@@ -684,9 +684,9 @@ export default function AdministrationBlogsPage() {
         />
 
 
-        {/* =============================
+        {/*                             =
             PAGINATION
-        ============================== */}
+                                    == */}
 
         <BlogsPagination
 

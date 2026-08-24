@@ -8,9 +8,8 @@ const authorize = require("../middleware/authorize.middleware");
 
 const { blogImageUpload } = require("../middleware/upload.middleware");
 
-// ========================================
+ 
 // PUBLIC ROUTES
-// ========================================
 
 // GET ALL PUBLISHED BLOGS
 
@@ -20,9 +19,7 @@ router.get(
   blogController.getBlogs,
 );
 
-// ========================================
 // AUTHOR / ADMINISTRATION
-// ========================================
 
 // GET MY BLOGS
 
@@ -99,9 +96,8 @@ router.patch(
   blogController.submitBlog,
 );
 
-// ========================================
+ 
 // ADMINISTRATION ONLY
-// ========================================
 
 // GET ALL BLOGS FOR ADMINISTRATION
 //
@@ -158,9 +154,8 @@ router.patch(
   blogController.unpublishBlog,
 );
 
-// ========================================
+ 
 // AUTHOR / ADMINISTRATION
-// ========================================
 
 // DELETE BLOG
 
@@ -178,11 +173,9 @@ router.delete(
   blogController.deleteBlog,
 );
 
-// ========================================
 // PUBLIC DYNAMIC ROUTE
-//
+
 // MUST ALWAYS BE LAST
-// ========================================
 
 router.get(
   "/:id",

@@ -11,9 +11,9 @@ const authorize =
   require("../middleware/authorize.middleware");
 
 
-// =================================
+ 
 // PUBLIC ROUTES
-// =================================
+ 
 
 router.get(
   "/",
@@ -21,10 +21,10 @@ router.get(
 );
 
 
-// =================================
+ 
 // ADMINISTRATION ROUTES
 // Must come before "/:id"
-// =================================
+ 
 
 router.get(
   "/admin/all",
@@ -69,10 +69,10 @@ router.delete(
 );
 
 
-// =================================
+ 
 // PUBLIC PARAMETERIZED ROUTE
 // Must come last
-// =================================
+ 
 
 router.get(
   "/:id",

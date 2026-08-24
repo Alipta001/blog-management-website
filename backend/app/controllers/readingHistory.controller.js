@@ -7,9 +7,9 @@ const Blog =
 
 class ReadingHistoryController {
 
-  // =================================
+   
   // ADD / UPDATE READING HISTORY
-  // =================================
+   
 
   async addReadingHistory(req, res, next) {
     try {
@@ -79,9 +79,9 @@ class ReadingHistoryController {
 
 
 
-  // =================================
+   
   // GET MY READING HISTORY
-  // =================================
+   
 
   async getMyReadingHistory(
     req,
@@ -200,9 +200,9 @@ class ReadingHistoryController {
 
 
 
-  // =================================
+   
   // CLEAR MY READING HISTORY
-  // =================================
+   
 
   async clearReadingHistory(
     req,

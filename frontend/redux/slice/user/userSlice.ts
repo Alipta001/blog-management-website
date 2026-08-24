@@ -20,9 +20,9 @@ import {
 } from "@/api/endPoints/endPoints";
 
 
-// =================================
+ 
 // REQUEST TYPES
-// =================================
+ 
 
 export interface GetUsersParams {
   page?: number;
@@ -48,17 +48,17 @@ export interface UpdateUserPayload {
 }
 
 
-// =================================
+ 
 // MY PROFILE UPDATE
-// =================================
+ 
 
 export type UpdateMyProfilePayload =
   FormData;
 
 
-// =================================
+ 
 // RESPONSE TYPES
-// =================================
+ 
 
 interface GetUsersResponse {
   users: User[];
@@ -111,9 +111,9 @@ const normalizeUser = (user: ApiUser): User => ({
 });
 
 
-// =================================
+ 
 // STATE
-// =================================
+ 
 
 interface UserState {
   users: User[];
@@ -149,10 +149,10 @@ const initialState: UserState = {
 };
 
 
-// =================================
+ 
 // GET ALL USERS
 // GET /user/all-user
-// =================================
+ 
 
 export const getUsers =
   createAsyncThunk<
@@ -198,10 +198,10 @@ export const getUsers =
   );
 
 
-// =================================
+ 
 // GET USER BY ID
 // GET /user/:id
-// =================================
+ 
 
 export const getUserById =
   createAsyncThunk<
@@ -250,10 +250,10 @@ export const getUserById =
   );
 
 
-// =================================
+ 
 // UPDATE USER
 // PATCH /user/:id/update
-// =================================
+ 
 
 export const updateUser =
   createAsyncThunk<
@@ -308,9 +308,9 @@ export const updateUser =
   );
 
 
-// =================================
+ 
 // ACTIVATE USER
-// =================================
+ 
 
 export const activateUser =
   createAsyncThunk<
@@ -362,9 +362,9 @@ export const activateUser =
   );
 
 
-// =================================
+ 
 // DEACTIVATE USER
-// =================================
+ 
 
 export const deactivateUser =
   createAsyncThunk<
@@ -416,9 +416,9 @@ export const deactivateUser =
   );
 
 
-// =================================
+ 
 // BLOCK USER
-// =================================
+ 
 
 export const blockUser =
   createAsyncThunk<
@@ -470,9 +470,9 @@ export const blockUser =
   );
 
 
-// =================================
+ 
 // DELETE USER
-// =================================
+ 
 
 export const deleteUser =
   createAsyncThunk<
@@ -524,10 +524,10 @@ export const deleteUser =
   );
 
 
-// =================================
+ 
 // GET MY PROFILE
 // GET /user/profile
-// =================================
+ 
 
 export const getMyProfile =
   createAsyncThunk<
@@ -567,11 +567,11 @@ export const getMyProfile =
   );
 
 
-// =================================
+ 
 // UPDATE MY PROFILE
 // PATCH /user/profile/update
 // MULTIPART/FORM-DATA
-// =================================
+ 
 
 export const updateMyProfile =
   createAsyncThunk<
@@ -623,9 +623,9 @@ export const updateMyProfile =
   );
 
 
-// =================================
+ 
 // USER SLICE
-// =================================
+ 
 
 const userSlice =
   createSlice({
@@ -636,9 +636,9 @@ const userSlice =
 
     reducers: {
 
-      // =============================
+      //                             =
       // CLEAR ERROR
-      // =============================
+      //                             =
 
       clearUserError: (
         state
@@ -649,9 +649,9 @@ const userSlice =
       },
 
 
-      // =============================
+      //                             =
       // CLEAR SUCCESS MESSAGE
-      // =============================
+      //                             =
 
       clearUserSuccessMessage: (
         state
@@ -662,9 +662,9 @@ const userSlice =
       },
 
 
-      // =============================
+      //                             =
       // CLEAR SELECTED USER
-      // =============================
+      //                             =
 
       clearSelectedUser: (
         state
@@ -675,9 +675,9 @@ const userSlice =
       },
 
 
-      // =============================
+      //                             =
       // CLEAR USERS
-      // =============================
+      //                             =
 
       clearUsers: (
         state
@@ -690,9 +690,9 @@ const userSlice =
       },
 
 
-      // =============================
+      //                             =
       // CLEAR PROFILE
-      // =============================
+      //                             =
 
       clearProfile: (
         state
@@ -705,9 +705,9 @@ const userSlice =
     },
 
 
-    // =================================
+     
     // EXTRA REDUCERS
-    // =================================
+     
 
     extraReducers: (
       builder
@@ -715,9 +715,9 @@ const userSlice =
 
       builder
 
-        // =============================
+        //                             =
         // GET ALL USERS
-        // =============================
+        //                             =
 
         .addCase(
           getUsers.pending,
@@ -765,9 +765,9 @@ const userSlice =
         )
 
 
-        // =============================
+        //                             =
         // GET USER BY ID
-        // =============================
+        //                             =
 
         .addCase(
           getUserById.pending,
@@ -812,9 +812,9 @@ const userSlice =
         )
 
 
-        // =============================
+        //                             =
         // UPDATE USER
-        // =============================
+        //                             =
 
         .addCase(
           updateUser.pending,
@@ -903,9 +903,9 @@ const userSlice =
         )
 
 
-        // =============================
+        //                             =
         // ACTIVATE USER
-        // =============================
+        //                             =
 
         .addCase(
           activateUser.pending,
@@ -980,9 +980,9 @@ const userSlice =
         )
 
 
-        // =============================
+        //                             =
         // DEACTIVATE USER
-        // =============================
+        //                             =
 
         .addCase(
           deactivateUser.pending,
@@ -1057,9 +1057,9 @@ const userSlice =
         )
 
 
-        // =============================
+        //                             =
         // BLOCK USER
-        // =============================
+        //                             =
 
         .addCase(
           blockUser.pending,
@@ -1134,9 +1134,9 @@ const userSlice =
         )
 
 
-        // =============================
+        //                             =
         // DELETE USER
-        // =============================
+        //                             =
 
         .addCase(
           deleteUser.pending,
@@ -1203,9 +1203,9 @@ const userSlice =
         )
 
 
-        // =============================
+        //                             =
         // GET MY PROFILE
-        // =============================
+        //                             =
 
         .addCase(
           getMyProfile.pending,
@@ -1250,9 +1250,9 @@ const userSlice =
         )
 
 
-        // =============================
+        //                             =
         // UPDATE MY PROFILE
-        // =============================
+        //                             =
 
         .addCase(
           updateMyProfile.pending,
@@ -1345,9 +1345,9 @@ const userSlice =
   });
 
 
-// =================================
+ 
 // EXPORT ACTIONS
-// =================================
+ 
 
 export const {
   clearUserError,
@@ -1359,9 +1359,9 @@ export const {
   userSlice.actions;
 
 
-// =================================
+ 
 // EXPORT REDUCER
-// =================================
+ 
 
 export default
   userSlice.reducer;

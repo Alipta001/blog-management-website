@@ -4,10 +4,10 @@ const readingHistoryController = require("../controllers/readingHistory.controll
 
 const authMiddleware = require("../middleware/auth.middleware");
 
-// =================================
+ 
 // ADD / UPDATE READING HISTORY
 // POST /reading-history/:blogId
-// =================================
+ 
 
 router.post(
   "/:blogId",
@@ -17,10 +17,10 @@ router.post(
   readingHistoryController.addReadingHistory,
 );
 
-// =================================
+ 
 // GET MY READING HISTORY
 // GET /reading-history
-// =================================
+ 
 
 router.get(
   "/",
@@ -30,10 +30,10 @@ router.get(
   readingHistoryController.getMyReadingHistory,
 );
 
-// =================================
+ 
 // CLEAR MY READING HISTORY
 // DELETE /reading-history
-// =================================
+ 
 
 router.delete(
   "/",

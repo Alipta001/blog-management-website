@@ -13,9 +13,9 @@ import { endPoints } from "@/api/endPoints/endPoints";
 import AxiosInstance from "@/api/axios/axios";
 
 
-// =================================
+ 
 // TYPES
-// =================================
+ 
 
 export interface Pagination {
   total: number;
@@ -61,9 +61,9 @@ interface ClearReadingHistoryResponse {
 }
 
 
-// =================================
+ 
 // STATE
-// =================================
+ 
 
 interface ReadingHistoryState {
   history: ReadingHistory[];
@@ -91,10 +91,10 @@ const initialState: ReadingHistoryState = {
 };
 
 
-// =================================
+ 
 // ADD / UPDATE READING HISTORY
 // POST /reading-history/:blogId
-// =================================
+ 
 
 export const addReadingHistory =
   createAsyncThunk<
@@ -144,10 +144,10 @@ export const addReadingHistory =
   );
 
 
-// =================================
+ 
 // GET MY READING HISTORY
 // GET /reading-history
-// =================================
+ 
 
 export const getMyReadingHistory =
   createAsyncThunk<
@@ -195,10 +195,10 @@ export const getMyReadingHistory =
   );
 
 
-// =================================
+ 
 // CLEAR READING HISTORY
 // DELETE /reading-history
-// =================================
+ 
 
 export const clearReadingHistory =
   createAsyncThunk<
@@ -240,9 +240,9 @@ export const clearReadingHistory =
   );
 
 
-// =================================
+ 
 // READING HISTORY SLICE
-// =================================
+ 
 
 const readingHistorySlice =
   createSlice({
@@ -251,16 +251,16 @@ const readingHistorySlice =
     initialState,
 
 
-    // =================================
+     
     // REDUCERS
-    // =================================
+     
 
     reducers: {
 
 
-      // =============================
+      //                             =
       // CLEAR ERROR
-      // =============================
+      //                             =
 
       clearReadingHistoryError: (
         state
@@ -269,9 +269,9 @@ const readingHistorySlice =
       },
 
 
-      // =============================
+      //                             =
       // CLEAR SUCCESS MESSAGE
-      // =============================
+      //                             =
 
       clearReadingHistorySuccessMessage: (
         state
@@ -280,9 +280,9 @@ const readingHistorySlice =
       },
 
 
-      // =============================
+      //                             =
       // CLEAR LOCAL HISTORY STATE
-      // =============================
+      //                             =
 
       clearReadingHistoryState: (
         state
@@ -299,9 +299,9 @@ const readingHistorySlice =
     },
 
 
-    // =================================
+     
     // EXTRA REDUCERS
-    // =================================
+     
 
     extraReducers: (
       builder
@@ -310,9 +310,9 @@ const readingHistorySlice =
       builder
 
 
-        // =============================
+        //                             =
         // ADD / UPDATE READING HISTORY
-        // =============================
+        //                             =
 
         .addCase(
           addReadingHistory.pending,
@@ -381,9 +381,9 @@ const readingHistorySlice =
         )
 
 
-        // =============================
+        //                             =
         // GET MY READING HISTORY
-        // =============================
+        //                             =
 
         .addCase(
           getMyReadingHistory.pending,
@@ -425,9 +425,9 @@ const readingHistorySlice =
         )
 
 
-        // =============================
+        //                             =
         // CLEAR READING HISTORY
-        // =============================
+        //                             =
 
         .addCase(
           clearReadingHistory.pending,
@@ -474,9 +474,9 @@ const readingHistorySlice =
   });
 
 
-// =================================
+ 
 // EXPORT ACTIONS
-// =================================
+ 
 
 export const {
   clearReadingHistoryError,
@@ -486,9 +486,9 @@ export const {
   readingHistorySlice.actions;
 
 
-// =================================
+ 
 // EXPORT REDUCER
-// =================================
+ 
 
 export default
   readingHistorySlice.reducer;

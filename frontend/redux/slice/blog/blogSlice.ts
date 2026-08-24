@@ -29,9 +29,9 @@ import {
 } from "@/utils/blogFormData";
 
 
-// =================================
+ 
 // STATE
-// =================================
+ 
 
 interface BlogState {
   blogs: Blog[];
@@ -58,9 +58,9 @@ interface BlogState {
 }
 
 
-// =================================
+ 
 // INITIAL STATE
-// =================================
+ 
 
 const initialState: BlogState = {
   blogs: [],
@@ -87,9 +87,9 @@ const initialState: BlogState = {
 };
 
 
-// =================================
+ 
 // RESPONSE TYPES
-// =================================
+ 
 
 interface CreateBlogResponse {
   blog: Blog;
@@ -121,9 +121,9 @@ interface RecordBlogViewResponse {
 }
 
 
-// =================================
+ 
 // GET ALL PUBLIC BLOGS
-// =================================
+ 
 
 export const getBlogs = createAsyncThunk<
   BlogsResponse,
@@ -160,9 +160,9 @@ export const getBlogs = createAsyncThunk<
 );
 
 
-// =================================
+ 
 // GET ADMINISTRATION BLOGS
-// =================================
+ 
 
 export const getAdminBlogs = createAsyncThunk<
   BlogsResponse,
@@ -200,9 +200,9 @@ export const getAdminBlogs = createAsyncThunk<
 );
 
 
-// =================================
+ 
 // GET BLOG BY ID
-// =================================
+ 
 
 export const getBlogById = createAsyncThunk<
   Blog,
@@ -243,9 +243,9 @@ export const getBlogById = createAsyncThunk<
 );
 
 
-// =================================
+ 
 // GET MY BLOGS
-// =================================
+ 
 
 export const getMyBlogs = createAsyncThunk<
   BlogsResponse,
@@ -283,9 +283,9 @@ export const getMyBlogs = createAsyncThunk<
 );
 
 
-// =================================
+ 
 // CREATE BLOG
-// =================================
+ 
 
 export const createBlog = createAsyncThunk<
   CreateBlogResponse,
@@ -330,9 +330,9 @@ export const createBlog = createAsyncThunk<
 );
 
 
-// =================================
+ 
 // UPDATE BLOG
-// =================================
+ 
 
 export const updateBlog = createAsyncThunk<
   UpdateBlogResponse,
@@ -383,9 +383,9 @@ export const updateBlog = createAsyncThunk<
 );
 
 
-// =================================
+ 
 // SUBMIT BLOG
-// =================================
+ 
 
 export const submitBlog = createAsyncThunk<
   BlogActionResponse,
@@ -432,9 +432,9 @@ export const submitBlog = createAsyncThunk<
 );
 
 
-// =================================
+ 
 // PUBLISH BLOG
-// =================================
+ 
 
 export const publishBlog = createAsyncThunk<
   BlogActionResponse,
@@ -481,9 +481,9 @@ export const publishBlog = createAsyncThunk<
 );
 
 
-// =================================
+ 
 // REJECT BLOG
-// =================================
+ 
 
 export const rejectBlog = createAsyncThunk<
   BlogActionResponse,
@@ -536,9 +536,9 @@ export const rejectBlog = createAsyncThunk<
 );
 
 
-// =================================
+ 
 // UNPUBLISH BLOG
-// =================================
+ 
 
 export const unpublishBlog = createAsyncThunk<
   BlogActionResponse,
@@ -585,9 +585,9 @@ export const unpublishBlog = createAsyncThunk<
 );
 
 
-// =================================
+ 
 // DELETE BLOG
-// =================================
+ 
 
 export const deleteBlog = createAsyncThunk<
   DeleteBlogResponse,
@@ -634,12 +634,12 @@ export const deleteBlog = createAsyncThunk<
 );
 
 
-// =================================
+ 
 // RECORD BLOG VIEW
 //
 // PATCH /blog/:id/view
 // POST /blog/:id/view
-// =================================
+ 
 
 export const recordBlogView = createAsyncThunk<
   RecordBlogViewResponse,
@@ -685,9 +685,9 @@ export const recordBlogView = createAsyncThunk<
 );
 
 
-// =================================
+ 
 // HELPER
-// =================================
+ 
 
 const replaceBlogInList = (
   blogs: Blog[],
@@ -710,9 +710,9 @@ const replaceBlogInList = (
 };
 
 
-// =================================
+ 
 // UPDATE SELECTED BLOG
-// =================================
+ 
 
 const updateSelectedBlog = (
   state: BlogState,
@@ -731,9 +731,9 @@ const updateSelectedBlog = (
 };
 
 
-// =================================
+ 
 // UPDATE BLOG VIEWS
-// =================================
+ 
 
 const updateBlogViewsInList = (
   blogs: Blog[],
@@ -755,9 +755,9 @@ const updateBlogViewsInList = (
 };
 
 
-// =================================
+ 
 // SLICE
-// =================================
+ 
 
 const blogSlice = createSlice({
 
@@ -768,9 +768,9 @@ const blogSlice = createSlice({
 
   reducers: {
 
-    // =============================
+    //                             =
     // CLEAR ERROR
-    // =============================
+    //                             =
 
     clearBlogError: (
       state,
@@ -781,9 +781,9 @@ const blogSlice = createSlice({
     },
 
 
-    // =============================
+    //                             =
     // CLEAR SUCCESS MESSAGE
-    // =============================
+    //                             =
 
     clearBlogSuccessMessage: (
       state,
@@ -794,9 +794,9 @@ const blogSlice = createSlice({
     },
 
 
-    // =============================
+    //                             =
     // CLEAR SELECTED BLOG
-    // =============================
+    //                             =
 
     clearSelectedBlog: (
       state,
@@ -807,9 +807,9 @@ const blogSlice = createSlice({
     },
 
 
-    // =============================
+    //                             =
     // UPDATE LIKE STATE
-    // =============================
+    //                             =
 
     setSelectedBlogLikeState: (
       state,
@@ -843,9 +843,9 @@ const blogSlice = createSlice({
     builder
 
 
-      // ===============================
+      //                             ===
       // GET PUBLIC BLOGS
-      // ===============================
+      //                             ===
 
       .addCase(
         getBlogs.pending,
@@ -886,9 +886,9 @@ const blogSlice = createSlice({
       )
 
 
-      // ===============================
+      //                             ===
       // GET ADMIN BLOGS
-      // ===============================
+      //                             ===
 
       .addCase(
         getAdminBlogs.pending,
@@ -933,9 +933,9 @@ const blogSlice = createSlice({
       )
 
 
-      // ===============================
+      //                             ===
       // GET BLOG BY ID
-      // ===============================
+      //                             ===
 
       .addCase(
         getBlogById.pending,
@@ -973,9 +973,9 @@ const blogSlice = createSlice({
       )
 
 
-      // ===============================
+      //                             ===
       // GET MY BLOGS
-      // ===============================
+      //                             ===
 
       .addCase(
         getMyBlogs.pending,
@@ -1016,9 +1016,9 @@ const blogSlice = createSlice({
       )
 
 
-      // ===============================
+      //                             ===
       // CREATE BLOG
-      // ===============================
+      //                             ===
 
       .addCase(
         createBlog.pending,
@@ -1061,9 +1061,9 @@ const blogSlice = createSlice({
       )
 
 
-      // ===============================
+      //                             ===
       // UPDATE BLOG
-      // ===============================
+      //                             ===
 
       .addCase(
         updateBlog.pending,
@@ -1124,9 +1124,9 @@ const blogSlice = createSlice({
       )
 
 
-      // ===============================
+      //                             ===
       // SUBMIT BLOG
-      // ===============================
+      //                             ===
 
       .addCase(
         submitBlog.pending,
@@ -1182,9 +1182,9 @@ const blogSlice = createSlice({
       )
 
 
-      // ===============================
+      //                             ===
       // PUBLISH BLOG
-      // ===============================
+      //                             ===
 
       .addCase(
         publishBlog.pending,
@@ -1245,9 +1245,9 @@ const blogSlice = createSlice({
       )
 
 
-      // ===============================
+      //                             ===
       // REJECT BLOG
-      // ===============================
+      //                             ===
 
       .addCase(
         rejectBlog.pending,
@@ -1303,9 +1303,9 @@ const blogSlice = createSlice({
       )
 
 
-      // ===============================
+      //                             ===
       // UNPUBLISH BLOG
-      // ===============================
+      //                             ===
 
       .addCase(
         unpublishBlog.pending,
@@ -1368,9 +1368,9 @@ const blogSlice = createSlice({
       )
 
 
-      // ===============================
+      //                             ===
       // DELETE BLOG
-      // ===============================
+      //                             ===
 
       .addCase(
         deleteBlog.pending,
@@ -1437,9 +1437,9 @@ const blogSlice = createSlice({
       )
 
 
-      // ===============================
+      //                             ===
       // RECORD BLOG VIEW
-      // ===============================
+      //                             ===
 
       .addCase(
         recordBlogView.fulfilled,
@@ -1494,9 +1494,9 @@ const blogSlice = createSlice({
 });
 
 
-// =================================
+ 
 // ACTIONS
-// =================================
+ 
 
 export const {
   clearBlogError,
@@ -1507,8 +1507,8 @@ export const {
   blogSlice.actions;
 
 
-// =================================
+ 
 // REDUCER
-// =================================
+ 
 
 export default blogSlice.reducer;

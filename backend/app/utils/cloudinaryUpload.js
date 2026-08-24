@@ -3,9 +3,9 @@ const { Readable } = require("stream");
 const cloudinary = require("../config/cloudinary");
 
 
-// ========================================
+        
 // UPLOAD BUFFER TO CLOUDINARY
-// ========================================
+        
 
 const uploadToCloudinary = (
   buffer,
@@ -36,9 +36,9 @@ const uploadToCloudinary = (
 };
 
 
-// ========================================
+        
 // DELETE IMAGE FROM CLOUDINARY
-// ========================================
+        
 
 const deleteFromCloudinary = (
   publicId

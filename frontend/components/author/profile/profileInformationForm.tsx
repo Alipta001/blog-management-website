@@ -38,9 +38,9 @@ import {
 } from "@/redux/slice/auth/authSlice";
 
 
-// =================================
+ 
 // TYPES
-// =================================
+ 
 
 interface ProfileInformationFormProps {
   user: User;
@@ -54,9 +54,9 @@ interface ProfileFormValues {
 }
 
 
-// =================================
+ 
 // VALIDATION
-// =================================
+ 
 
 const profileSchema: yup.ObjectSchema<ProfileFormValues> = yup.object({
   name: yup
@@ -106,9 +106,9 @@ const profileSchema: yup.ObjectSchema<ProfileFormValues> = yup.object({
 });
 
 
-// =================================
+ 
 // COMPONENT
-// =================================
+ 
 
 export default function ProfileInformationForm({
   user,
@@ -123,9 +123,9 @@ export default function ProfileInformationForm({
   );
 
 
-  // =================================
+   
   // IMAGE STATE
-  // =================================
+   
 
   const fileInputRef =
     useRef<HTMLInputElement | null>(null);
@@ -143,9 +143,9 @@ export default function ProfileInformationForm({
   );
 
 
-  // =================================
+   
   // FORM
-  // =================================
+   
 
   const {
     register,
@@ -170,17 +170,17 @@ export default function ProfileInformationForm({
   });
 
 
-  // =================================
+   
   // WATCH BIO
-  // =================================
+   
 
   const bioValue =
     watch("bio") || "";
 
 
-  // =================================
+   
   // UPDATE FORM WHEN PROFILE CHANGES
-  // =================================
+   
 
   useEffect(() => {
     reset({
@@ -201,9 +201,9 @@ export default function ProfileInformationForm({
   ]);
 
 
-  // =================================
+   
   // IMAGE SELECT
-  // =================================
+   
 
   const handleImageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -281,9 +281,9 @@ export default function ProfileInformationForm({
   };
 
 
-  // =================================
+   
   // REMOVE IMAGE
-  // =================================
+   
 
   const handleRemoveImage = () => {
 
@@ -299,9 +299,9 @@ export default function ProfileInformationForm({
   };
 
 
-  // =================================
+   
   // SUBMIT
-  // =================================
+   
 
 const onSubmit = async (
   data: ProfileFormValues,
@@ -384,9 +384,9 @@ const onSubmit = async (
       "
     >
 
-      {/* =================================
+      {/*                             =====
           HEADER
-      ================================= */}
+                                  ===== */}
 
       <div
         className="
@@ -419,9 +419,9 @@ const onSubmit = async (
       </div>
 
 
-      {/* =================================
+      {/*                             =====
           FORM
-      ================================= */}
+                                  ===== */}
 
       <form
         onSubmit={
@@ -430,9 +430,9 @@ const onSubmit = async (
         className="p-6"
       >
 
-        {/* =================================
+        {/*                             =====
             PROFILE IMAGE
-        ================================= */}
+                                    ===== */}
 
         <div
           className="
@@ -617,9 +617,9 @@ const onSubmit = async (
         </div>
 
 
-        {/* =================================
+        {/*                             =====
             FORM FIELDS
-        ================================= */}
+                                    ===== */}
 
         <div
           className="
@@ -1074,9 +1074,9 @@ const onSubmit = async (
         </div>
 
 
-        {/* =================================
+        {/*                             =====
             ACTIONS
-        ================================= */}
+                                    ===== */}
 
         <div
           className="

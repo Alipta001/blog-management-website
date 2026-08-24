@@ -36,9 +36,9 @@ export default function AuthorProfilePage() {
   );
 
 
-  // =================================
+   
   // LOAD PROFILE
-  // =================================
+   
 
   useEffect(() => {
     dispatch(
@@ -58,9 +58,9 @@ export default function AuthorProfilePage() {
   }, [dispatch]);
 
 
-  // =================================
+   
   // INITIAL LOADING
-  // =================================
+   
 
   if (
     loading &&
@@ -72,9 +72,9 @@ export default function AuthorProfilePage() {
   }
 
 
-  // =================================
+   
   // PROFILE NOT FOUND
-  // =================================
+   
 
   if (!profile) {
     return (
@@ -89,23 +89,23 @@ export default function AuthorProfilePage() {
   }
 
 
-  // =================================
+   
   // RENDER
-  // =================================
+   
 
   return (
     <div className="space-y-6">
 
-      {/* =================================
+      {/*                             =====
           HEADER
-      ================================= */}
+                                  ===== */}
 
       <ProfileHeader />
 
 
-      {/* =================================
+      {/*                             =====
           ERROR
-      ================================= */}
+                                  ===== */}
 
       {error && (
         <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
@@ -114,9 +114,9 @@ export default function AuthorProfilePage() {
       )}
 
 
-      {/* =================================
+      {/*                             =====
           SUCCESS
-      ================================= */}
+                                  ===== */}
 
       {successMessage && (
         <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-400">
@@ -125,24 +125,24 @@ export default function AuthorProfilePage() {
       )}
 
 
-      {/* =================================
+      {/*                             =====
           PROFILE CONTENT
-      ================================= */}
+                                  ===== */}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
 
-        {/* =================================
+        {/*                             =====
             LEFT
-        ================================= */}
+                                    ===== */}
 
         <ProfileOverview
           user={profile}
         />
 
 
-        {/* =================================
+        {/*                             =====
             RIGHT
-        ================================= */}
+                                    ===== */}
 
         <ProfileInformationForm
           user={profile}

@@ -20,9 +20,9 @@ import {
 import AxiosInstance from "@/api/axios/axios";
 
 
-// =================================
+ 
 // REQUEST TYPES
-// =================================
+ 
 
 interface GetCommentsParams {
   blogId: string;
@@ -71,9 +71,9 @@ interface ModerateCommentPayload {
 }
 
 
-// =================================
+ 
 // RESPONSE TYPES
-// =================================
+ 
 
 interface CommentsResponse {
   comments: Comment[];
@@ -96,9 +96,9 @@ interface CommentActionResponse {
 }
 
 
-// =================================
+ 
 // STATE
-// =================================
+ 
 
 interface CommentState {
   comments: Comment[];
@@ -113,9 +113,9 @@ interface CommentState {
 }
 
 
-// =================================
+ 
 // INITIAL STATE
-// =================================
+ 
 
 const initialState: CommentState = {
   comments: [],
@@ -130,10 +130,10 @@ const initialState: CommentState = {
 };
 
 
-// =================================
+ 
 // GET APPROVED COMMENTS
 // GET /comment/blog/:blogId
-// =================================
+ 
 
 export const getApprovedComments =
   createAsyncThunk<
@@ -185,10 +185,10 @@ export const getApprovedComments =
   );
 
 
-// =================================
+ 
 // GET COMMENTS FOR AUTHOR
 // GET /comment/author
-// =================================
+ 
 
 export const getCommentsForAuthor =
   createAsyncThunk<
@@ -234,10 +234,10 @@ export const getCommentsForAuthor =
   );
 
 
-// =================================
+ 
 // GET ALL COMMENTS FOR ADMINISTRATION
 // GET /comment/administration
-// =================================
+ 
 
 export const getAllCommentsForAdministration =
   createAsyncThunk<
@@ -271,10 +271,10 @@ export const getAllCommentsForAdministration =
   );
 
 
-// =================================
+ 
 // CREATE COMMENT
 // POST /comment/blog/:blogId/create
-// =================================
+ 
 
 export const createComment =
   createAsyncThunk<
@@ -328,10 +328,10 @@ export const createComment =
   );
 
 
-// =================================
+ 
 // UPDATE OWN COMMENT
 // PATCH /comment/:id/update
-// =================================
+ 
 
 export const updateOwnComment =
   createAsyncThunk<
@@ -385,10 +385,10 @@ export const updateOwnComment =
   );
 
 
-// =================================
+ 
 // DELETE OWN COMMENT
 // DELETE /comment/:id/delete
-// =================================
+ 
 
 export const deleteOwnComment =
   createAsyncThunk<
@@ -435,11 +435,11 @@ export const deleteOwnComment =
   );
 
 
-// =================================
+ 
 // MODERATE COMMENT
 // PATCH /comment/:id/moderate
 // ADMIN ONLY
-// =================================
+ 
 
 export const moderateComment =
   createAsyncThunk<
@@ -493,9 +493,9 @@ export const moderateComment =
   );
 
 
-// =================================
+ 
 // COMMENT SLICE
-// =================================
+ 
 
 const commentSlice =
   createSlice({
@@ -505,9 +505,9 @@ const commentSlice =
 
     reducers: {
 
-      // =============================
+      //                             =
       // CLEAR ERROR
-      // =============================
+      //                             =
 
       clearCommentError: (
         state,
@@ -516,9 +516,9 @@ const commentSlice =
       },
 
 
-      // =============================
+      //                             =
       // CLEAR SUCCESS MESSAGE
-      // =============================
+      //                             =
 
       clearCommentSuccessMessage: (
         state,
@@ -527,9 +527,9 @@ const commentSlice =
       },
 
 
-      // =============================
+      //                             =
       // CLEAR COMMENTS
-      // =============================
+      //                             =
 
       clearComments: (
         state,
@@ -548,9 +548,9 @@ const commentSlice =
       builder
 
 
-        // =================================
+         
         // GET APPROVED COMMENTS
-        // =================================
+         
 
         .addCase(
           getApprovedComments.pending,
@@ -592,9 +592,9 @@ const commentSlice =
         )
 
 
-        // =================================
+         
         // GET COMMENTS FOR AUTHOR
-        // =================================
+         
 
         .addCase(
           getCommentsForAuthor.pending,
@@ -636,9 +636,9 @@ const commentSlice =
         )
 
 
-        // =================================
+         
         // GET ALL COMMENTS FOR ADMINISTRATION
-        // =================================
+         
 
         .addCase(
           getAllCommentsForAdministration.pending,
@@ -672,9 +672,9 @@ const commentSlice =
         )
 
 
-        // =================================
+         
         // CREATE COMMENT
-        // =================================
+         
 
         .addCase(
           createComment.pending,
@@ -715,9 +715,9 @@ const commentSlice =
         )
 
 
-        // =================================
+         
         // UPDATE OWN COMMENT
-        // =================================
+         
 
         .addCase(
           updateOwnComment.pending,
@@ -771,9 +771,9 @@ const commentSlice =
         )
 
 
-        // =================================
+         
         // DELETE OWN COMMENT
-        // =================================
+         
 
         .addCase(
           deleteOwnComment.pending,
@@ -819,9 +819,9 @@ const commentSlice =
         )
 
 
-        // =================================
+         
         // MODERATE COMMENT
-        // =================================
+         
 
         .addCase(
           moderateComment.pending,
@@ -877,9 +877,9 @@ const commentSlice =
   });
 
 
-// =================================
+ 
 // EXPORT ACTIONS
-// =================================
+ 
 
 export const {
   clearCommentError,
@@ -888,9 +888,9 @@ export const {
 } = commentSlice.actions;
 
 
-// =================================
+ 
 // REDUCER
-// =================================
+ 
 
 export default commentSlice.reducer;
 

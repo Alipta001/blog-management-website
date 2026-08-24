@@ -15,9 +15,9 @@ import type { SidebarItem } from "./sidebar.types";
 
 import type { UserRole } from "@/types/user.types";
 
-// =================================
+ 
 // ADMINISTRATION
-// =================================
+ 
 
 const administrationSidebarItems: SidebarItem[] = [
   {
@@ -57,9 +57,9 @@ const administrationSidebarItems: SidebarItem[] = [
   },
 ];
 
-// =================================
+ 
 // AUTHOR
-// =================================
+ 
 
 const authorSidebarItems: SidebarItem[] = [
   {
@@ -93,9 +93,9 @@ const authorSidebarItems: SidebarItem[] = [
   },
 ];
 
-// =================================
+ 
 // USER
-// =================================
+ 
 
 const userSidebarItems: SidebarItem[] = [
   {
@@ -122,9 +122,9 @@ const userSidebarItems: SidebarItem[] = [
   },
 ];
 
-// =================================
+ 
 // SIDEBAR CONFIG
-// =================================
+ 
 
 export const sidebarConfig: Record<UserRole, SidebarItem[]> = {
   administrator: administrationSidebarItems,
