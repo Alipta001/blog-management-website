@@ -4,7 +4,8 @@ export type UserRole =
   | "administrator" 
   | "administration"
   | "author"
-  | "user";
+  | "user"
+  | "reader";
 
 
 export type UserStatus =
