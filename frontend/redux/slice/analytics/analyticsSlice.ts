@@ -140,9 +140,9 @@ const analyticsSlice =
     reducers: {
 
 
-      //                             =
+       
       // CLEAR ERROR
-      //                             =
+       
 
       clearAnalyticsError: (
         state
@@ -154,9 +154,9 @@ const analyticsSlice =
       },
 
 
-      //                             =
+       
       // CLEAR ANALYTICS
-      //                             =
+       
 
       clearAuthorAnalytics: (
         state
@@ -177,9 +177,9 @@ const analyticsSlice =
       builder
 
 
-        //                             =
+         
         // GET AUTHOR ANALYTICS
-        //                             =
+         
 
         .addCase(
           getAuthorAnalytics

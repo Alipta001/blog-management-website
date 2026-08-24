@@ -16,9 +16,8 @@ class CommentController {
 
       const { content } = req.body;
 
-      //                             ===
+       
       // CHECK BLOG
-      //                             ===
 
       const blog = await Blog.findOne({
         _id: blogId,
@@ -36,9 +35,9 @@ class CommentController {
         });
       }
 
-      //                             ===
+       
       // CREATE COMMENT
-      //                             ===
+      
 
       const comment = await Comment.create({
         blog: blogId,
@@ -141,9 +140,9 @@ class CommentController {
 
       const skip = (Number(page) - 1) * Number(limit);
 
-      //                             ===
+      
       // FIND AUTHOR'S BLOGS
-      //                             ===
+       
 
       const blogs = await Blog.find({
         author: req.user.id,
@@ -153,9 +152,9 @@ class CommentController {
 
       const blogIds = blogs.map((blog) => blog._id);
 
-      //                             ===
+       
       // IF AUTHOR HAS NO BLOGS
-      //                             ===
+       
 
       if (blogIds.length === 0) {
         return res.status(200).json({
@@ -177,9 +176,9 @@ class CommentController {
         });
       }
 
-      //                             ===
+       
       // BUILD FILTER
-      //                             ===
+       
 
       const filter = {
         blog: {
@@ -192,9 +191,9 @@ class CommentController {
         filter.status = status;
       }
 
-      //                             ===
+       
       // GET COMMENTS
-      //                             ===
+       
 
       const [comments, total] = await Promise.all([
         Comment.find(filter)
@@ -301,9 +300,9 @@ class CommentController {
         });
       }
 
-      //                             ===
+       
       // UPDATE CONTENT
-      //                             ===
+  
 
       comment.content = req.body.content;
 

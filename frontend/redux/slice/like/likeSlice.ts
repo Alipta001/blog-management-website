@@ -197,18 +197,18 @@ const likeSlice = createSlice({
 
   reducers: {
 
-    //                             =
+     
     // CLEAR ERROR
-    //                             =
+     
 
     clearLikeError: (state) => {
       state.error = null;
     },
 
 
-    //                             =
+     
     // CLEAR SUCCESS MESSAGE
-    //                             =
+     
 
     clearLikeSuccessMessage: (
       state
@@ -217,9 +217,9 @@ const likeSlice = createSlice({
     },
 
 
-    //                             =
+     
     // RESET LIKE STATE
-    //                             =
+     
 
     resetLikeState: (state) => {
       state.totalLikes = 0;
@@ -232,10 +232,10 @@ const likeSlice = createSlice({
     },
 
 
-    //                             =
+     
     // SET LIKE STATUS
     // Useful when loading blog data
-    //                             =
+     
 
     setIsLiked: (
       state,
@@ -251,9 +251,9 @@ const likeSlice = createSlice({
     builder
 
 
-      //                             =
+       
       // GET BLOG LIKE COUNT
-      //                             =
+       
 
       .addCase(
         getBlogLikeCount.pending,
@@ -286,9 +286,9 @@ const likeSlice = createSlice({
       )
 
 
-      //                             =
+       
       // LIKE BLOG
-      //                             =
+       
 
       .addCase(
         likeBlog.pending,
@@ -328,9 +328,9 @@ const likeSlice = createSlice({
       )
 
 
-      //                             =
+       
       // UNLIKE BLOG
-      //                             =
+       
 
       .addCase(
         unlikeBlog.pending,

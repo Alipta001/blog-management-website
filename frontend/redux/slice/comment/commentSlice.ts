@@ -505,9 +505,9 @@ const commentSlice =
 
     reducers: {
 
-      //                             =
+       
       // CLEAR ERROR
-      //                             =
+       
 
       clearCommentError: (
         state,
@@ -516,9 +516,9 @@ const commentSlice =
       },
 
 
-      //                             =
+       
       // CLEAR SUCCESS MESSAGE
-      //                             =
+       
 
       clearCommentSuccessMessage: (
         state,
@@ -527,9 +527,9 @@ const commentSlice =
       },
 
 
-      //                             =
+       
       // CLEAR COMMENTS
-      //                             =
+       
 
       clearComments: (
         state,

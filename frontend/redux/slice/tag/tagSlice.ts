@@ -253,36 +253,36 @@ const tagSlice = createSlice({
   reducers: {
 
 
-    //                             =
+     
     // CLEAR ERROR
-    //                             =
+     
 
     clearTagError: (state) => {
       state.error = null;
     },
 
 
-    //                             =
+     
     // CLEAR SUCCESS MESSAGE
-    //                             =
+     
 
     clearTagSuccessMessage: (state) => {
       state.successMessage = null;
     },
 
 
-    //                             =
+     
     // CLEAR SELECTED TAG
-    //                             =
+     
 
     clearSelectedTag: (state) => {
       state.selectedTag = null;
     },
 
 
-    //                             =
+     
     // CLEAR TAGS
-    //                             =
+     
 
     clearTags: (state) => {
       state.tags = [];
@@ -297,9 +297,9 @@ const tagSlice = createSlice({
     builder
 
 
-      //                             =
+       
       // GET ALL TAGS
-      //                             =
+       
 
       .addCase(
         getTags.pending,
@@ -336,9 +336,9 @@ const tagSlice = createSlice({
 
 
 
-      //                             =
+       
       // GET TAG BY ID
-      //                             =
+       
 
       .addCase(
         getTagById.pending,
@@ -375,9 +375,9 @@ const tagSlice = createSlice({
 
 
 
-      //                             =
+       
       // CREATE TAG
-      //                             =
+       
 
       .addCase(
         createTag.pending,
@@ -426,9 +426,9 @@ const tagSlice = createSlice({
 
 
 
-      //                             =
+       
       // UPDATE TAG
-      //                             =
+       
 
       .addCase(
         updateTag.pending,
@@ -497,9 +497,9 @@ const tagSlice = createSlice({
 
 
 
-      //                             =
+       
       // DELETE TAG
-      //                             =
+       
 
       .addCase(
         deleteTag.pending,

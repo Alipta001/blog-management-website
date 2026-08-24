@@ -13,9 +13,9 @@ export const createBlogFormData = (
 ) => {
   const formData = new FormData();
 
-  //                             ===
+  
   // TEXT FIELDS
-  //                             ===
+  
 
   formData.append(
     "title",
@@ -37,9 +37,9 @@ export const createBlogFormData = (
     data.category,
   );
 
-  //                             ===
+
   // TAGS
-  //                             ===
+  
 
   data.tags?.forEach(
     (tagId) => {
@@ -50,9 +50,9 @@ export const createBlogFormData = (
     },
   );
 
-  //                             ===
+  
   // FEATURED IMAGE
-  //                             ===
+
 
   if (data.featuredImage) {
     formData.append(
@@ -61,9 +61,9 @@ export const createBlogFormData = (
     );
   }
 
-  //                             ===
+  
   // CONTENT IMAGES
-  //                             ===
+   
 
   data.contentImages?.forEach(
     (image) => {
@@ -74,9 +74,9 @@ export const createBlogFormData = (
     },
   );
 
-  //                             ===
+  
   // STATUS
-  //                             ===
+  
 
   if (data.status) {
     formData.append(

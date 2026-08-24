@@ -16,6 +16,32 @@ const authMiddleware =
 
 
 // ---------------------------------
+// FORGOT PASSWORD
+// ---------------------------------
+
+router.post(
+
+  "/forgot-password",
+
+  authController.resetPasswordLink
+
+);
+
+
+// ---------------------------------
+// RESET PASSWORD
+// ---------------------------------
+
+router.post(
+
+  "/reset-password",
+
+  authController.resetPassword
+
+);
+
+
+// ---------------------------------
 // SEND REGISTRATION OTP
 // ---------------------------------
 

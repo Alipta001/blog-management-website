@@ -56,6 +56,17 @@ interface ResendRegistrationOtpPayload {
   email: string;
 }
 
+interface ForgotPasswordPayload {
+  email: string;
+}
+
+interface ResetPasswordPayload {
+  userId: string;
+  token: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 interface BasicResponse {
   message: string;
 }
@@ -113,6 +124,68 @@ const initialState: AuthState = {
  
 // REGISTER
  
+
+// FORGOT PASSWORD
+
+
+export const forgotPassword =
+  createAsyncThunk<
+    BasicResponse,
+    ForgotPasswordPayload,
+    {
+      rejectValue: string;
+    }
+  >(
+    "auth/forgotPassword",
+    async (data, { rejectWithValue }) => {
+      try {
+        const response = await AxiosInstance.post(
+          endPoints.auth.forgotPassword,
+          data,
+        );
+
+        return {
+          message: response.data.message,
+        };
+      } catch (error: any) {
+        return rejectWithValue(
+          error?.response?.data?.message || "Unable to send reset email"
+        );
+      }
+    }
+  );
+
+
+// RESET PASSWORD
+
+
+export const resetPassword =
+  createAsyncThunk<
+    BasicResponse,
+    ResetPasswordPayload,
+    {
+      rejectValue: string;
+    }
+  >(
+    "auth/resetPassword",
+    async (data, { rejectWithValue }) => {
+      try {
+        const response = await AxiosInstance.post(
+          endPoints.auth.resetPassword,
+          data,
+        );
+
+        return {
+          message: response.data.message,
+        };
+      } catch (error: any) {
+        return rejectWithValue(
+          error?.response?.data?.message || "Unable to reset password"
+        );
+      }
+    }
+  );
+
 
 export const registerUser =
   createAsyncThunk<

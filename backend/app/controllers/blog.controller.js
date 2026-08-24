@@ -905,19 +905,16 @@ class BlogController {
     }
   }
 
-  //                             =====
   // RECORD BLOG VIEW
-  //
   // POST /blog/:id/view
-  //                             =====
 
   async recordBlogView(req, res, next) {
     try {
       const { id } = req.params;
 
-      //                             =
+       
       // VALIDATE BLOG ID
-      //                             =
+       
 
       if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({
@@ -927,9 +924,9 @@ class BlogController {
         });
       }
 
-      //                             =
+       
       // FIND BLOG
-      //                             =
+       
 
       const blog = await Blog.findOne({
         _id: id,
@@ -947,10 +944,10 @@ class BlogController {
         });
       }
 
-      //                             =
+       
       // OPTIONAL:
       // DON'T COUNT AUTHOR'S OWN VIEW
-      //                             =
+       
 
       if (req.user && blog.author.toString() === req.user._id.toString()) {
         return res.status(200).json({
@@ -964,9 +961,9 @@ class BlogController {
         });
       }
 
-      //                             =
+       
       // CREATE VIEW RECORD
-      //                             =
+       
 
       await BlogView.create({
         blog: blog._id,
@@ -976,9 +973,9 @@ class BlogController {
         viewedAt: new Date(),
       });
 
-      //                             =
+       
       // INCREMENT TOTAL VIEWS
-      //                             =
+       
 
       blog.views = (blog.views || 0) + 1;
 

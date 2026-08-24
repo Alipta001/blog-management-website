@@ -342,9 +342,9 @@ const notificationSlice =
     reducers: {
 
 
-      //                             =
+       
       // CLEAR ERROR
-      //                             =
+       
 
       clearNotificationError: (
         state
@@ -353,9 +353,9 @@ const notificationSlice =
       },
 
 
-      //                             =
+       
       // CLEAR SUCCESS MESSAGE
-      //                             =
+       
 
       clearNotificationSuccessMessage: (
         state
@@ -364,9 +364,9 @@ const notificationSlice =
       },
 
 
-      //                             =
+       
       // CLEAR NOTIFICATIONS
-      //                             =
+       
 
       clearNotifications: (
         state
@@ -398,9 +398,9 @@ const notificationSlice =
       builder
 
 
-        //                             =
+         
         // GET MY NOTIFICATIONS
-        //                             =
+         
 
         .addCase(
           getMyNotifications.pending,
@@ -445,9 +445,9 @@ const notificationSlice =
         )
 
 
-        //                             =
+         
         // MARK ONE AS READ
-        //                             =
+         
 
         .addCase(
           markNotificationAsRead.pending,
@@ -530,9 +530,9 @@ const notificationSlice =
         )
 
 
-        //                             =
+         
         // MARK ALL AS READ
-        //                             =
+         
 
         .addCase(
           markAllNotificationsAsRead.pending,
@@ -614,9 +614,9 @@ const notificationSlice =
         )
 
 
-        //                             =
+         
         // DELETE NOTIFICATION
-        //                             =
+         
 
         .addCase(
           deleteNotification.pending,

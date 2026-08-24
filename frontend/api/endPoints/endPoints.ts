@@ -1,5 +1,7 @@
 export const endPoints = {
   auth: {
+    forgotPassword: "/auth/forgot-password",
+    resetPassword: "/auth/reset-password",
     // Registration OTP flow
     sendRegistrationOtp: "/auth/send-registration-otp",
     resendRegistrationOtp: "/auth/resend-registration-otp",

@@ -258,9 +258,9 @@ const readingHistorySlice =
     reducers: {
 
 
-      //                             =
+       
       // CLEAR ERROR
-      //                             =
+       
 
       clearReadingHistoryError: (
         state
@@ -269,9 +269,9 @@ const readingHistorySlice =
       },
 
 
-      //                             =
+       
       // CLEAR SUCCESS MESSAGE
-      //                             =
+       
 
       clearReadingHistorySuccessMessage: (
         state
@@ -280,9 +280,9 @@ const readingHistorySlice =
       },
 
 
-      //                             =
+       
       // CLEAR LOCAL HISTORY STATE
-      //                             =
+       
 
       clearReadingHistoryState: (
         state
@@ -310,9 +310,9 @@ const readingHistorySlice =
       builder
 
 
-        //                             =
+         
         // ADD / UPDATE READING HISTORY
-        //                             =
+         
 
         .addCase(
           addReadingHistory.pending,
@@ -381,9 +381,9 @@ const readingHistorySlice =
         )
 
 
-        //                             =
+         
         // GET MY READING HISTORY
-        //                             =
+         
 
         .addCase(
           getMyReadingHistory.pending,
@@ -425,9 +425,9 @@ const readingHistorySlice =
         )
 
 
-        //                             =
+         
         // CLEAR READING HISTORY
-        //                             =
+         
 
         .addCase(
           clearReadingHistory.pending,

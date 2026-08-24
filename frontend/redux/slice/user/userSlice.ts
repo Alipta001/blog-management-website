@@ -636,9 +636,9 @@ const userSlice =
 
     reducers: {
 
-      //                             =
+       
       // CLEAR ERROR
-      //                             =
+       
 
       clearUserError: (
         state
@@ -649,9 +649,9 @@ const userSlice =
       },
 
 
-      //                             =
+       
       // CLEAR SUCCESS MESSAGE
-      //                             =
+       
 
       clearUserSuccessMessage: (
         state
@@ -662,9 +662,9 @@ const userSlice =
       },
 
 
-      //                             =
+       
       // CLEAR SELECTED USER
-      //                             =
+       
 
       clearSelectedUser: (
         state
@@ -675,9 +675,9 @@ const userSlice =
       },
 
 
-      //                             =
+       
       // CLEAR USERS
-      //                             =
+       
 
       clearUsers: (
         state
@@ -690,9 +690,9 @@ const userSlice =
       },
 
 
-      //                             =
+       
       // CLEAR PROFILE
-      //                             =
+       
 
       clearProfile: (
         state
@@ -715,9 +715,9 @@ const userSlice =
 
       builder
 
-        //                             =
+         
         // GET ALL USERS
-        //                             =
+         
 
         .addCase(
           getUsers.pending,
@@ -765,9 +765,9 @@ const userSlice =
         )
 
 
-        //                             =
+         
         // GET USER BY ID
-        //                             =
+         
 
         .addCase(
           getUserById.pending,
@@ -812,9 +812,9 @@ const userSlice =
         )
 
 
-        //                             =
+         
         // UPDATE USER
-        //                             =
+         
 
         .addCase(
           updateUser.pending,
@@ -903,9 +903,9 @@ const userSlice =
         )
 
 
-        //                             =
+         
         // ACTIVATE USER
-        //                             =
+         
 
         .addCase(
           activateUser.pending,
@@ -980,9 +980,9 @@ const userSlice =
         )
 
 
-        //                             =
+         
         // DEACTIVATE USER
-        //                             =
+         
 
         .addCase(
           deactivateUser.pending,
@@ -1057,9 +1057,9 @@ const userSlice =
         )
 
 
-        //                             =
+         
         // BLOCK USER
-        //                             =
+         
 
         .addCase(
           blockUser.pending,
@@ -1134,9 +1134,9 @@ const userSlice =
         )
 
 
-        //                             =
+         
         // DELETE USER
-        //                             =
+         
 
         .addCase(
           deleteUser.pending,
@@ -1203,9 +1203,9 @@ const userSlice =
         )
 
 
-        //                             =
+         
         // GET MY PROFILE
-        //                             =
+         
 
         .addCase(
           getMyProfile.pending,
@@ -1250,9 +1250,9 @@ const userSlice =
         )
 
 
-        //                             =
+         
         // UPDATE MY PROFILE
-        //                             =
+         
 
         .addCase(
           updateMyProfile.pending,

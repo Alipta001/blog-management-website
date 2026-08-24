@@ -768,9 +768,9 @@ const blogSlice = createSlice({
 
   reducers: {
 
-    //                             =
+     
     // CLEAR ERROR
-    //                             =
+     
 
     clearBlogError: (
       state,
@@ -781,9 +781,9 @@ const blogSlice = createSlice({
     },
 
 
-    //                             =
+     
     // CLEAR SUCCESS MESSAGE
-    //                             =
+     
 
     clearBlogSuccessMessage: (
       state,
@@ -794,9 +794,9 @@ const blogSlice = createSlice({
     },
 
 
-    //                             =
+     
     // CLEAR SELECTED BLOG
-    //                             =
+     
 
     clearSelectedBlog: (
       state,
@@ -807,9 +807,9 @@ const blogSlice = createSlice({
     },
 
 
-    //                             =
+     
     // UPDATE LIKE STATE
-    //                             =
+     
 
     setSelectedBlogLikeState: (
       state,
@@ -843,9 +843,9 @@ const blogSlice = createSlice({
     builder
 
 
-      //                             ===
+      
       // GET PUBLIC BLOGS
-      //                             ===
+  
 
       .addCase(
         getBlogs.pending,
@@ -886,9 +886,9 @@ const blogSlice = createSlice({
       )
 
 
-      //                             ===
+      
       // GET ADMIN BLOGS
-      //                             ===
+      
 
       .addCase(
         getAdminBlogs.pending,
@@ -933,9 +933,9 @@ const blogSlice = createSlice({
       )
 
 
-      //                             ===
+      
       // GET BLOG BY ID
-      //                             ===
+      
 
       .addCase(
         getBlogById.pending,
@@ -973,9 +973,9 @@ const blogSlice = createSlice({
       )
 
 
-      //                             ===
+       
       // GET MY BLOGS
-      //                             ===
+       
 
       .addCase(
         getMyBlogs.pending,
@@ -1016,9 +1016,9 @@ const blogSlice = createSlice({
       )
 
 
-      //                             ===
+       
       // CREATE BLOG
-      //                             ===
+       
 
       .addCase(
         createBlog.pending,
@@ -1061,9 +1061,9 @@ const blogSlice = createSlice({
       )
 
 
-      //                             ===
+       
       // UPDATE BLOG
-      //                             ===
+       
 
       .addCase(
         updateBlog.pending,
@@ -1124,9 +1124,9 @@ const blogSlice = createSlice({
       )
 
 
-      //                             ===
+       
       // SUBMIT BLOG
-      //                             ===
+       
 
       .addCase(
         submitBlog.pending,
@@ -1182,9 +1182,9 @@ const blogSlice = createSlice({
       )
 
 
-      //                             ===
+       
       // PUBLISH BLOG
-      //                             ===
+       
 
       .addCase(
         publishBlog.pending,
@@ -1245,9 +1245,8 @@ const blogSlice = createSlice({
       )
 
 
-      //                             ===
+       
       // REJECT BLOG
-      //                             ===
 
       .addCase(
         rejectBlog.pending,
@@ -1303,9 +1302,9 @@ const blogSlice = createSlice({
       )
 
 
-      //                             ===
+       
       // UNPUBLISH BLOG
-      //                             ===
+       
 
       .addCase(
         unpublishBlog.pending,
@@ -1368,9 +1367,9 @@ const blogSlice = createSlice({
       )
 
 
-      //                             ===
+       
       // DELETE BLOG
-      //                             ===
+      
 
       .addCase(
         deleteBlog.pending,
@@ -1437,10 +1436,9 @@ const blogSlice = createSlice({
       )
 
 
-      //                             ===
+       
       // RECORD BLOG VIEW
-      //                             ===
-
+      
       .addCase(
         recordBlogView.fulfilled,
         (state, action) => {

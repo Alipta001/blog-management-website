@@ -26,9 +26,9 @@ function VerifyOtpContent() {
     searchParams.get("email");
 
 
-  //                             =
+   
   // EMAIL NOT PROVIDED
-  //                             =
+   
 
   if (!email) {
     return (

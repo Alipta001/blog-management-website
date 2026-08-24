@@ -1,11 +1,15 @@
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 
 const User = require("../models/user");
 const Otp = require("../models/otp");
 
 const sendRegistrationOtpEmail = require(
   "../utils/sendRegistrationOtpEmail",
+);
+const sendResetPasswordLink = require(
+  "../utils/sendResetPasswordLink",
 );
 
 const {
@@ -172,17 +176,17 @@ class AuthController {
       } = req.body;
 
 
-      //                             =
+       
       // NORMALIZE EMAIL
-      //                             =
+       
 
       const normalizedEmail =
         email.toLowerCase().trim();
 
 
-      //                             =
+       
       // CHECK EXISTING USER
-      //                             =
+       
 
       const existingUser =
         await User.findOne({
@@ -205,11 +209,11 @@ class AuthController {
       }
 
 
-      //                             =
+       
       // ALLOW ONLY PUBLIC ROLES
       // Never allow administration
       // registration from frontend
-      //                             =
+       
 
       const allowedRoles = [
         "author",
@@ -224,9 +228,9 @@ class AuthController {
           : "reader";
 
 
-      //                             =
+       
       // HASH PASSWORD
-      //                             =
+       
 
       const hashedPassword =
         await bcrypt.hash(
@@ -235,9 +239,9 @@ class AuthController {
         );
 
 
-      //                             =
+       
       // GENERATE 6 DIGIT OTP
-      //                             =
+       
 
       const otp =
         crypto
@@ -248,9 +252,9 @@ class AuthController {
           .toString();
 
 
-      //                             =
+       
       // HASH OTP
-      //                             =
+       
 
       const hashedOtp =
         await bcrypt.hash(
@@ -259,10 +263,10 @@ class AuthController {
         );
 
 
-      //                             =
+       
       // SET EXPIRY
       // 10 MINUTES
-      //                             =
+       
 
       const expiresAt =
         new Date(
@@ -273,10 +277,10 @@ class AuthController {
         );
 
 
-      //                             =
+       
       // REMOVE EXISTING
       // REGISTRATION OTP
-      //                             =
+       
 
       await Otp.deleteOne({
 
@@ -289,9 +293,9 @@ class AuthController {
       });
 
 
-      //                             =
+       
       // CREATE OTP RECORD
-      //                             =
+       
 
       await Otp.create({
 
@@ -321,9 +325,9 @@ class AuthController {
       });
 
 
-      //                             =
+       
       // SEND OTP EMAIL
-      //                             =
+       
 
       await sendRegistrationOtpEmail({
   email: normalizedEmail,
@@ -382,17 +386,17 @@ class AuthController {
       } = req.body;
 
 
-      //                             =
+       
       // NORMALIZE EMAIL
-      //                             =
+       
 
       const normalizedEmail =
         email.toLowerCase().trim();
 
 
-      //                             =
+       
       // FIND OTP RECORD
-      //                             =
+       
 
       const otpRecord =
         await Otp.findOne({
@@ -409,9 +413,9 @@ class AuthController {
           );
 
 
-      //                             =
+       
       // OTP NOT FOUND
-      //                             =
+       
 
       if (!otpRecord) {
 
@@ -427,9 +431,9 @@ class AuthController {
       }
 
 
-      //                             =
+       
       // CHECK OTP EXPIRY
-      //                             =
+       
 
       if (
         otpRecord.expiresAt <
@@ -456,9 +460,9 @@ class AuthController {
       }
 
 
-      //                             =
+       
       // CHECK MAX ATTEMPTS
-      //                             =
+       
 
       if (
         otpRecord.attempts >=
@@ -485,9 +489,9 @@ class AuthController {
       }
 
 
-      //                             =
+       
       // VERIFY OTP
-      //                             =
+       
 
       const isOtpValid =
         await bcrypt.compare(
@@ -496,9 +500,9 @@ class AuthController {
         );
 
 
-      //                             =
+       
       // INVALID OTP
-      //                             =
+       
 
       if (!isOtpValid) {
 
@@ -519,10 +523,10 @@ class AuthController {
       }
 
 
-      //                             =
+      //                             
       // DOUBLE CHECK
       // USER DOESN'T EXIST
-      //                             =
+      //                             
 
       const existingUser =
         await User.findOne({
@@ -555,9 +559,9 @@ class AuthController {
       }
 
 
-      //                             =
+      //                             
       // CREATE USER
-      //                             =
+      //                             
 
       const user =
         await User.create({
@@ -583,9 +587,9 @@ class AuthController {
         });
 
 
-      //                             =
+      //                             
       // DELETE USED OTP
-      //                             =
+      //                             
 
       await Otp.deleteOne({
 
@@ -656,17 +660,17 @@ class AuthController {
       } = req.body;
 
 
-      //                             =
+      //                             
       // NORMALIZE EMAIL
-      //                             =
+      //                             
 
       const normalizedEmail =
         email.toLowerCase().trim();
 
 
-      //                             =
+      //                             
       // FIND USER
-      //                             =
+      //                             
 
       const user =
         await User.findOne({
@@ -680,9 +684,9 @@ class AuthController {
           );
 
 
-      //                             =
+      //                             
       // USER NOT FOUND
-      //                             =
+      //                            
 
       if (!user) {
 
@@ -698,9 +702,9 @@ class AuthController {
       }
 
 
-      //                             =
+      //                             
       // CHECK ACCOUNT STATUS
-      //                             =
+      //                             
 
       if (
         user.status !==
@@ -719,9 +723,9 @@ class AuthController {
       }
 
 
-      //                             =
+      //                             
       // CHECK EMAIL VERIFICATION
-      //                             =
+      //                             
 
       if (!user.isVerified) {
 
@@ -737,9 +741,9 @@ class AuthController {
       }
 
 
-      //                             =
+      //                             
       // COMPARE PASSWORD
-      //                             =
+      //                             
 
       const isPasswordMatched =
         await bcrypt.compare(
@@ -765,9 +769,9 @@ class AuthController {
       }
 
 
-      //                             =
+      //                             
       // GENERATE ACCESS TOKEN
-      //                             =
+      //                             
 
       const accessToken =
         generateAccessToken({
@@ -781,9 +785,9 @@ class AuthController {
         });
 
 
-      //                             =
+      //                             
       // GENERATE REFRESH TOKEN
-      //                             =
+      //                             
 
       const refreshToken =
         generateRefreshToken({
@@ -794,9 +798,9 @@ class AuthController {
         });
 
 
-      //                             =
+      //                             
       // SAVE REFRESH TOKEN
-      //                             =
+      //                             
 
       user.refreshToken =
         refreshToken;
@@ -805,9 +809,9 @@ class AuthController {
       await user.save();
 
 
-      //                             =
+      //                             
       // SET ACCESS COOKIE
-      //                             =
+      //                             
 
       res.cookie(
 
@@ -820,9 +824,9 @@ class AuthController {
       );
 
 
-      //                             =
+      //                             
       // SET REFRESH COOKIE
-      //                             =
+      //                             
 
       res.cookie(
 
@@ -894,9 +898,9 @@ class AuthController {
         req.cookies.refreshToken;
 
 
-      //                             =
+      //                             
       // REFRESH TOKEN MISSING
-      //                             =
+      //                             
 
       if (!refreshToken) {
 
@@ -921,9 +925,9 @@ class AuthController {
       }
 
 
-      //                             =
+      //                             
       // FIND USER
-      //                             =
+      //                             
 
       const user =
         await User.findOne({
@@ -950,9 +954,9 @@ class AuthController {
       }
 
 
-      //                             =
+      //                             
       // CHECK STATUS
-      //                             =
+      //                             
 
       if (
         user.status !==
@@ -971,9 +975,9 @@ class AuthController {
       }
 
 
-      //                             =
+       
       // GENERATE NEW ACCESS TOKEN
-      //                             =
+       
 
       const accessToken =
         generateAccessToken({
@@ -987,9 +991,9 @@ class AuthController {
         });
 
 
-      //                             =
+       
       // SET ACCESS TOKEN COOKIE
-      //                             =
+       
 
       res.cookie(
 
@@ -1105,9 +1109,9 @@ class AuthController {
         req.user._id;
 
 
-      //                             =
+       
       // REMOVE REFRESH TOKEN
-      //                             =
+       
 
       await User.findByIdAndUpdate(
 
@@ -1121,9 +1125,9 @@ class AuthController {
       );
 
 
-      //                             =
+       
       // CLEAR ACCESS TOKEN
-      //                             =
+       
 
       res.clearCookie(
 
@@ -1142,9 +1146,9 @@ class AuthController {
       );
 
 
-      //                             =
+       
       // CLEAR REFRESH TOKEN
-      //                             =
+       
 
       res.clearCookie(
 
@@ -1180,6 +1184,141 @@ class AuthController {
 
   }
 
+  // Reset Password Link
+async resetPasswordLink(req, res) {
+  try {
+    const { email } = req.body;
+
+    // Validate email first
+    if (!email) {
+      return res.status(400).json({
+        status: false,
+        message: "Email is required!",
+      });
+    }
+
+    // Find user
+    const user = await User.findOne({
+      email: email.toLowerCase().trim(),
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found!",
+      });
+    }
+
+    // Create reset token
+    const secret =
+      user._id.toString() + process.env.JWT_SECRET;
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      secret,
+      {
+        expiresIn: "10m",
+      }
+    );
+
+    // Create reset link
+    const resetLink =
+      `${process.env.FRONTEND_URL}/reset-password?token=${encodeURIComponent(token)}&id=${encodeURIComponent(user._id.toString())}`;
+
+    // IMPORTANT: wait until email is actually sent
+    await sendResetPasswordLink(
+      user,
+      resetLink
+    );
+
+    return res.status(200).json({
+      status: true,
+      message:
+        "Password reset link sent successfully to your registered email.",
+    });
+
+  } catch (error) {
+    console.error(
+      "Error in forgetting password:",
+      error
+    );
+
+    return res.status(500).json({
+      status: false,
+      message:
+        "Unable to send password reset email. Please try again later.",
+    });
+  }
+}
+
+
+
+  // Reset Password
+  async resetPassword(req, res) {
+    try {
+      const {
+        userId,
+        token,
+        newPassword,
+        confirmPassword,
+      } = req.body;
+      if (
+        !userId ||
+        !token ||
+        !newPassword ||
+        !confirmPassword
+      ) {
+        return res.status(400).json({
+          status: false,
+          message: "All fields are required!",
+        });
+      }
+      if (newPassword !== confirmPassword) {
+        return res.status(400).json({
+          status: false,
+          message: "Password and confirm password should be same!",
+        });
+      }
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({
+          status: false,
+          message: "User not found!",
+        });
+      }
+      const secret = user._id.toString() + process.env.JWT_SECRET;
+      try {
+        jwt.verify(token, secret);
+      } catch (err) {
+        return res.status(400).json({
+          status: false,
+          message: "Invalid or expired reset link!",
+        });
+      }
+      const salt = await bcrypt.genSalt(10);
+      const passwordHash = await bcrypt.hash(newPassword, salt);
+      user.password = passwordHash;
+      user.refreshToken = null;
+      await user.save();
+      return res.status(200).json({
+  status: true,
+  message: "Password reset successful!",
+  data: {
+    role: user.role,
+  },
+});
+    } catch (error) {
+      console.log("Error in resetting password: ", error);
+      return res.status(500).json({
+        status: false,
+        message: "Server Error. Please try again later!",
+      });
+    }
+  }
+
 
    
   // CHANGE PASSWORD
@@ -1206,9 +1345,9 @@ class AuthController {
       } = req.body;
 
 
-      //                             =
+       
       // FIND USER
-      //                             =
+       
 
       const user =
         await User.findById(
@@ -1233,9 +1372,9 @@ class AuthController {
       }
 
 
-      //                             =
+       
       // COMPARE CURRENT PASSWORD
-      //                             =
+       
 
       const isPasswordMatched =
         await bcrypt.compare(
@@ -1261,9 +1400,9 @@ class AuthController {
       }
 
 
-      //                             =
+       
       // HASH NEW PASSWORD
-      //                             =
+       
 
       const hashedPassword =
         await bcrypt.hash(
@@ -1275,17 +1414,17 @@ class AuthController {
         );
 
 
-      //                             =
+       
       // UPDATE PASSWORD
-      //                             =
+       
 
       user.password =
         hashedPassword;
 
 
-      //                             =
+       
       // INVALIDATE REFRESH TOKEN
-      //                             =
+       
 
       user.refreshToken =
         null;
@@ -1294,9 +1433,9 @@ class AuthController {
       await user.save();
 
 
-      //                             =
+       
       // CLEAR ACCESS TOKEN
-      //                             =
+       
 
       res.clearCookie(
 
@@ -1315,9 +1454,9 @@ path: "/",
       );
 
 
-      //                             =
+       
       // CLEAR REFRESH TOKEN
-      //                             =
+       
 
       res.clearCookie(
 
