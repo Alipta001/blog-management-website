@@ -1,157 +1,492 @@
-# GolpoKotha
+# ✍️ GolpoKotha
 
-[![Next.js](https://img.shields.io/badge/Next.js-16.3.1-black?logo=next.js)](https://nextjs.org/)
-[![React](https://img.shields.io/badge/React-19.2.8-149eca?logo=react)](https://react.dev/)
-[![Express](https://img.shields.io/badge/Express-5.2.1-000000?logo=express)](https://expressjs.com/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?logo=mongodb)](https://www.mongodb.com/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+<div align="center">
 
-GolpoKotha is a full-stack blog publishing platform with email-verified registration, role-based dashboards, blog moderation, reader engagement, notifications, analytics, and password recovery.
+### **A Modern Full-Stack Blog Publishing & Content Management Platform**
 
-## Table of Contents
+*Create. Publish. Discover. Engage.*
 
-- [Overview](#overview)
-- [Features](#features)
-- [RBAC Matrix](#rbac-matrix)
-- [Tech Stack](#tech-stack)
-- [Repository Structure](#repository-structure)
-- [Core Workflows](#core-workflows)
-- [API Reference](#api-reference)
-- [Database Models](#database-models)
-- [Local Setup](#local-setup)
-- [Environment Variables](#environment-variables)
-- [Visuals](#visuals)
-- [Roadmap](#roadmap)
-- [Implementation Notes](#implementation-notes)
+<br/>
 
-## Overview
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge\&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge\&logo=react\&logoColor=black)](https://react.dev/)
+[![Node.js](https://img.shields.io/badge/Node.js-Backend-339933?style=for-the-badge\&logo=node.js\&logoColor=white)](https://nodejs.org/)
+[![Express](https://img.shields.io/badge/Express.js-5-000000?style=for-the-badge\&logo=express)](https://expressjs.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Database-47A248?style=for-the-badge\&logo=mongodb\&logoColor=white)](https://www.mongodb.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge\&logo=typescript\&logoColor=white)](https://www.typescriptlang.org/)
 
-GolpoKotha provides separate experiences for:
+<br/>
 
-- Administrators managing users, content, taxonomy, and moderation
-- Authors creating, submitting, and analyzing blog posts
-- Readers discovering published content and maintaining engagement history
+[![JWT](https://img.shields.io/badge/JWT-Authentication-000000?style=flat-square\&logo=jsonwebtokens)](https://jwt.io/)
+[![Redux](https://img.shields.io/badge/Redux_Toolkit-764ABC?style=flat-square\&logo=redux)](https://redux-toolkit.js.org/)
+[![Cloudinary](https://img.shields.io/badge/Cloudinary-Image_Storage-3448C5?style=flat-square\&logo=cloudinary)](https://cloudinary.com/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](#)
 
-The frontend is built with Next.js and Redux Toolkit. The backend exposes an Express REST API backed by MongoDB through Mongoose.
+<br/>
 
-## Features
+**🔐 Secure Authentication   •   📝 Content Publishing   •   👥 Role-Based Access   •   💬 Reader Engagement   •   📊 Analytics**
 
-### Authentication
+</div>
 
-- Login with JWT-based authentication
-- HttpOnly access and refresh-token cookies
-- Refresh-token rotation support
-- Logout and session restoration
-- Password change for authenticated users
-- Forgot-password email flow
-- Ten-minute password reset links
-- Email-verified registration
-- Six-digit registration OTPs
-- OTP expiry and invalid-attempt limits
-- Registration OTP resend
+---
 
-### Blog Publishing
+## 📖 About The Project
 
-- Create, update, submit, publish, reject, unpublish, and delete blogs
-- Draft and pending workflows
-- Featured and content image uploads
-- Cloudinary image storage
-- Public blog browsing
-- Search, category, author, tag, sorting, pagination, and view tracking
-- Soft deletion
-- Blog analytics for authors
+**GolpoKotha** is a modern full-stack blog publishing and content management platform designed around a structured **role-based publishing ecosystem**.
 
-### Reader Engagement
+The application provides dedicated experiences for three major user groups:
 
-- Blog likes and unlike actions
-- Approved public comments
-- Comment creation, editing, deletion, and moderation
-- Reading history
-- Blog view tracking
-- Notifications with read state and pagination
+<table>
+<tr>
+<td width="33%" align="center">
 
-### Administration
+### 👑 Administration
 
-- User management
-- User activation, deactivation, blocking, and deletion
-- Category management
-- Tag management
-- Blog moderation
-- Comment moderation
-- Administrative dashboards and statistics
+Manage the platform, users, content moderation, categories, tags, and comments.
 
-## RBAC Matrix
+</td>
 
-The backend uses the following persisted roles:
+<td width="33%" align="center">
 
-- `administration`
-- `author`
-- `user`
+### ✍️ Authors
 
-| Capability | Administration | Author | User |
-|---|:---:|:---:|:---:|
-| Authenticate and manage own profile | Yes | Yes | Yes |
-| Change password | Yes | Yes | Yes |
-| Browse published blogs | Yes | Yes | Yes |
-| Like published blogs | Yes | Yes | Yes |
-| Manage own comments | Yes | Yes | Yes |
-| View own notifications | Yes | Yes | Yes |
-| Manage reading history | Yes | Yes | Yes |
-| Create blogs | Yes | Yes | No |
-| Manage own blogs | Yes | Yes | No |
-| Submit blogs | Yes | Yes | No |
-| View author analytics | No | Yes | No |
-| Review own-blog comments | No | Yes | No |
-| View all blogs | Yes | No | No |
-| Publish, reject, or unpublish blogs | Yes | No | No |
-| Manage users | Yes | No | No |
-| Manage categories | Yes | No | No |
-| Manage tags | Yes | No | No |
-| Moderate all comments | Yes | No | No |
+Create, edit, submit, manage, and analyze blog content.
 
-The frontend also contains an `administrator` type, but the backend user schema accepts `administration`, `author`, and `user`.
+</td>
 
-## Tech Stack
+<td width="33%" align="center">
 
-| Area | Technologies |
-|---|---|
-| Frontend | Next.js `16.3.1`, React `19.2.8`, React DOM `19.2.8`, TypeScript |
-| UI | Tailwind CSS `4`, Lucide React, React Toastify |
-| State | Redux Toolkit, React Redux |
-| Forms | React Hook Form, Yup |
-| HTTP | Axios |
-| Charts | Recharts |
-| Backend | Node.js, Express `5.2.1` |
-| Database | MongoDB, Mongoose `9.6.2` |
-| Authentication | JSON Web Tokens, bcryptjs, HttpOnly cookies |
-| Validation | Joi schemas, controller checks, Mongoose validation |
-| Email | Nodemailer and Brevo SDK |
-| Uploads | Multer and Cloudinary |
-| Middleware and tooling | Helmet, CORS, Morgan, express-rate-limit, Nodemon |
-| Templates | EJS |
+### 📚 Readers
 
-## Repository Structure
+Discover published articles, interact with content, and maintain reading history.
+
+</td>
+</tr>
+</table>
+
+The project combines a modern frontend architecture with a structured REST API backend.
+
+```text
+Next.js + TypeScript
+        │
+        ▼
+Redux Toolkit
+        │
+        ▼
+Axios Service Layer
+        │
+        ▼
+Express REST API
+        │
+        ▼
+MongoDB + Mongoose
+```
+
+---
+
+# ✨ Features
+
+## 🔐 Authentication & Security
+
+<table>
+<tr>
+<td>
+
+* 🔑 JWT-based authentication
+* 🍪 HttpOnly cookie authentication
+* ♻️ Access token refresh
+* 🚪 Secure logout
+* 👤 Current user authentication
+* 🔒 Password hashing with bcrypt
+
+</td>
+
+<td>
+
+* ✉️ Email verification
+* 🔢 Six-digit OTP verification
+* ⏳ OTP expiration
+* 🛡️ Invalid attempt protection
+* 🔄 OTP resend functionality
+* 🔐 Password change
+
+</td>
+
+<td>
+
+* ❓ Forgot password
+* 🔗 Secure password reset links
+* ⏱️ Expiring reset tokens
+* 🔒 Password confirmation
+* 🚫 Refresh token invalidation
+* 🛡️ Protected routes
+
+</td>
+</tr>
+</table>
+
+---
+
+## 📝 Blog Publishing
+
+The platform supports a complete blog publishing and moderation lifecycle.
+
+### Supported Features
+
+* 📝 Create blog posts
+* ✏️ Update blog posts
+* 📤 Submit blogs for review
+* ✅ Publish blogs
+* ❌ Reject blogs
+* 📥 Unpublish blogs
+* 🗑️ Soft delete blogs
+* 🔍 Search functionality
+* 🏷️ Category filtering
+* 👤 Author filtering
+* 🔖 Tag filtering
+* 📄 Pagination
+* ↕️ Sorting
+* 👁️ View tracking
+* 📊 Author analytics
+
+---
+
+## 🔄 Blog Lifecycle
+
+```mermaid
+stateDiagram-v2
+    [*] --> Draft
+
+    Draft --> Pending: Submit
+
+    Pending --> Published: Publish
+
+    Pending --> Rejected: Reject
+
+    Rejected --> Draft: Edit
+
+    Published --> Unpublished: Unpublish
+
+    Unpublished --> Published: Publish Again
+```
+
+### Publishing Workflow
+
+```text
+✍️ Author
+   │
+   ▼
+📝 Create Blog
+   │
+   ▼
+📄 Draft
+   │
+   ▼
+📤 Submit
+   │
+   ▼
+⏳ Pending Review
+   │
+   ▼
+👑 Administration
+   │
+   ├───────────────┐
+   ▼               ▼
+✅ Published      ❌ Rejected
+   │
+   ▼
+📥 Unpublished
+```
+
+---
+
+## 💬 Reader Engagement
+
+Readers can actively interact with published content.
+
+| Feature              | Description                   |
+| -------------------- | ----------------------------- |
+| ❤️ Likes             | Like and unlike blog posts    |
+| 💬 Comments          | Create comments on blogs      |
+| ✏️ Comment Editing   | Update owned comments         |
+| 🗑️ Comment Deletion | Delete owned comments         |
+| 📖 Reading History   | Track previously read blogs   |
+| 👁️ Blog Views       | Track blog engagement         |
+| 🔔 Notifications     | View and manage notifications |
+
+---
+
+## 👑 Administration Panel
+
+The administration dashboard provides centralized control over the platform.
+
+<table>
+<tr>
+<td>
+
+### 👥 User Management
+
+* Activate users
+* Deactivate users
+* Block users
+* Delete users
+* Update user information
+
+</td>
+
+<td>
+
+### 📝 Content Moderation
+
+* View all blogs
+* Publish blogs
+* Reject blogs
+* Unpublish blogs
+* Manage content
+
+</td>
+
+<td>
+
+### 🏷️ Platform Management
+
+* Manage categories
+* Manage tags
+* Moderate comments
+* Manage platform data
+
+</td>
+</tr>
+</table>
+
+---
+
+# 👥 User Roles
+
+GolpoKotha implements **Role-Based Access Control (RBAC)**.
+
+```text
+┌─────────────────────┐
+│   ADMINISTRATION    │
+│ Platform Management │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│       AUTHOR        │
+│ Content Publishing  │
+└──────────┬──────────┘
+           │
+           ▼
+┌─────────────────────┐
+│        USER         │
+│ Content Engagement  │
+└─────────────────────┘
+```
+
+### Backend Roles
+
+```text
+administration
+author
+user
+```
+
+> ⚠️ **Important:** Role names must remain consistent between the frontend, backend, middleware, database schema, and authorization logic.
+
+---
+
+# 🛡️ RBAC Matrix
+
+| Capability                | 👑 Administration | ✍️ Author | 📚 User |
+| ------------------------- | :---------------: | :-------: | :-----: |
+| 🔐 Login                  |         ✅         |     ✅     |    ✅    |
+| 👤 Manage own profile     |         ✅         |     ✅     |    ✅    |
+| 🔒 Change password        |         ✅         |     ✅     |    ✅    |
+| 📚 Browse published blogs |         ✅         |     ✅     |    ✅    |
+| ❤️ Like blogs             |         ✅         |     ✅     |    ✅    |
+| 💬 Manage own comments    |         ✅         |     ✅     |    ✅    |
+| 🔔 View notifications     |         ✅         |     ✅     |    ✅    |
+| 📖 Reading history        |         ✅         |     ✅     |    ✅    |
+| 📝 Create blogs           |         ❌         |     ✅     |    ❌    |
+| ✏️ Manage own blogs       |         ❌         |     ✅     |    ❌    |
+| 📤 Submit blogs           |         ❌         |     ✅     |    ❌    |
+| 📊 Author analytics       |         ❌         |     ✅     |    ❌    |
+| 📚 Manage all blogs       |         ✅         |     ❌     |    ❌    |
+| ✅ Publish blogs           |         ✅         |     ❌     |    ❌    |
+| ❌ Reject blogs            |         ✅         |     ❌     |    ❌    |
+| 📥 Unpublish blogs        |         ✅         |     ❌     |    ❌    |
+| 👥 Manage users           |         ✅         |     ❌     |    ❌    |
+| 🏷️ Manage categories     |         ✅         |     ❌     |    ❌    |
+| 🔖 Manage tags            |         ✅         |     ❌     |    ❌    |
+| 💬 Moderate comments      |         ✅         |     ❌     |    ❌    |
+
+---
+
+# 🧰 Technology Stack
+
+## 🎨 Frontend
+
+| Technology         | Purpose                 |
+| ------------------ | ----------------------- |
+| ⚡ Next.js          | React framework         |
+| ⚛️ React           | User interface          |
+| 🔷 TypeScript      | Type safety             |
+| 🎨 Tailwind CSS    | Styling                 |
+| 🧠 Redux Toolkit   | State management        |
+| 🔗 React Redux     | Redux integration       |
+| 🌐 Axios           | HTTP communication      |
+| 📝 React Hook Form | Form management         |
+| ✅ Yup              | Form validation         |
+| 🔔 React Toastify  | Notifications           |
+| 🎯 Lucide React    | Icons                   |
+| 📊 Recharts        | Analytics visualization |
+
+---
+
+## ⚙️ Backend
+
+| Technology    | Purpose             |
+| ------------- | ------------------- |
+| 🟢 Node.js    | Runtime environment |
+| 🚂 Express.js | REST API            |
+| 🍃 MongoDB    | Database            |
+| 🦦 Mongoose   | MongoDB ODM         |
+| 🔐 JWT        | Authentication      |
+| 🔒 bcryptjs   | Password hashing    |
+| ✅ Joi         | Request validation  |
+| ✉️ Nodemailer | Email delivery      |
+| 📤 Brevo      | Email service       |
+| 📁 Multer     | File uploads        |
+| ☁️ Cloudinary | Image storage       |
+
+---
+
+## 🛡️ Security & Middleware
+
+```text
+Helmet
+   +
+CORS
+   +
+Cookie Parser
+   +
+Rate Limiting
+   +
+Authentication Middleware
+   +
+Role Authorization
+```
+
+| Tool                  | Purpose               |
+| --------------------- | --------------------- |
+| 🛡️ Helmet            | Security headers      |
+| 🌍 CORS               | Cross-origin control  |
+| 🍪 cookie-parser      | Cookie handling       |
+| 🚦 express-rate-limit | Request rate limiting |
+| 📋 Morgan             | HTTP request logging  |
+| 🔄 Nodemon            | Development server    |
+
+---
+
+# 🏗️ Architecture
+
+## Backend Architecture
+
+The backend follows a structured architecture inspired by the **MVC pattern**.
+
+```text
+                 ┌─────────────┐
+                 │   Request   │
+                 └──────┬──────┘
+                        │
+                        ▼
+                 ┌─────────────┐
+                 │    Route    │
+                 └──────┬──────┘
+                        │
+                        ▼
+                 ┌─────────────┐
+                 │ Middleware  │
+                 └──────┬──────┘
+                        │
+                        ▼
+                 ┌─────────────┐
+                 │ Controller  │
+                 └──────┬──────┘
+                        │
+                        ▼
+                 ┌─────────────┐
+                 │    Model    │
+                 └──────┬──────┘
+                        │
+                        ▼
+                 ┌─────────────┐
+                 │   MongoDB   │
+                 └─────────────┘
+```
+
+---
+
+## Frontend Architecture
+
+```text
+┌──────────────────────┐
+│        Pages         │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│      Components      │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│ Redux / Local State  │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│   API Service Layer  │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│        Axios         │
+└──────────┬───────────┘
+           │
+           ▼
+┌──────────────────────┐
+│    Express API       │
+└──────────────────────┘
+```
+
+---
+
+# 📂 Repository Structure
 
 ```text
 .
 ├── backend/
+│   │
 │   ├── app.js
 │   ├── package.json
-│   ├── app/
-│   │   ├── config/
-│   │   │   ├── cloudinary.js
-│   │   │   ├── db.js
-│   │   │   └── emailConfig.js
-│   │   ├── controllers/
-│   │   ├── middleware/
-│   │   ├── models/
-│   │   ├── routes/
-│   │   ├── utils/
-│   │   └── validations/
-│   ├── public/
-│   └── uploads/
+│   │
+│   └── app/
+│       ├── config/
+│       │   ├── cloudinary.js
+│       │   ├── db.js
+│       │   └── emailConfig.js
+│       │
+│       ├── controllers/
+│       ├── middleware/
+│       ├── models/
+│       ├── routes/
+│       ├── utils/
+│       └── validations/
 │
 ├── frontend/
+│   │
 │   ├── app/
 │   │   ├── (auth)/
 │   │   │   ├── forgot-password/
@@ -159,18 +494,23 @@ The frontend also contains an `administrator` type, but the backend user schema 
 │   │   │   ├── register/
 │   │   │   ├── reset-password/
 │   │   │   └── verifyOtp/
+│   │   │
 │   │   ├── (dashboard)/
 │   │   │   └── dashboard/
 │   │   │       ├── administration/
 │   │   │       ├── author/
 │   │   │       └── reader/
-│   │   ├── (public)/
+│   │   │
+│   │   ├
 │   │   ├── globals.css
 │   │   ├── layout.tsx
 │   │   └── page.tsx
+│   │
 │   ├── api/
 │   │   ├── axios/
-│   │   └── endPoints/
+│   │   ├── endPoints/
+│   │   └── services/
+│   │
 │   ├── components/
 │   │   ├── administration/
 │   │   ├── auth/
@@ -182,11 +522,13 @@ The frontend also contains an `administrator` type, but the backend user schema 
 │   │   ├── profile/
 │   │   ├── public/
 │   │   └── reader/
+│   │
 │   ├── redux/
 │   │   ├── hooks.ts
 │   │   ├── provider/
 │   │   ├── slice/
 │   │   └── store/
+│   │
 │   ├── types/
 │   ├── utils/
 │   ├── next.config.ts
@@ -196,367 +538,668 @@ The frontend also contains an `administrator` type, but the backend user schema 
 └── README.md
 ```
 
-## Core Workflows
+---
 
-### Authentication and Cookies
+# 🔄 Core Workflows
 
-1. A user submits login credentials to `POST /auth/login`.
-2. The backend validates the account and credentials.
-3. JWT access and refresh tokens are issued.
-4. Tokens are stored in secure HttpOnly cookies.
-5. Authenticated requests use the `accessToken` cookie.
-6. The frontend can request `POST /auth/refresh-token` when the access token expires.
-7. Logout clears the refresh-token cookie and stored session token.
-
-### Registration and OTP Verification
-
-1. Registration data is submitted to `POST /auth/send-registration-otp`.
-2. The backend checks whether the email already belongs to a user.
-3. The password is hashed for temporary registration storage.
-4. A six-digit OTP is generated and hashed.
-5. The OTP record expires after ten minutes.
-6. The OTP is sent by email.
-7. `POST /auth/resend-registration-otp` replaces the OTP and resets attempts.
-8. `POST /auth/verify-registration-otp` verifies the code.
-9. A verified user account is created after successful verification.
-
-Invalid OTP attempts are tracked, and the record is removed after five invalid attempts.
-
-### Password Reset
-
-1. A user submits an email through `POST /auth/forgot-password`.
-2. The backend finds the matching user.
-3. A JWT reset token is signed using `user._id + JWT_SECRET`.
-4. The token expires after ten minutes.
-5. A reset link is emailed in this format:
-
-   ```text
-   /reset-password?token=<token>&id=<user-id>
-   ```
-
-6. The frontend reads `token` and `id` from the query string.
-7. The new password and confirmation are submitted to `POST /auth/reset-password`.
-8. The backend verifies the token, hashes the new password, clears the stored refresh token, and saves the user.
-9. The frontend redirects the user to `/login`.
-
-### Blog Lifecycle
+## 🔐 Authentication Flow
 
 ```mermaid
-flowchart LR
-    Draft --> Pending
-    Pending --> Published
-    Pending --> Rejected
-    Published --> Unpublished
-    Unpublished --> Published
+sequenceDiagram
+    participant U as User
+    participant F as Frontend
+    participant B as Backend
+    participant D as MongoDB
+
+    U->>F: Enter credentials
+    F->>B: POST /auth/login
+    B->>D: Find user
+    D-->>B: User data
+    B->>B: Verify password
+    B-->>F: Set authentication cookies
+    F-->>U: Redirect to dashboard
 ```
 
-Typical workflow:
+---
 
-1. An author creates a blog as a draft.
-2. The author submits the draft.
-3. The blog becomes pending.
-4. Administration publishes or rejects the blog.
-5. Published blogs become visible to readers.
-6. Administration can unpublish published blogs.
-7. Unpublished blogs can be published again.
-8. Blog deletion is implemented as soft deletion.
+## ✉️ Registration & OTP Verification
 
-## API Reference
+```text
+👤 User
+   │
+   ▼
+📝 Registration Form
+   │
+   ▼
+📨 Send Registration Request
+   │
+   ▼
+🔍 Check Existing Email
+   │
+   ▼
+🔒 Hash Password
+   │
+   ▼
+🔢 Generate 6-Digit OTP
+   │
+   ▼
+🔐 Hash OTP
+   │
+   ▼
+✉️ Send Verification Email
+   │
+   ▼
+🔢 User Enters OTP
+   │
+   ▼
+✅ Verify OTP
+   │
+   ▼
+🎉 Create Verified Account
+```
 
-All API paths are relative to the backend origin.
+### OTP Security
 
-### Authentication
+* 🔒 OTPs are hashed before storage.
+* ⏳ OTPs expire after the configured duration.
+* 🚫 Invalid attempts are tracked.
+* 🛡️ Excessive invalid attempts invalidate the OTP.
+* ✉️ OTP resend functionality is supported.
 
-| Method | Endpoint | Access |
-|---|---|---|
-| `POST` | `/auth/forgot-password` | Public |
-| `POST` | `/auth/reset-password` | Public |
-| `POST` | `/auth/send-registration-otp` | Public |
-| `POST` | `/auth/resend-registration-otp` | Public |
-| `POST` | `/auth/verify-registration-otp` | Public |
-| `POST` | `/auth/login` | Public |
-| `POST` | `/auth/refresh-token` | Public, refresh cookie |
-| `GET` | `/auth/me` | Authenticated |
-| `POST` | `/auth/logout` | Authenticated |
-| `PATCH` | `/auth/change-password` | Authenticated |
+---
 
-### Blogs
+## 🔑 Forgot Password Flow
 
-| Method | Endpoint | Access |
-|---|---|---|
-| `GET` | `/blog` | Public |
-| `GET` | `/blog/:id` | Public, optional authentication |
-| `POST` | `/blog/:id/view` | Public, optional authentication |
-| `GET` | `/blog/my-blogs` | Author, administration |
-| `POST` | `/blog/create` | Author, administration |
-| `PATCH` | `/blog/:id/update` | Author owner, administration |
-| `PATCH` | `/blog/:id/submit` | Author owner, administration |
-| `GET` | `/blog/administration/all` | Administration |
-| `PATCH` | `/blog/:id/publish` | Administration |
-| `PATCH` | `/blog/:id/reject` | Administration |
-| `PATCH` | `/blog/:id/unpublish` | Administration |
-| `DELETE` | `/blog/:id/delete` | Author owner, administration |
+```mermaid
+flowchart TD
+    A[User clicks Forgot Password]
+    --> B[Enter registered email]
 
-Supported public blog query parameters include `search`, `category`, `author`, `tag`, `sort`, `page`, and `limit`. Supported sort values are `latest`, `oldest`, and `mostViewed`.
+    B --> C[POST /auth/forgot-password]
 
-### Categories
+    C --> D{User exists?}
 
-| Method | Endpoint | Access |
-|---|---|---|
-| `GET` | `/category` | Public |
-| `GET` | `/category/:id` | Public |
-| `POST` | `/category/create` | Administration |
-| `PATCH` | `/category/:id/update` | Administration |
-| `PATCH` | `/category/:id/activate` | Administration |
-| `PATCH` | `/category/:id/deactivate` | Administration |
-| `DELETE` | `/category/:id/delete` | Administration |
+    D -->|Yes| E[Generate reset token]
 
-### Tags
+    E --> F[Send reset link by email]
 
-| Method | Endpoint | Access |
-|---|---|---|
-| `GET` | `/tag` | Public |
-| `GET` | `/tag/:id` | Public |
-| `GET` | `/tag/admin/all` | Administration |
-| `POST` | `/tag` | Administration |
-| `PATCH` | `/tag/:id` | Administration |
-| `PATCH` | `/tag/:id/activate` | Administration |
-| `PATCH` | `/tag/:id/deactivate` | Administration |
-| `DELETE` | `/tag/:id` | Administration |
+    F --> G[User opens reset link]
 
-### Comments
+    G --> H[Enter new password]
 
-| Method | Endpoint | Access |
-|---|---|---|
-| `GET` | `/comment/blog/:blogId` | Public, approved comments |
-| `POST` | `/comment/blog/:blogId/create` | Authenticated |
-| `GET` | `/comment/author` | Author |
-| `GET` | `/comment/administration` | Administration |
-| `PATCH` | `/comment/:id/update` | Authenticated owner |
-| `DELETE` | `/comment/:id/delete` | Authenticated owner |
-| `PATCH` | `/comment/:id/moderate` | Administration |
+    H --> I[POST /auth/reset-password]
 
-Comment moderation supports `approved`, `rejected`, and `hidden`.
+    I --> J{Token valid?}
 
-### Likes
+    J -->|Yes| K[Hash and update password]
 
-| Method | Endpoint | Access |
-|---|---|---|
-| `GET` | `/like/:blogId/like-count` | Public |
-| `GET` | `/like/:blogId/status` | Authenticated |
-| `POST` | `/like/:blogId/like` | Authenticated |
-| `DELETE` | `/like/:blogId/unlike` | Authenticated |
+    K --> L[Invalidate refresh token]
 
-### Notifications
+    L --> M[Redirect to Login]
 
-| Method | Endpoint | Access |
-|---|---|---|
-| `GET` | `/notification` | Authenticated |
-| `PATCH` | `/notification/read-all` | Authenticated |
-| `PATCH` | `/notification/:id/read` | Authenticated recipient |
-| `DELETE` | `/notification/:id/delete` | Authenticated recipient |
+    D -->|No| N[Return error]
 
-### Reading History
+    J -->|No| O[Invalid or expired link]
+```
 
-| Method | Endpoint | Access |
-|---|---|---|
-| `POST` | `/readingHistory/:blogId` | Authenticated |
-| `GET` | `/readingHistory` | Authenticated |
-| `DELETE` | `/readingHistory` | Authenticated |
+---
 
-### Users and Profiles
+# 📡 API Reference
 
-| Method | Endpoint | Access |
-|---|---|---|
-| `GET` | `/user/profile` | Authenticated |
-| `PATCH` | `/user/profile/update` | Authenticated |
-| `GET` | `/user/all-user` | Administration |
-| `GET` | `/user/:id` | Administration |
-| `PATCH` | `/user/:id/update` | Administration |
-| `PATCH` | `/user/:id/activate` | Administration |
-| `PATCH` | `/user/:id/deactivate` | Administration |
-| `PATCH` | `/user/:id/block` | Administration |
-| `DELETE` | `/user/:id/delete` | Administration |
+> All endpoints are relative to the backend base URL.
 
-### Analytics
+## 🔐 Authentication
 
-| Method | Endpoint | Access |
-|---|---|---|
-| `GET` | `/analytics/author` | Author |
+| Method  | Endpoint                        | Access            |
+| ------- | ------------------------------- | ----------------- |
+| `POST`  | `/auth/send-registration-otp`   | 🌐 Public         |
+| `POST`  | `/auth/verify-registration-otp` | 🌐 Public         |
+| `POST`  | `/auth/resend-registration-otp` | 🌐 Public         |
+| `POST`  | `/auth/login`                   | 🌐 Public         |
+| `POST`  | `/auth/forgot-password`         | 🌐 Public         |
+| `POST`  | `/auth/reset-password`          | 🌐 Public         |
+| `POST`  | `/auth/refresh-token`           | 🍪 Refresh Cookie |
+| `GET`   | `/auth/me`                      | 🔐 Authenticated  |
+| `POST`  | `/auth/logout`                  | 🔐 Authenticated  |
+| `PATCH` | `/auth/change-password`         | 🔐 Authenticated  |
 
-Supported analytics ranges are `7d`, `30d`, `90d`, and `all`.
+---
 
-## Database Models
+## 📝 Blogs
 
-| Model | Purpose |
-|---|---|
-| `User` | Accounts, roles, password hashes, status, profile data, verification state, refresh tokens |
-| `Blog` | Blog content, authorship, taxonomy, status, images, views, publication metadata, deletion state |
-| `Category` | Blog categories, slugs, descriptions, images, active and deletion state |
-| `Tag` | Tags, slugs, active and deletion state |
-| `Comment` | Blog comments, authorship, moderation state, and moderator metadata |
-| `Like` | User/blog likes with a unique compound index |
-| `Notification` | Recipient notifications, references, messages, read state, and notification type |
-| `ReadingHistory` | User/blog reading records with repeat-visit timestamps |
-| `BlogView` | Blog view records with optional user association |
-| `Otp` | Hashed OTPs, expiry, purpose, temporary registration data, and attempt count |
+| Method   | Endpoint                   | Access                    |
+| -------- | -------------------------- | ------------------------- |
+| `GET`    | `/blog`                    | 🌐 Public                 |
+| `GET`    | `/blog/:id`                | 🌐 Public                 |
+| `POST`   | `/blog/:id/view`           | 🌐 Public / Optional Auth |
+| `GET`    | `/blog/my-blogs`           | ✍️ Author                 |
+| `POST`   | `/blog/create`             | ✍️ Author                 |
+| `PATCH`  | `/blog/:id/update`         | 👤 Owner                  |
+| `PATCH`  | `/blog/:id/submit`         | 👤 Owner                  |
+| `GET`    | `/blog/administration/all` | 👑 Administration         |
+| `PATCH`  | `/blog/:id/publish`        | 👑 Administration         |
+| `PATCH`  | `/blog/:id/reject`         | 👑 Administration         |
+| `PATCH`  | `/blog/:id/unpublish`      | 👑 Administration         |
+| `DELETE` | `/blog/:id/delete`         | 👤 Owner / 👑 Admin       |
 
-MongoDB connectivity is configured through `MONGODB_URL`.
+### 🔍 Query Parameters
 
-## Local Setup
+```text
+search
+category
+author
+tag
+sort
+page
+limit
+```
 
-### Prerequisites
+### ↕️ Supported Sorting
 
-- Node.js and npm
-- MongoDB connection
-- SMTP or Brevo email configuration
-- Cloudinary credentials for image uploads
+```text
+latest
+oldest
+mostViewed
+```
 
-### Backend
+---
+
+## 🏷️ Categories
+
+| Method   | Endpoint                   | Access            |
+| -------- | -------------------------- | ----------------- |
+| `GET`    | `/category`                | 🌐 Public         |
+| `GET`    | `/category/:id`            | 🌐 Public         |
+| `POST`   | `/category/create`         | 👑 Administration |
+| `PATCH`  | `/category/:id/update`     | 👑 Administration |
+| `PATCH`  | `/category/:id/activate`   | 👑 Administration |
+| `PATCH`  | `/category/:id/deactivate` | 👑 Administration |
+| `DELETE` | `/category/:id/delete`     | 👑 Administration |
+
+---
+
+## 🔖 Tags
+
+| Method   | Endpoint              | Access            |
+| -------- | --------------------- | ----------------- |
+| `GET`    | `/tag`                | 🌐 Public         |
+| `GET`    | `/tag/:id`            | 🌐 Public         |
+| `GET`    | `/tag/admin/all`      | 👑 Administration |
+| `POST`   | `/tag`                | 👑 Administration |
+| `PATCH`  | `/tag/:id`            | 👑 Administration |
+| `PATCH`  | `/tag/:id/activate`   | 👑 Administration |
+| `PATCH`  | `/tag/:id/deactivate` | 👑 Administration |
+| `DELETE` | `/tag/:id`            | 👑 Administration |
+
+---
+
+## 💬 Comments
+
+| Method   | Endpoint                       | Access            |
+| -------- | ------------------------------ | ----------------- |
+| `GET`    | `/comment/blog/:blogId`        | 🌐 Public         |
+| `POST`   | `/comment/blog/:blogId/create` | 🔐 Authenticated  |
+| `GET`    | `/comment/author`              | ✍️ Author         |
+| `GET`    | `/comment/administration`      | 👑 Administration |
+| `PATCH`  | `/comment/:id/update`          | 👤 Owner          |
+| `DELETE` | `/comment/:id/delete`          | 👤 Owner          |
+| `PATCH`  | `/comment/:id/moderate`        | 👑 Administration |
+
+### Moderation States
+
+```text
+approved
+rejected
+hidden
+```
+
+---
+
+## ❤️ Likes
+
+| Method   | Endpoint                   | Access           |
+| -------- | -------------------------- | ---------------- |
+| `GET`    | `/like/:blogId/like-count` | 🌐 Public        |
+| `GET`    | `/like/:blogId/status`     | 🔐 Authenticated |
+| `POST`   | `/like/:blogId/like`       | 🔐 Authenticated |
+| `DELETE` | `/like/:blogId/unlike`     | 🔐 Authenticated |
+
+---
+
+## 🔔 Notifications
+
+| Method   | Endpoint                   | Access           |
+| -------- | -------------------------- | ---------------- |
+| `GET`    | `/notification`            | 🔐 Authenticated |
+| `PATCH`  | `/notification/read-all`   | 🔐 Authenticated |
+| `PATCH`  | `/notification/:id/read`   | 👤 Recipient     |
+| `DELETE` | `/notification/:id/delete` | 👤 Recipient     |
+
+---
+
+## 📖 Reading History
+
+| Method   | Endpoint                  | Access           |
+| -------- | ------------------------- | ---------------- |
+| `POST`   | `/readingHistory/:blogId` | 🔐 Authenticated |
+| `GET`    | `/readingHistory`         | 🔐 Authenticated |
+| `DELETE` | `/readingHistory`         | 🔐 Authenticated |
+
+---
+
+## 👤 Users & Profiles
+
+| Method   | Endpoint               | Access            |
+| -------- | ---------------------- | ----------------- |
+| `GET`    | `/user/profile`        | 🔐 Authenticated  |
+| `PATCH`  | `/user/profile/update` | 🔐 Authenticated  |
+| `GET`    | `/user/all-user`       | 👑 Administration |
+| `GET`    | `/user/:id`            | 👑 Administration |
+| `PATCH`  | `/user/:id/update`     | 👑 Administration |
+| `PATCH`  | `/user/:id/activate`   | 👑 Administration |
+| `PATCH`  | `/user/:id/deactivate` | 👑 Administration |
+| `PATCH`  | `/user/:id/block`      | 👑 Administration |
+| `DELETE` | `/user/:id/delete`     | 👑 Administration |
+
+---
+
+## 📊 Analytics
+
+| Method | Endpoint            | Access    |
+| ------ | ------------------- | --------- |
+| `GET`  | `/analytics/author` | ✍️ Author |
+
+Supported ranges:
+
+```text
+7d
+30d
+90d
+all
+```
+
+---
+
+# 🗄️ Database Models
+
+| Model               | Purpose                                                        |
+| ------------------- | -------------------------------------------------------------- |
+| 👤 `User`           | User accounts, authentication, roles, status, and profile data |
+| 📝 `Blog`           | Blog content, status, authorship, views, and metadata          |
+| 🗂️ `Category`      | Blog categorization                                            |
+| 🏷️ `Tag`           | Blog tagging                                                   |
+| 💬 `Comment`        | Blog comments and moderation                                   |
+| ❤️ `Like`           | User engagement through likes                                  |
+| 🔔 `Notification`   | User notifications                                             |
+| 📖 `ReadingHistory` | Previously read content                                        |
+| 👁️ `BlogView`      | Blog view tracking                                             |
+| 🔢 `Otp`            | OTP verification and temporary registration data               |
+
+---
+
+# 🛡️ Security
+
+## 🔒 Password Security
+
+Passwords are securely hashed using:
+
+```text
+bcryptjs
+```
+
+> Passwords are never stored in plain text.
+
+---
+
+## 🍪 Cookie-Based Authentication
+
+Authentication tokens are stored using **HttpOnly cookies**.
+
+```text
+┌──────────────────┐
+│   Access Token   │
+└────────┬─────────┘
+         │
+         ▼
+ Protected API Access
+
+
+┌──────────────────┐
+│  Refresh Token   │
+└────────┬─────────┘
+         │
+         ▼
+ Generate New Access Token
+```
+
+---
+
+## 🔑 Password Reset Security
+
+Password reset functionality includes:
+
+* 🔐 Signed reset tokens
+* ⏳ Limited expiration
+* ✉️ Email-based reset links
+* 🔍 Token verification
+* 🔒 Secure password hashing
+* 🚫 Refresh token invalidation
+
+---
+
+# 💻 Getting Started
+
+## 📋 Prerequisites
+
+Make sure you have:
+
+* 🟢 Node.js
+* 📦 npm
+* 🍃 MongoDB database
+* ✉️ SMTP or Brevo email credentials
+* ☁️ Cloudinary credentials
+
+---
+
+# ⚙️ Backend Setup
+
+### 1️⃣ Navigate to the backend
 
 ```bash
 cd backend
+```
+
+### 2️⃣ Install dependencies
+
+```bash
 npm install
+```
+
+### 3️⃣ Configure environment variables
+
+Create a `.env` file.
+
+### 4️⃣ Start development server
+
+```bash
 npm run dev
 ```
 
-The production-style command is:
+### Production
 
 ```bash
 npm start
 ```
 
-The backend defaults to port `4000`.
+Backend:
 
-### Frontend
+```text
+http://localhost:4000
+```
+
+---
+
+# 🎨 Frontend Setup
+
+### 1️⃣ Navigate to the frontend
 
 ```bash
 cd frontend
+```
+
+### 2️⃣ Install dependencies
+
+```bash
 npm install
+```
+
+### 3️⃣ Start development server
+
+```bash
 npm run dev
 ```
 
-The frontend defaults to port `3000`.
+Frontend:
 
-Additional frontend commands:
+```text
+http://localhost:3000
+```
+
+### Production Build
 
 ```bash
 npm run build
 npm start
+```
+
+### Run Linter
+
+```bash
 npm run lint
 ```
 
-## Environment Variables
+---
 
-Use placeholders for all credentials and secrets.
+# 🔑 Environment Variables
 
-### Backend `.env`
+> ⚠️ **Never commit real environment variables or secrets to GitHub.**
+
+## Backend `.env`
 
 ```env
+# SERVER
 PORT=4000
 NODE_ENV=development
 
+
+# DATABASE
 MONGODB_URL=<your-mongodb-connection-string>
 
-ACCESS_TOKEN_SECRET=<your-access-token-secret>
-ACCESS_TOKEN_EXPIRES_IN=30s
 
-REFRESH_TOKEN_SECRET=<your-refresh-token-secret>
-REFRESH_TOKEN_EXPIRES_IN=7d
-
-JWT_SECRET=<your-password-reset-jwt-secret>
-
-FRONTEND_URL=http://localhost:3000
-
-CLOUDINARY_CLOUD_NAME=<your-cloudinary-cloud-name>
-CLOUDINARY_API_KEY=<your-cloudinary-api-key>
-CLOUDINARY_API_SECRET=<your-cloudinary-api-secret>
-
-EMAIL_HOST=<your-smtp-host>
-EMAIL_PORT=587
-EMAIL_USER=<your-smtp-user>
-EMAIL_PASS=<your-smtp-password>
-EMAIL_FROM=<your-sender-email>
-
-BREVO_API_KEY=<your-brevo-api-key>
-```
-
-### Render Backend Variables
-
-Configure the same backend variables in the Render service environment:
-
-```env
-PORT=<render-assigned-port>
-NODE_ENV=production
-
-MONGODB_URL=<your-mongodb-connection-string>
-
+# ACCESS TOKEN
 ACCESS_TOKEN_SECRET=<your-access-token-secret>
 ACCESS_TOKEN_EXPIRES_IN=<access-token-expiry>
 
+
+# REFRESH TOKEN
 REFRESH_TOKEN_SECRET=<your-refresh-token-secret>
 REFRESH_TOKEN_EXPIRES_IN=<refresh-token-expiry>
 
+
+# PASSWORD RESET
 JWT_SECRET=<your-password-reset-jwt-secret>
 
-FRONTEND_URL=<your-vercel-frontend-url>
 
+# FRONTEND
+FRONTEND_URL=http://localhost:3000
+
+
+# CLOUDINARY
 CLOUDINARY_CLOUD_NAME=<your-cloudinary-cloud-name>
 CLOUDINARY_API_KEY=<your-cloudinary-api-key>
 CLOUDINARY_API_SECRET=<your-cloudinary-api-secret>
 
+
+# EMAIL
 EMAIL_HOST=<your-smtp-host>
-EMAIL_PORT=<your-smtp-port>
-EMAIL_USER=<your-smtp-user>
-EMAIL_PASS=<your-smtp-password>
+EMAIL_PORT=587
+EMAIL_USER=<your-email-user>
+EMAIL_PASS=<your-email-password>
 EMAIL_FROM=<your-sender-email>
 
+
+# BREVO
 BREVO_API_KEY=<your-brevo-api-key>
 ```
 
-### Frontend `.env.local`
+---
+
+## Frontend `.env.local`
 
 ```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
 ```
 
-### Vercel Frontend Variables
+---
 
-```env
-NEXT_PUBLIC_API_BASE_URL=<your-render-backend-url>
+# 🚀 Deployment
+
+The project can be deployed using the following architecture:
+
+```text
+                 ┌──────────────┐
+                 │    Vercel    │
+                 │   Frontend   │
+                 └──────┬───────┘
+                        │
+                        ▼
+                 ┌──────────────┐
+                 │    Render    │
+                 │   Backend    │
+                 └──────┬───────┘
+                        │
+                        ▼
+                 ┌──────────────┐
+                 │ MongoDB Atlas│
+                 │   Database   │
+                 └──────────────┘
 ```
 
-The frontend Axios client uses `NEXT_PUBLIC_API_BASE_URL`. If it is not provided, the implementation falls back to the configured deployed API URL.
+### Suggested Deployment Stack
 
-## Visuals
+| Layer       | Platform      |
+| ----------- | ------------- |
+| 🎨 Frontend | Vercel        |
+| ⚙️ Backend  | Render        |
+| 🍃 Database | MongoDB Atlas |
+| ☁️ Images   | Cloudinary    |
+| ✉️ Email    | SMTP / Brevo  |
 
-<!-- Add screenshot here: Login and registration experience -->
+---
 
-<!-- Add screenshot here: Reader blog discovery page -->
+# 🖼️ Screenshots
 
-<!-- Add screenshot here: Author dashboard -->
+> Add project screenshots here as the UI is finalized.
 
-<!-- Add screenshot here: Administration dashboard -->
+<table>
+<tr>
+<td align="center">
 
-<!-- Add screenshot here: Blog editor and moderation workflow -->
+### 🔐 Authentication
 
-## Roadmap
+`Add Screenshot`
 
-No additional roadmap is defined in the current implementation.
+</td>
 
-<!-- Add future roadmap items here only when they are implemented or formally planned. -->
+<td align="center">
 
-## Implementation Notes
+### 📚 Blog Discovery
 
-- Access and refresh tokens are stored in secure HttpOnly cookies.
-- The backend authentication middleware reads the `accessToken` cookie.
-- Password reset tokens expire after ten minutes.
-- Password reset clears the stored user refresh token.
-- Registration OTP records use a MongoDB TTL index.
-- Registration OTP attempts are limited to five invalid attempts.
-- Blog image uploads use Multer memory storage and Cloudinary.
-- Featured images accept one image upload.
-- Content images accept up to ten image uploads.
-- Uploaded files are limited to five megabytes and must use image MIME types.
-- Frontend authentication routes are included in the proxy matcher.
-- The proxy currently forwards requests with `NextResponse.next()` and does not implement server-side authorization.
+`Add Screenshot`
+
+</td>
+</tr>
+
+<tr>
+<td align="center">
+
+### ✍️ Author Dashboard
+
+`Add Screenshot`
+
+</td>
+
+<td align="center">
+
+### 👑 Administration Dashboard
+
+`Add Screenshot`
+
+</td>
+</tr>
+</table>
+
+---
+
+# 🔮 Future Improvements
+
+Planned or potential enhancements:
+
+* [ ] ✨ Rich text editor improvements
+* [ ] 🌐 Social authentication
+* [ ] 🔖 Bookmark functionality
+* [ ] 👥 Author following system
+* [ ] 🔍 Advanced search
+* [ ] 📊 Advanced analytics
+* [ ] 🔗 Social sharing
+* [ ] 🌍 Multi-language support
+* [ ] 🌙 Dark mode
+* [ ] 🧪 Automated testing
+* [ ] 📚 Swagger / OpenAPI documentation
+* [ ] 🔔 Advanced notification preferences
+* [ ] 🚀 Performance optimization
+
+---
+
+# 📝 Implementation Notes
+
+* 🍪 Access and refresh tokens use HttpOnly cookies.
+* 🔐 Authentication middleware protects restricted routes.
+* 🔑 Password reset links have limited validity.
+* 🚫 Password resets invalidate the stored refresh token.
+* 🔢 Registration OTPs are hashed before database storage.
+* ⏳ OTP expiration is enforced.
+* 🛡️ Invalid OTP attempts are limited.
+* 📤 Images are processed using Multer.
+* ☁️ Cloudinary handles cloud image storage.
+* 📝 Blogs follow a structured moderation workflow.
+* 🗑️ Blog deletion supports a soft-delete strategy.
+* 🧠 Redux Toolkit manages frontend state.
+* 🌐 Axios handles API communication.
+* 👥 Role-based authorization controls protected functionality.
+
+---
+
+# 🤝 Contributing
+
+Contributions and improvements are welcome!
+
+```text
+1. Fork the repository
+        ↓
+2. Create a feature branch
+        ↓
+3. Make your changes
+        ↓
+4. Commit your changes
+        ↓
+5. Push your branch
+        ↓
+6. Create a Pull Request
+```
+
+---
+
+# 👨‍💻 Author
+
+<div align="center">
+
+## **Alipta Ghosh**
+
+### Full-Stack Developer
+
+Building modern, scalable web applications using:
+
+**Next.js • React • TypeScript • Node.js • Express • MongoDB**
+
+<br/>
+
+---
+
+### ⭐ If you found this project interesting, consider giving it a star!
+
+<br/>
+
+**Built with ❤️ using the MERN ecosystem and Next.js**
+
+</div>
