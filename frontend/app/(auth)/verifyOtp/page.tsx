@@ -193,7 +193,7 @@ function VerifyOtpContent() {
               text-white
             "
           >
-            Blog Management
+            GolpoKotha
           </span>
 
         </Link>
@@ -217,7 +217,7 @@ function VerifyOtpContent() {
           "
         >
 
-          © {new Date().getFullYear()} Blog Management.
+          © {new Date().getFullYear()} GolpoKotha.
           All rights reserved.
 
         </p>

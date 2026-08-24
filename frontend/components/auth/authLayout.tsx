@@ -130,7 +130,7 @@ export default function AuthLayout({
                 tracking-tight
               "
             >
-              BlogSpace
+              GolpoKotha
             </span>
 
           </Link>
@@ -323,7 +323,7 @@ export default function AuthLayout({
               text-zinc-600
             "
           >
-            © 2026 BlogSpace. Built for ideas.
+            © 2026 GolpoKotha. Built for ideas.
           </p>
 
         </div>
@@ -385,7 +385,7 @@ export default function AuthLayout({
               font-semibold
             "
           >
-            BlogSpace
+            GolpoKotha
           </span>
 
         </Link>

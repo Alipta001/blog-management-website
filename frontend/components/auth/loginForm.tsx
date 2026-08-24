@@ -506,7 +506,7 @@ export default function LoginForm() {
           text-zinc-500
         "
       >
-        New to BlogSpace?
+        New to GolpoKotha?
 
         {" "}
 

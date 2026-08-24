@@ -64,7 +64,7 @@ app.use("/analytics", analyticsRoutes);
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "Blog Management API is running",
+    message: "GolpoKotha API is running",
   });
 });
 

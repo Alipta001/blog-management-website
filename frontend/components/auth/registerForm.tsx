@@ -406,7 +406,7 @@ export default function RegisterForm() {
             text-zinc-300
           "
         >
-          How do you want to use BlogSpace?
+          How do you want to use GolpoKotha?
         </label>
 
 

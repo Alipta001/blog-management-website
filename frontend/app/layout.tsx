@@ -6,7 +6,7 @@ import Providers from "@/redux/provider/provider";
 
 
 export const metadata: Metadata = {
-  title: "Your App",
+  title: "GolpoKotha",
   description: "Premium blog platform",
 };
 

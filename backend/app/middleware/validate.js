@@ -1,23 +1,23 @@
 
-const validate = (schema) => {
-    return (req, res, next) => {
+// const validate = (schema) => {
+//     return (req, res, next) => {
 
-        const { error, value } = schema.validate(req.body);
+//         const { error, value } = schema.validate(req.body);
 
-        if (error) {
-            return res.status(400).json({
-                success: false,
-                errors: error.details.map(err => ({
-                    field: err.path[0],
-                    message: err.message
-                }))
-            });
-        }
+//         if (error) {
+//             return res.status(400).json({
+//                 success: false,
+//                 errors: error.details.map(err => ({
+//                     field: err.path[0],
+//                     message: err.message
+//                 }))
+//             });
+//         }
 
-        req.body = value;
+//         req.body = value;
 
-        next();
-    };
-};
+//         next();
+//     };
+// };
 
-module.exports = validate;
+// module.exports = validate;

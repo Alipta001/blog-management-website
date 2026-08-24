@@ -96,7 +96,7 @@ export default function MobileSidebar({
             <div>
 
               <h1 className="font-bold text-white">
-                BlogSpace
+                GolpoKotha
               </h1>
 
               <p className="text-xs capitalize text-slate-500">

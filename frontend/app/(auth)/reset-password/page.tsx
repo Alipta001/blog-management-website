@@ -142,7 +142,7 @@ export default function ResetPasswordPage() {
   return (
     <AuthLayout
       title="Choose a new password"
-      subtitle="Create a fresh password for your BlogSpace account."
+      subtitle="Create a fresh password for your GolpoKotha account."
     >
       <Suspense>
         <ResetPasswordForm />

@@ -12,7 +12,7 @@
 //     await transporter.sendMail({
 
 //       from:
-//         `"Blog Management" <${process.env.EMAIL_FROM}>`,
+//         `"GolpoKotha" <${process.env.EMAIL_FROM}>`,
 
 //       to:
 //         email,
@@ -23,7 +23,7 @@
 
 //       text: `Hello ${name},
 
-// Thank you for registering with Blog Management.
+// Thank you for registering with GolpoKotha.
 
 // Your email verification OTP is:
 
@@ -36,7 +36,7 @@
 // If you did not request this registration, please ignore this email.
 
 // Regards,
-// Blog Management Team`,
+// GolpoKotha Team`,
 
 
 //       html: `
@@ -92,7 +92,7 @@
 //                     font-weight:700;
 //                   "
 //                 >
-//                   Blog Management
+//                   GolpoKotha
 //                 </h1>
 
 
@@ -141,7 +141,7 @@
 //                 >
 //                   Thank you for registering with
 //                   <strong>
-//                     Blog Management
+//                     GolpoKotha
 //                   </strong>.
 //                 </p>
 
@@ -274,7 +274,7 @@
 //                   "
 //                 >
 //                   © ${new Date().getFullYear()}
-//                   Blog Management.
+//                   GolpoKotha.
 //                   All Rights Reserved.
 //                 </p>
 
@@ -322,7 +322,7 @@ const sendRegistrationOtpEmail = async ({ email, name, otp }) => {
   return await brevo.transactionalEmails.sendTransacEmail({
     subject: "Verify Your Email Address",
     sender: {
-      name: "Blog Management",
+      name: "GolpoKotha",
       email: process.env.EMAIL_FROM || process.env.EMAIL_USER,
     },
     to: [{ email: email, name: name }],
@@ -330,7 +330,7 @@ const sendRegistrationOtpEmail = async ({ email, name, otp }) => {
     // Plain Text Version
     textContent: `Hello ${name},
 
-Thank you for registering with Blog Management.
+Thank you for registering with GolpoKotha.
 
 Your email verification OTP is:
 
@@ -343,7 +343,7 @@ Do not share this OTP with anyone.
 If you did not request this registration, please ignore this email.
 
 Regards,
-Blog Management Team`,
+GolpoKotha Team`,
 
     // HTML Template Version
     htmlContent: `
@@ -385,7 +385,7 @@ Blog Management Team`,
                   font-weight:700;
                 "
               >
-                Blog Management
+                GolpoKotha
               </h1>
               <p
                 style="
@@ -420,7 +420,7 @@ Blog Management Team`,
                 "
               >
                 Thank you for registering with
-                <strong>Blog Management</strong>.
+                <strong>GolpoKotha</strong>.
               </p>
 
               <p
@@ -521,7 +521,7 @@ Blog Management Team`,
                   font-size:13px;
                 "
               >
-                © ${new Date().getFullYear()} Blog Management. All Rights Reserved.
+                © ${new Date().getFullYear()} GolpoKotha. All Rights Reserved.
               </p>
 
               <p

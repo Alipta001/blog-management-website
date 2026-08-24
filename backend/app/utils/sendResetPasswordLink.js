@@ -191,7 +191,7 @@ const transporter = require("../config/emailConfig");
 const sendResetPasswordLink = async ( user, link) => {
   try {
     const info = await transporter.sendMail({
-      from: `"Role Access" <${process.env.EMAIL_FROM}>`,
+      from: `"GolpoKotha" <${process.env.EMAIL_FROM}>`,
       to:  user.email,
       subject: "Reset Your Password",
 
@@ -416,7 +416,7 @@ If you did not request a password reset, you can safely ignore this email.
               font-size:12px;
             "
           >
-            © 2026 Role Access. All rights reserved.
+            © 2026 GolpoKotha. All rights reserved.
           </p>
         </td>
       </tr>

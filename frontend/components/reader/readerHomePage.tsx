@@ -94,7 +94,7 @@ export default function ReaderHomePage() {
         >
           Explore the latest published
           stories, ideas and perspectives
-          from the BlogSpace community.
+          from the GolpoKotha community.
         </p>
 
         {/* SEARCH */}

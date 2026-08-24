@@ -58,7 +58,7 @@ export default function Sidebar({
           <div>
 
             <h1 className="font-bold tracking-tight text-white">
-              BlogSpace
+              GolpoKotha
             </h1>
 
             <p className="text-xs text-slate-500">

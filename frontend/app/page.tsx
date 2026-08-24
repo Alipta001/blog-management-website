@@ -64,7 +64,7 @@ export default function Home() {
         <div className="h-10 w-10 animate-spin rounded-full border-4 border-zinc-700 border-t-violet-500" />
 
         <p className="text-sm text-zinc-400">
-          Loading BlogSpace...
+          Loading GolpoKotha...
         </p>
 
       </div>
