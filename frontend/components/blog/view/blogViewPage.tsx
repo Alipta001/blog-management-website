@@ -747,9 +747,9 @@ export default function BlogViewPage({
         </div>
 
 
-        {/*                      ====
+        {/*                     
             ROLE ACTIONS
-                             ==== */}
+                              */}
 
         {context !== "public" && (
 
@@ -946,7 +946,7 @@ export default function BlogViewPage({
                         }
 
                         href={
-                          `/blogs/${related._id}`
+                          `/dashboard/administration/blogs/${related._id}`
                         }
 
                         className="
