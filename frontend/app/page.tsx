@@ -90,7 +90,6 @@ export default function Home() {
         break;
 
 
-      case "reader":
 
       case "user":
 

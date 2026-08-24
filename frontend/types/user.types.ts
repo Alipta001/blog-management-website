@@ -5,7 +5,6 @@ export type UserRole =
   | "administration"
   | "author"
   | "user"
-  | "reader";
 
 
 export type UserStatus =
