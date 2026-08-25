@@ -46,6 +46,8 @@ router.get(
 router.get(
   "/blog/:blogId",
 
+  authMiddleware.optionalAuthMiddleware,
+
   commentController.getBlogComments
 );
 
@@ -86,6 +88,24 @@ router.delete(
   authMiddleware,
 
   commentController.deleteComment
+);
+
+router.patch(
+  "/:id/like",
+
+  authMiddleware,
+
+  commentController.toggleCommentLike,
+);
+
+router.patch(
+  "/:id/pin",
+
+  authMiddleware,
+
+  authorize("author"),
+
+  commentController.toggleCommentPin,
 );
 
 

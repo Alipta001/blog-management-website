@@ -165,6 +165,11 @@ const userSchema = new mongoose.Schema(
       default: null,
     },
 
+    favoriteAuthors: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    }],
+
     status: {
       type: String,
       enum: {

@@ -68,7 +68,7 @@ export interface GetBlogsParams {
 
   author?: string;
 
-  sort?: "latest" | "oldest" | "mostViewed";
+  sort?: "latest" | "oldest" | "mostViewed" | "mostLiked";
 }
 
 

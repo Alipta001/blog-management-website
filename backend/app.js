@@ -59,6 +59,8 @@ const userRoute = require("./app/routes/user.route");
 app.use("/user", userRoute);
 const analyticsRoutes = require("./app/routes/analytics.route");
 app.use("/analytics", analyticsRoutes);
+const factRoutes = require("./app/routes/fact.route");
+app.use("/facts", factRoutes);
 
 
 app.get("/", (req, res) => {

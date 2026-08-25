@@ -2,7 +2,8 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { Trash2 } from "lucide-react";
+import Image from "next/image";
+import { BookOpen, Clock3, Trash2 } from "lucide-react";
 import { toast } from "react-toastify";
 
 import {
@@ -120,7 +121,7 @@ export default function ReaderHistoryPage() {
 
       {/* LOADING */}
       {loading && !history.length && (
-        <div className="space-y-3">
+        <div className="grid gap-5 md:grid-cols-2">
           {Array.from({ length: 5 }).map(
             (_, index) => (
               <div
@@ -159,7 +160,7 @@ export default function ReaderHistoryPage() {
 
       {/* HISTORY */}
       {history.length > 0 && (
-        <div className="space-y-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {history.map((item) => {
             const blog =
               typeof item.blog === "string"
@@ -176,47 +177,33 @@ export default function ReaderHistoryPage() {
                 }
                 className="
                   group
-                  flex
-                  flex-col
-                  gap-3
+                  overflow-hidden
                   rounded-2xl
                   border
                   border-white/10
                   bg-[#111114]
-                  p-5
                   transition
+                  hover:-translate-y-1
                   hover:border-violet-500/30
-                  sm:flex-row
-                  sm:items-center
-                  sm:justify-between
+                  hover:shadow-xl
+                  hover:shadow-violet-950/10
                 "
               >
-                <div>
-                  <h2
-                    className="
-                      font-medium
-                      text-white
-                      transition
-                      group-hover:text-violet-300
-                    "
-                  >
-                    {blog?.title ||
-                      "Unavailable blog"}
-                  </h2>
-
-                  <p className="mt-1 text-sm text-slate-500">
-                    Viewed{" "}
-                    {new Date(
-                      item.viewedAt,
-                    ).toLocaleDateString(
-                      "en-IN",
-                    )}
-                  </p>
+                  <div className="relative aspect-[16/9] overflow-hidden bg-white/[0.04]">
+                  {blog?.featuredImage?.url ? <Image src={blog.featuredImage.url} alt={blog.title} fill className="object-cover transition duration-500 group-hover:scale-105" /> : <div className="flex h-full items-center justify-center text-slate-600"><BookOpen className="h-8 w-8" /></div>}
                 </div>
-
-                <span className="text-sm text-violet-400">
-                  Read again →
-                </span>
+                <div className="p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-xs font-semibold uppercase tracking-[0.14em] text-violet-400">{typeof blog?.category === "object" ? blog.category.name : "Article"}</span>
+                    <span className="inline-flex items-center gap-1 text-xs text-slate-500"><Clock3 className="h-3.5 w-3.5" />{new Date(item.viewedAt).toLocaleDateString("en-IN")}</span>
+                  </div>
+                  <h2 className="mt-2 line-clamp-2 text-base font-semibold leading-6 text-white transition group-hover:text-violet-300">{blog?.title || "Unavailable blog"}</h2>
+                  <p className="mt-2 line-clamp-2 text-sm leading-6 text-slate-400">{blog?.description || "This article is no longer available."}</p>
+                  <div className="mt-4 flex items-center justify-between border-t border-white/[0.06] pt-3 text-xs">
+                    <span className="text-slate-500">{typeof blog?.author === "object" ? blog.author.name : "Unknown author"}</span>
+                    <span className="font-medium text-violet-400">Read again <span aria-hidden="true">→</span></span>
+                  </div>
+                </div>
               </Link>
             );
           })}

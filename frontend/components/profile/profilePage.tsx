@@ -31,7 +31,7 @@ export default function ProfilePage() {
 
   if (!profile) {
     return (
-      <div className="flex min-h-[400px] items-center justify-center rounded-2xl border border-white/10 bg-[#09090b]">
+        <div className="flex min-h-[400px] items-center justify-center rounded-2xl border border-slate-200 bg-white dark:border-white/10 dark:bg-[#09090b]">
         <p className="text-sm text-slate-500">Unable to load your profile.</p>
       </div>
     );

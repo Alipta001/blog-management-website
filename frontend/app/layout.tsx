@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 import Providers from "@/redux/provider/provider";
+import ThemeProvider from "@/components/common/theme/theme-provider";
 
 
 export const metadata: Metadata = {
@@ -17,12 +18,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
 
-        <Providers>
-          {children}
-        </Providers>
+        <ThemeProvider>
+          <Providers>
+            {children}
+          </Providers>
+        </ThemeProvider>
 
       </body>
     </html>

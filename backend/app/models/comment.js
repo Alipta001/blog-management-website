@@ -16,6 +16,13 @@ const CommentSchema = new mongoose.Schema(
       index: true,
     },
 
+    parentComment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+      default: null,
+      index: true,
+    },
+
     content: {
       type: String,
       required: [true, "Comment content is required"],
@@ -31,6 +38,12 @@ const CommentSchema = new mongoose.Schema(
         message: "Invalid comment status",
       },
       default: "pending",
+      index: true,
+    },
+
+    isPinned: {
+      type: Boolean,
+      default: false,
       index: true,
     },
 

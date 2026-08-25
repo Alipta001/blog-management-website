@@ -34,7 +34,7 @@ export default function DashboardLayout({
   // Wait while authentication state is loading
   if (!authInitialized || loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#09090b]">
+      <div className="theme-page flex min-h-screen items-center justify-center bg-[var(--theme-background)] text-[var(--theme-text-primary)]">
 
         <div className="flex flex-col items-center gap-4">
 
@@ -61,7 +61,7 @@ export default function DashboardLayout({
 
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-white">
+    <div className="theme-page min-h-screen bg-[var(--theme-background)] text-[var(--theme-text-primary)]">
 
       {/* Desktop Sidebar */}
 

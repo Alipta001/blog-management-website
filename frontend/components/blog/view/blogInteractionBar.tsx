@@ -13,6 +13,9 @@ interface BlogInteractionBarProps {
   loading: boolean;
   onLike: () => void;
   onUnlike: () => void;
+  isFavoriteAuthor: boolean;
+  favoriteAuthorLoading: boolean;
+  onToggleFavoriteAuthor: () => void;
 }
 
 export default function BlogInteractionBar({
@@ -21,6 +24,9 @@ export default function BlogInteractionBar({
   loading,
   onLike,
   onUnlike,
+  isFavoriteAuthor,
+  favoriteAuthorLoading,
+  onToggleFavoriteAuthor,
 }: BlogInteractionBarProps) {
   const handleLike = () => {
     if (isLiked) {
@@ -48,23 +54,29 @@ export default function BlogInteractionBar({
 
   return (
     <div
-      className="
-        flex
-        items-center
-        justify-between
-        gap-4
-        border-y
-        border-white/10
-        py-5
-      "
-    >
+  className="
+    flex
+    flex-wrap
+    items-center
+    gap-4
+    rounded-2xl
+    border
+    border-slate-200
+    bg-white
+    blog-interaction-bar
+    p-4
+    shadow-sm
+    dark:border-slate-800
+    dark:bg-slate-900/60
+    dark:shadow-none
+  "
+>
       <button
         type="button"
         disabled={loading}
         onClick={handleLike}
         className={`
           inline-flex
-          items-center
           gap-2
           rounded-full
           border
@@ -79,7 +91,7 @@ export default function BlogInteractionBar({
           ${
             isLiked
               ? "border-rose-500/30 bg-rose-500/10 text-rose-400"
-              : "border-white/10 bg-white/[0.03] text-slate-300 hover:border-rose-500/30 hover:text-rose-400"
+              : "border-slate-200 bg-white text-slate-700 hover:border-rose-300 hover:text-rose-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300 dark:hover:border-rose-500/30 dark:hover:text-rose-400"
           }
         `}
       >
@@ -103,6 +115,16 @@ export default function BlogInteractionBar({
 
       <button
         type="button"
+        onClick={onToggleFavoriteAuthor}
+        disabled={favoriteAuthorLoading}
+        className={`inline-flex items-center gap-2 rounded-full border px-4 py-2.5 text-sm font-medium transition disabled:cursor-wait disabled:opacity-60 ${isFavoriteAuthor ? "border-rose-500/30 bg-rose-500/10 text-rose-500" : "border-slate-200 bg-white text-slate-700 hover:border-rose-300 hover:text-rose-600 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300 dark:hover:border-rose-500/30 dark:hover:text-rose-400"}`}
+      >
+        <Heart className="h-4 w-4" fill={isFavoriteAuthor ? "currentColor" : "none"} />
+        {isFavoriteAuthor ? "Favourite author" : "Add author to favourites"}
+      </button>
+
+      <button
+        type="button"
         onClick={handleShare}
         className="
           inline-flex
@@ -110,16 +132,20 @@ export default function BlogInteractionBar({
           gap-2
           rounded-full
           border
-          border-white/10
-          bg-white/[0.03]
+          border-slate-200
+          bg-white
           px-4
           py-2.5
           text-sm
           font-medium
-          text-slate-300
+          text-slate-700
+          dark:border-slate-800
+          dark:bg-slate-900/60
+          dark:text-slate-300
           transition
           hover:border-violet-500/30
-          hover:text-white
+          hover:text-slate-950
+          dark:hover:text-white
         "
       >
         <Share2 className="h-4 w-4" />

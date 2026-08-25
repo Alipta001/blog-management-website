@@ -9,6 +9,9 @@ import {
   FilePenLine,
   TrendingUp,
   Bell,
+  Heart,
+  Gamepad2,
+  Lightbulb,
 } from "lucide-react";
 
 import type { SidebarItem } from "./sidebar.types";
@@ -113,6 +116,24 @@ const userSidebarItems: SidebarItem[] = [
     name: "Reading History",
     href: "/dashboard/reader/history",
     icon: History,
+  },
+
+  {
+    name: "Favourite Authors",
+    href: "/dashboard/reader/favourites",
+    icon: Heart,
+  },
+
+  {
+    name: "Daily Quiz",
+    href: "/dashboard/reader/quiz",
+    icon: Gamepad2,
+  },
+
+  {
+    name: "Did You Know?",
+    href: "/dashboard/reader/facts",
+    icon: Lightbulb,
   },
 
   {

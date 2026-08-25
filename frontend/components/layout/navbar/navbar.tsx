@@ -11,6 +11,7 @@ import {
 import {
   useState,
   useEffect,
+  useRef,
 } from "react";
 
 import {
@@ -43,6 +44,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "@/redux/hooks";
+import ThemeToggle from "@/components/common/theme/theme-toggle";
 
 
  
@@ -114,6 +116,8 @@ export default function Navbar({
     setIsNotificationsOpen,
   ] = useState(false);
 
+  const navbarRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
     if (isNotificationsOpen) {
       appDispatch(
@@ -124,6 +128,24 @@ export default function Navbar({
       );
     }
   }, [appDispatch, isNotificationsOpen]);
+
+  useEffect(() => {
+    const handleOutsidePointerDown = (event: PointerEvent) => {
+      if (
+        navbarRef.current &&
+        !navbarRef.current.contains(event.target as Node)
+      ) {
+        setIsProfileOpen(false);
+        setIsNotificationsOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handleOutsidePointerDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handleOutsidePointerDown);
+    };
+  }, []);
 
 
    
@@ -205,12 +227,14 @@ export default function Navbar({
 
   return (
     <header
+      ref={navbarRef}
       className="
         sticky top-0 z-30
         flex h-[72px]
         items-center justify-between
         border-b border-white/10
         bg-[#09090b]/80
+        theme-navbar
         px-4
         backdrop-blur-xl
         sm:px-6
@@ -228,6 +252,8 @@ export default function Navbar({
           flex items-center gap-3
         "
       >
+
+        <ThemeToggle />
 
         {/*                             =====
             NOTIFICATION
@@ -250,6 +276,7 @@ export default function Navbar({
               rounded-xl
               border border-white/10
               bg-white/[0.03]
+              theme-control
               text-slate-400
               transition
               hover:bg-white/[0.07]
@@ -452,10 +479,13 @@ export default function Navbar({
                 rounded-xl
                 border border-white/10
                 bg-[#111113]
+                theme-menu
                 shadow-2xl
                 shadow-black/40
               "
             >
+
+            <ThemeToggle />
 
               {/*                             =====
                   DROPDOWN HEADER

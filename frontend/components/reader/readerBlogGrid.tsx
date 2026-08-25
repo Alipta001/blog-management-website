@@ -5,11 +5,17 @@ import ReaderBlogCard from "./readerBlogCard";
 interface ReaderBlogGridProps {
   blogs: Blog[];
   loading: boolean;
+  favoriteAuthors?: string[];
+  authenticated?: boolean;
+  onToggleFavorite?: (authorId: string) => void;
 }
 
 export default function ReaderBlogGrid({
   blogs,
   loading,
+  favoriteAuthors = [],
+  authenticated = false,
+  onToggleFavorite,
 }: ReaderBlogGridProps) {
   if (loading) {
     return (
@@ -84,6 +90,9 @@ export default function ReaderBlogGrid({
         <ReaderBlogCard
           key={blog._id}
           blog={blog}
+          isFavoriteAuthor={typeof blog.author !== "string" && favoriteAuthors.includes(blog.author._id)}
+          authenticated={authenticated}
+          onToggleFavorite={onToggleFavorite}
         />
       ))}
     </div>
