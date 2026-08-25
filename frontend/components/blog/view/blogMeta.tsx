@@ -45,6 +45,7 @@ export default function BlogMeta({
         gap-y-4
         border-b
         border-white/10
+        blog-meta
         pb-7
       "
     >

@@ -48,16 +48,21 @@ export default function BlogInteractionBar({
 
   return (
     <div
-      className="
-        flex
-        items-center
-        justify-between
-        gap-4
-        border-y
-        border-white/10
-        py-5
-      "
-    >
+  className="
+    flex
+    flex-wrap
+    items-center
+    justify-between
+    gap-4
+    rounded-2xl
+    border
+    border-white/10
+    bg-white/[0.03]
+    blog-interaction-bar
+    p-4
+    backdrop-blur-sm
+  "
+>
       <button
         type="button"
         disabled={loading}

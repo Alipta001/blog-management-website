@@ -1,41 +1,934 @@
+// "use client";
+
+// import {
+//   useEffect,
+//   useRef,
+// } from "react";
+
+// import Link from "next/link";
+
+// import {
+//   useRouter,
+// } from "next/navigation";
+
+// import {
+//   ArrowLeft,
+// } from "lucide-react";
+
+// import {
+//   toast,
+// } from "react-toastify";
+
+// import {
+//   useAppDispatch,
+//   useAppSelector,
+// } from "@/redux/hooks";
+
+// import {
+//   getCurrentUser,
+// } from "@/redux/slice/auth/authSlice";
+
+// import {
+//   createComment,
+//   getApprovedComments,
+// } from "@/redux/slice/comment/commentSlice";
+
+// import {
+//   addReadingHistory,
+// } from "@/redux/slice/readingHistory/readingHistorySlice";
+
+// import {
+//   likeBlog,
+//   resetLikeState,
+//   unlikeBlog,
+// } from "@/redux/slice/like/likeSlice";
+
+// import {
+//   clearBlogError,
+//   clearBlogSuccessMessage,
+//   clearSelectedBlog,
+//   deleteBlog,
+//   getBlogById,
+//   getBlogs,
+//   publishBlog,
+//   recordBlogView,
+//   rejectBlog,
+//   setSelectedBlogLikeState,
+//   submitBlog,
+//   unpublishBlog,
+// } from "@/redux/slice/blog/blogSlice";
+
+// import BlogComments from "./blogComments";
+// import BlogContent from "./blogContent";
+// import BlogContentImages from "./blogContentImages";
+// import BlogFeaturedImage from "./blogFeaturedImage";
+// import BlogInteractionBar from "./blogInteractionBar";
+// import BlogMeta from "./blogMeta";
+// import BlogNotFound from "./blogNotFound";
+// import BlogRoleActions from "./blogRoleActions";
+// import BlogSidebar from "./blogSidebar";
+// import BlogViewHeader from "./blogViewHeader";
+// import BlogViewSkeleton from "./blogViewSkeleton";
+
+// // PROPS
+
+// interface BlogViewPageProps {
+//   id: string;
+
+//   context?:
+//     | "public"
+//     | "author"
+//     | "administration";
+// }
+
+// // COMPONENT
+
+// export default function BlogViewPage({
+//   id,
+//   context = "public",
+// }: BlogViewPageProps) {
+
+//   const dispatch =
+//     useAppDispatch();
+
+//   const router =
+//     useRouter();
+
+//   // PREVENT DUPLICATE VIEW RECORDING
+
+//   const hasRecordedView =
+//     useRef(false);
+
+//   // REDUX STATE
+
+//   const blogState =
+//     useAppSelector(
+//       (state) => state.blog,
+//     );
+
+//   const auth =
+//     useAppSelector(
+//       (state) => state.auth,
+//     );
+
+//   const comments =
+//     useAppSelector(
+//       (state) => state.comment,
+//     );
+
+//   const likes =
+//     useAppSelector(
+//       (state) => state.like,
+//     );
+
+//   const blog =
+//     blogState.selectedBlog;
+
+//   // ROLE
+
+//   const role =
+//     auth.user?.role ||
+//     (
+//       context === "administration"
+//         ? "administration"
+//         : context === "author"
+//           ? "author"
+//           : "user"
+//     );
+
+//   // CHECK BLOG OWNER
+
+//   const isOwner =
+//     Boolean(
+//       blog &&
+//       typeof blog.author !== "string" &&
+//       auth.user &&
+//       blog.author._id === auth.user._id,
+//     );
+
+//   // LOAD BLOG
+//   // COMMENTS
+//   // CURRENT USER
+
+//   useEffect(() => {
+
+//     // Reset when blog ID changes
+//     hasRecordedView.current =
+//       false;
+
+//     dispatch(
+//       getBlogById(id),
+//     );
+
+//     dispatch(
+//       getApprovedComments({
+//         blogId: id,
+
+//         page: 1,
+
+//         limit: 20,
+//       }),
+//     );
+
+//     if (
+//       !auth.authInitialized
+//     ) {
+
+//       dispatch(
+//         getCurrentUser(),
+//       );
+
+//     }
+
+//     return () => {
+
+//       dispatch(
+//         clearSelectedBlog(),
+//       );
+
+//       dispatch(
+//         clearBlogError(),
+//       );
+
+//       dispatch(
+//         clearBlogSuccessMessage(),
+//       );
+
+//       dispatch(
+//         resetLikeState(),
+//       );
+
+//     };
+
+//   }, [
+//     dispatch,
+//     id,
+//     auth.authInitialized,
+//   ]);
+
+//   // RECORD BLOG VIEW
+
+//   useEffect(() => {
+
+//     if (!blog) {
+//       return;
+//     }
+
+//     if (
+//       hasRecordedView.current
+//     ) {
+//       return;
+//     }
+
+//     hasRecordedView.current =
+//       true;
+
+//     dispatch(
+//       recordBlogView(
+//         blog._id,
+//       ),
+//     )
+//       .unwrap()
+//       .catch(
+//         (error) => {
+
+//           console.error(
+//             "Failed to record blog view:",
+//             error,
+//           );
+
+//           // Allow retry if request fails
+//           hasRecordedView.current =
+//             false;
+
+//         },
+//       );
+
+//   }, [
+//     blog,
+//     dispatch,
+//   ]);
+
+//   // ADD READING HISTORY
+//   // AUTHENTICATED USERS ONLY
+
+//   useEffect(() => {
+
+//     if (!blog) {
+//       return;
+//     }
+
+//     if (
+//       !auth.isAuthenticated
+//     ) {
+//       return;
+//     }
+
+//     dispatch(
+//       addReadingHistory({
+//         blogId: blog._id,
+//       }),
+//     );
+
+//   }, [
+//     blog,
+//     auth.isAuthenticated,
+//     dispatch,
+//   ]);
+
+//   // LOAD RELATED BLOGS
+
+//   useEffect(() => {
+
+//     if (!blog) {
+//       return;
+//     }
+
+//     const category =
+//       typeof blog.category === "string"
+//         ? blog.category
+//         : blog.category?._id;
+
+//     if (!category) {
+//       return;
+//     }
+
+//     dispatch(
+//       getBlogs({
+
+//         category,
+
+//         page: 1,
+
+//         limit: 4,
+
+//       }),
+//     );
+
+//   }, [
+//     blog,
+//     dispatch,
+//   ]);
+
+//   // BLOG ERROR
+
+//   useEffect(() => {
+
+//     if (
+//       !blogState.error
+//     ) {
+//       return;
+//     }
+
+//     toast.error(
+//       blogState.error,
+//     );
+
+//     dispatch(
+//       clearBlogError(),
+//     );
+
+//   }, [
+//     blogState.error,
+//     dispatch,
+//   ]);
+
+//   // GENERIC ACTION HANDLER
+
+//   const action = async (
+//     operation: Promise<unknown>,
+//   ) => {
+
+//     try {
+
+//       await operation;
+
+//       await dispatch(
+//         getBlogById(id),
+//       ).unwrap();
+
+//     } catch (error) {
+
+//       toast.error(
+
+//         typeof error === "string"
+//           ? error
+//           : "Action failed",
+
+//       );
+
+//     }
+
+//   };
+
+//   // SUBMIT BLOG
+
+//   const submit = () =>
+
+//     action(
+
+//       dispatch(
+//         submitBlog(id),
+//       ).unwrap(),
+
+//     );
+
+//   // PUBLISH BLOG
+
+//   const publish = () =>
+
+//     action(
+
+//       dispatch(
+//         publishBlog(id),
+//       ).unwrap(),
+
+//     );
+
+//   // REJECT BLOG
+
+//   const reject = (
+//     reason: string,
+//   ) =>
+
+//     action(
+
+//       dispatch(
+
+//         rejectBlog({
+
+//           id,
+
+//           rejectionReason:
+//             reason,
+
+//         }),
+
+//       ).unwrap(),
+
+//     );
+
+//   // UNPUBLISH BLOG
+
+//   const unpublish = () =>
+
+//     action(
+
+//       dispatch(
+//         unpublishBlog(id),
+//       ).unwrap(),
+
+//     );
+
+//   // DELETE BLOG
+
+//   const remove =
+//     async () => {
+
+//       if (
+
+//         !window.confirm(
+
+//           "Are you sure you want to delete this blog?",
+
+//         )
+
+//       ) {
+
+//         return;
+
+//       }
+
+//       try {
+
+//         await dispatch(
+//           deleteBlog(id),
+//         ).unwrap();
+
+//         router.push(
+
+//           role === "administration"
+//             ? "/dashboard/administration/blogs"
+//             : "/dashboard/author/my-blogs",
+
+//         );
+
+//       } catch (error) {
+
+//         toast.error(
+
+//           typeof error === "string"
+//             ? error
+//             : "Failed to delete blog",
+
+//         );
+
+//       }
+
+//     };
+
+//   // CREATE COMMENT
+
+//   const postComment = async (
+//     content: string,
+//   ) => {
+//     try {
+//       const result =
+//         await dispatch(
+//           createComment({
+//             blogId: id,
+//             content,
+//           }),
+//         ).unwrap();
+
+//       toast.success(result.message);
+//     } catch (error) {
+//       toast.error(
+//         typeof error === "string"
+//           ? error
+//           : "Failed to send comment for review",
+//       );
+//     }
+//   };
+
+//   // TOGGLE LIKE
+
+//   const toggleLike =
+//     async () => {
+
+//       if (
+//         !auth.isAuthenticated
+//       ) {
+
+//         toast.info(
+//           "Please login to like this blog.",
+//         );
+
+//         return;
+
+//       }
+
+//       try {
+
+//         const result =
+//           await dispatch(
+
+//             blog?.isLiked
+//               ? unlikeBlog(id)
+//               : likeBlog(id),
+
+//           ).unwrap();
+
+//         dispatch(
+
+//           setSelectedBlogLikeState({
+
+//             likeCount:
+//               result.totalLikes,
+
+//             isLiked:
+//               result.isLiked,
+
+//           }),
+
+//         );
+
+//       } catch (error) {
+
+//         toast.error(
+
+//           typeof error === "string"
+//             ? error
+//             : "Unable to update like",
+
+//         );
+
+//       }
+
+//     };
+
+//   // LOADING
+
+//   if (
+
+//     blogState.loading &&
+//     !blog
+
+//   ) {
+
+//     return (
+//       <BlogViewSkeleton />
+//     );
+
+//   }
+
+//   // NOT FOUND
+
+//   if (!blog) {
+
+//     return (
+
+//       <BlogNotFound
+
+//         message={
+//           blogState.error ||
+//           undefined
+//         }
+
+//       />
+
+//     );
+
+//   }
+
+//   // RELATED BLOGS
+
+//   const relatedBlogs =
+//     blogState.blogs
+
+//       .filter(
+//         (item) => {
+
+//           const blogCategory =
+
+//             typeof blog.category ===
+//             "string"
+
+//               ? blog.category
+
+//               : blog.category?._id;
+
+//           const itemCategory =
+
+//             typeof item.category ===
+//             "string"
+
+//               ? item.category
+
+//               : item.category?._id;
+
+//           return (
+
+//             item._id !==
+//               blog._id &&
+
+//             blogCategory ===
+//               itemCategory
+
+//           );
+
+//         },
+//       )
+
+//       .slice(
+//         0,
+//         3,
+//       );
+
+//   // RENDER
+
+//   return (
+
+//     <main className="min-h-screen bg-[#09090b]">
+
+//       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
+
+//         {/*                      ====
+//             ARTICLE HEADER
+//                              ==== */}
+
+//         <div className="mx-auto max-w-6xl">
+
+//           <BlogViewHeader
+//             blog={blog}
+//           />
+
+//           <div className="mt-5">
+
+//             <BlogMeta
+//               blog={blog}
+//             />
+
+//           </div>
+
+//         </div>
+
+//         {/*
+//             ROLE ACTIONS
+//                               */}
+
+//         {context !== "public" && (
+
+//           <div className="mx-auto mt-6 max-w-5xl">
+
+//             <BlogRoleActions
+
+//               blog={blog}
+
+//               role={
+//                 role === "administrator"
+//                   ? "administration"
+//                   : role
+//               }
+
+//               isOwner={isOwner}
+
+//               loading={
+//                 blogState.loading
+//               }
+
+//               onSubmit={
+//                 submit
+//               }
+
+//               onPublish={
+//                 publish
+//               }
+
+//               onReject={
+//                 reject
+//               }
+
+//               onUnpublish={
+//                 unpublish
+//               }
+
+//               onDelete={
+//                 remove
+//               }
+
+//             />
+
+//           </div>
+
+//         )}
+
+//         {/*                      ====
+//             MAIN ARTICLE LAYOUT
+//                              ==== */}
+
+//         <div
+
+//           className="
+//             mx-auto
+//             mt-10
+//             grid
+//             max-w-6xl
+//             gap-10
+//             lg:grid-cols-[minmax(0,1fr)_280px]
+//           "
+
+//         >
+
+//           {/*
+//               ARTICLE
+//                                 */}
+
+//           <article className="min-w-0">
+
+//             {/* Hero */}
+
+//             <BlogFeaturedImage
+//               blog={blog}
+//             />
+
+//             <BlogContentImages
+//               images={blog.contentImages}
+//               title={blog.title}
+//             />
+
+//             {/* Content */}
+
+//             <div className="mt-8">
+
+//               <BlogContent
+//                 content={blog.content}
+//               />
+
+//             </div>
+
+//             {/* Interaction */}
+
+//             <div className="mt-8">
+
+//               <BlogInteractionBar
+
+//                 blogId={blog._id}
+
+//                 totalLikes={
+//                   blog.likeCount || 0
+//                 }
+
+//                 isLiked={
+//                   blog.isLiked || false
+//                 }
+
+//                 loading={
+//                   likes.loading ||
+//                   blogState.loading
+//                 }
+
+//                 onLike={
+//                   toggleLike
+//                 }
+
+//                 onUnlike={
+//                   toggleLike
+//                 }
+
+//               />
+
+//             </div>
+
+//             {/* Comments */}
+
+//             <div className="mt-10">
+
+//               <BlogComments
+
+//                 comments={
+//                   comments.comments
+//                 }
+
+//                 loading={
+//                   comments.loading
+//                 }
+
+//                 authenticated={
+//                   auth.isAuthenticated
+//                 }
+
+//                 onSubmit={
+//                   postComment
+//                 }
+
+//               />
+
+//             </div>
+
+//             {/*
+//                 RELATED BLOGS
+//                                   */}
+
+//             {relatedBlogs.length > 0 && (
+
+//               <section className="mt-14 border-t border-white/10 pt-10">
+
+//                 <div className="mb-5">
+
+//                   <p className="text-xs font-medium uppercase tracking-[0.18em] text-violet-400">
+
+//                     Continue reading
+
+//                   </p>
+
+//                   <h2 className="mt-1 text-2xl font-bold text-white">
+
+//                     You may also like
+
+//                   </h2>
+
+//                 </div>
+
+//                 <div className="grid gap-4 sm:grid-cols-3">
+
+//                   {relatedBlogs.map(
+//                     (related) => (
+
+//                       <Link
+
+//                         key={
+//                           related._id
+//                         }
+
+//                         href={
+//                           `/dashboard/administration/blogs/${related._id}`
+//                         }
+
+//                         className="
+//                           group
+//                           rounded-2xl
+//                           border
+//                           border-white/10
+//                           bg-[#111114]
+//                           p-5
+//                           transition
+//                           hover:-translate-y-0.5
+//                           hover:border-violet-500/30
+//                         "
+
+//                       >
+
+//                         <h3 className="line-clamp-3 text-sm font-semibold leading-6 text-slate-300 transition group-hover:text-white">
+
+//                           {related.title}
+
+//                         </h3>
+
+//                         <span className="mt-4 block text-xs text-violet-400">
+
+//                           Read article →
+
+//                         </span>
+
+//                       </Link>
+
+//                     ),
+//                   )}
+
+//                 </div>
+
+//               </section>
+
+//             )}
+
+//           </article>
+
+//           {/*
+//               SIDEBAR
+//                                 */}
+
+//           <aside className="lg:sticky lg:top-24 lg:self-start">
+
+//             <BlogSidebar
+//               blog={blog}
+//             />
+
+//           </aside>
+
+//         </div>
+
+//       </div>
+
+//     </main>
+
+//   );
+
+// }
+
 "use client";
 
-import {
-  useEffect,
-  useRef,
-} from "react";
+import { useEffect, useRef } from "react";
 
 import Link from "next/link";
+import Image from "next/image";
 
-import {
-  useRouter,
-} from "next/navigation";
+import { useRouter } from "next/navigation";
 
-import {
-  ArrowLeft,
-} from "lucide-react";
+import { ArrowLeft, ArrowUpRight, BookOpen, Clock3 } from "lucide-react";
 
-import {
-  toast,
-} from "react-toastify";
+import { toast } from "react-toastify";
 
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-import {
-  getCurrentUser,
-} from "@/redux/slice/auth/authSlice";
+import { getCurrentUser } from "@/redux/slice/auth/authSlice";
 
 import {
   createComment,
   getApprovedComments,
 } from "@/redux/slice/comment/commentSlice";
 
-import {
-  addReadingHistory,
-} from "@/redux/slice/readingHistory/readingHistorySlice";
+import { addReadingHistory } from "@/redux/slice/readingHistory/readingHistorySlice";
 
 import {
   likeBlog,
@@ -69,741 +962,541 @@ import BlogRoleActions from "./blogRoleActions";
 import BlogSidebar from "./blogSidebar";
 import BlogViewHeader from "./blogViewHeader";
 import BlogViewSkeleton from "./blogViewSkeleton";
-
-
- 
-// PROPS
- 
+import BlogAuthorCard from "./blogAuthorCard";
 
 interface BlogViewPageProps {
   id: string;
 
-  context?:
-    | "public"
-    | "author"
-    | "administration";
+  context?: "public" | "author" | "administration";
 }
-
-
- 
-// COMPONENT
- 
 
 export default function BlogViewPage({
   id,
   context = "public",
 }: BlogViewPageProps) {
+  const dispatch = useAppDispatch();
 
-  const dispatch =
-    useAppDispatch();
+  const router = useRouter();
 
-  const router =
-    useRouter();
-
-
-   
+  // =========================================
   // PREVENT DUPLICATE VIEW RECORDING
-   
+  // =========================================
 
-  const hasRecordedView =
-    useRef(false);
+  const hasRecordedView = useRef(false);
 
-
-   
+  // =========================================
   // REDUX STATE
-   
+  // =========================================
 
-  const blogState =
-    useAppSelector(
-      (state) => state.blog,
-    );
+  const blogState = useAppSelector((state) => state.blog);
 
-  const auth =
-    useAppSelector(
-      (state) => state.auth,
-    );
+  const auth = useAppSelector((state) => state.auth);
 
-  const comments =
-    useAppSelector(
-      (state) => state.comment,
-    );
+  const comments = useAppSelector((state) => state.comment);
 
-  const likes =
-    useAppSelector(
-      (state) => state.like,
-    );
+  const likes = useAppSelector((state) => state.like);
 
+  const blog = blogState.selectedBlog;
 
-  const blog =
-    blogState.selectedBlog;
-
-
-   
+  // =========================================
   // ROLE
-   
+  // =========================================
 
   const role =
     auth.user?.role ||
-    (
-      context === "administration"
-        ? "administration"
-        : context === "author"
-          ? "author"
-          : "user"
-    );
+    (context === "administration"
+      ? "administration"
+      : context === "author"
+        ? "author"
+        : "user");
 
-
-   
+  // =========================================
   // CHECK BLOG OWNER
-   
+  // =========================================
 
-  const isOwner =
-    Boolean(
-      blog &&
-      typeof blog.author !== "string" &&
-      auth.user &&
-      blog.author._id === auth.user._id,
-    );
+  const isOwner = Boolean(
+    blog &&
+    typeof blog.author !== "string" &&
+    auth.user &&
+    blog.author._id === auth.user._id,
+  );
 
-
-   
-  // LOAD BLOG
-  // COMMENTS
-  // CURRENT USER
-   
+  // =========================================
+  // LOAD BLOG / COMMENTS / USER
+  // =========================================
 
   useEffect(() => {
+    hasRecordedView.current = false;
 
-    // Reset when blog ID changes
-    hasRecordedView.current =
-      false;
-
-
-    dispatch(
-      getBlogById(id),
-    );
-
+    dispatch(getBlogById(id));
 
     dispatch(
       getApprovedComments({
         blogId: id,
-
         page: 1,
-
         limit: 20,
       }),
     );
 
-
-    if (
-      !auth.authInitialized
-    ) {
-
-      dispatch(
-        getCurrentUser(),
-      );
-
+    if (!auth.authInitialized) {
+      dispatch(getCurrentUser());
     }
-
 
     return () => {
+      dispatch(clearSelectedBlog());
 
-      dispatch(
-        clearSelectedBlog(),
-      );
+      dispatch(clearBlogError());
 
-      dispatch(
-        clearBlogError(),
-      );
+      dispatch(clearBlogSuccessMessage());
 
-      dispatch(
-        clearBlogSuccessMessage(),
-      );
-
-      dispatch(
-        resetLikeState(),
-      );
-
+      dispatch(resetLikeState());
     };
+  }, [dispatch, id, auth.authInitialized]);
 
-  }, [
-    dispatch,
-    id,
-    auth.authInitialized,
-  ]);
-
-
-   
+  // =========================================
   // RECORD BLOG VIEW
-   
+  // =========================================
 
   useEffect(() => {
-
     if (!blog) {
       return;
     }
 
-
-    if (
-      hasRecordedView.current
-    ) {
+    if (hasRecordedView.current) {
       return;
     }
 
+    hasRecordedView.current = true;
 
-    hasRecordedView.current =
-      true;
-
-
-    dispatch(
-      recordBlogView(
-        blog._id,
-      ),
-    )
+    dispatch(recordBlogView(blog._id))
       .unwrap()
-      .catch(
-        (error) => {
+      .catch((error) => {
+        console.error("Failed to record blog view:", error);
 
-          console.error(
-            "Failed to record blog view:",
-            error,
-          );
+        hasRecordedView.current = false;
+      });
+  }, [blog, dispatch]);
 
-          // Allow retry if request fails
-          hasRecordedView.current =
-            false;
-
-        },
-      );
-
-  }, [
-    blog,
-    dispatch,
-  ]);
-
-
-   
+  // =========================================
   // ADD READING HISTORY
-  // AUTHENTICATED USERS ONLY
-   
+  // =========================================
 
   useEffect(() => {
-
     if (!blog) {
       return;
     }
 
-
-    if (
-      !auth.isAuthenticated
-    ) {
+    if (!auth.isAuthenticated) {
       return;
     }
-
 
     dispatch(
       addReadingHistory({
         blogId: blog._id,
       }),
     );
+  }, [blog, auth.isAuthenticated, dispatch]);
 
-  }, [
-    blog,
-    auth.isAuthenticated,
-    dispatch,
-  ]);
-
-
-   
+  // =========================================
   // LOAD RELATED BLOGS
-   
+  // =========================================
 
   useEffect(() => {
-
     if (!blog) {
       return;
     }
 
-
     const category =
-      typeof blog.category === "string"
-        ? blog.category
-        : blog.category?._id;
-
+      typeof blog.category === "string" ? blog.category : blog.category?._id;
 
     if (!category) {
       return;
     }
 
-
     dispatch(
       getBlogs({
-
         category,
 
         page: 1,
 
-        limit: 4,
-
+        limit: 6,
       }),
     );
+  }, [blog, dispatch]);
 
-  }, [
-    blog,
-    dispatch,
-  ]);
-
-
-   
+  // =========================================
   // BLOG ERROR
-   
+  // =========================================
 
   useEffect(() => {
-
-    if (
-      !blogState.error
-    ) {
+    if (!blogState.error) {
       return;
     }
 
+    toast.error(blogState.error);
 
-    toast.error(
-      blogState.error,
-    );
+    dispatch(clearBlogError());
+  }, [blogState.error, dispatch]);
 
-
-    dispatch(
-      clearBlogError(),
-    );
-
-  }, [
-    blogState.error,
-    dispatch,
-  ]);
-
-
-   
+  // =========================================
   // GENERIC ACTION HANDLER
-   
+  // =========================================
 
-  const action = async (
-    operation: Promise<unknown>,
-  ) => {
-
+  const action = async (operation: Promise<unknown>) => {
     try {
-
       await operation;
 
-
-      await dispatch(
-        getBlogById(id),
-      ).unwrap();
-
+      await dispatch(getBlogById(id)).unwrap();
     } catch (error) {
-
-      toast.error(
-
-        typeof error === "string"
-          ? error
-          : "Action failed",
-
-      );
-
+      toast.error(typeof error === "string" ? error : "Action failed");
     }
-
   };
 
+  // =========================================
+  // BLOG ACTIONS
+  // =========================================
 
-   
-  // SUBMIT BLOG
-   
+  const submit = () => action(dispatch(submitBlog(id)).unwrap());
 
-  const submit = () =>
+  const publish = () => action(dispatch(publishBlog(id)).unwrap());
 
+  const reject = (reason: string) =>
     action(
-
       dispatch(
-        submitBlog(id),
-      ).unwrap(),
-
-    );
-
-
-   
-  // PUBLISH BLOG
-   
-
-  const publish = () =>
-
-    action(
-
-      dispatch(
-        publishBlog(id),
-      ).unwrap(),
-
-    );
-
-
-   
-  // REJECT BLOG
-   
-
-  const reject = (
-    reason: string,
-  ) =>
-
-    action(
-
-      dispatch(
-
         rejectBlog({
-
           id,
 
-          rejectionReason:
-            reason,
-
+          rejectionReason: reason,
         }),
-
       ).unwrap(),
-
     );
 
+  const unpublish = () => action(dispatch(unpublishBlog(id)).unwrap());
 
-   
-  // UNPUBLISH BLOG
-   
-
-  const unpublish = () =>
-
-    action(
-
-      dispatch(
-        unpublishBlog(id),
-      ).unwrap(),
-
-    );
-
-
-   
+  // =========================================
   // DELETE BLOG
-   
+  // =========================================
 
-  const remove =
-    async () => {
+  const remove = async () => {
+    if (!window.confirm("Are you sure you want to delete this blog?")) {
+      return;
+    }
 
-      if (
-
-        !window.confirm(
-
-          "Are you sure you want to delete this blog?",
-
-        )
-
-      ) {
-
-        return;
-
-      }
-
-
-      try {
-
-        await dispatch(
-          deleteBlog(id),
-        ).unwrap();
-
-
-        router.push(
-
-          role === "administration"
-            ? "/dashboard/administration/blogs"
-            : "/dashboard/author/my-blogs",
-
-        );
-
-      } catch (error) {
-
-        toast.error(
-
-          typeof error === "string"
-            ? error
-            : "Failed to delete blog",
-
-        );
-
-      }
-
-    };
-
-
-   
-  // CREATE COMMENT
-   
-
-  const postComment = async (
-    content: string,
-  ) => {
     try {
-      const result =
-        await dispatch(
-          createComment({
-            blogId: id,
-            content,
-          }),
-        ).unwrap();
+      await dispatch(deleteBlog(id)).unwrap();
+
+      router.push(
+        role === "administration"
+          ? "/dashboard/administration/blogs"
+          : "/dashboard/author/my-blogs",
+      );
+    } catch (error) {
+      toast.error(typeof error === "string" ? error : "Failed to delete blog");
+    }
+  };
+
+  // =========================================
+  // CREATE COMMENT
+  // =========================================
+
+  const postComment = async (content: string) => {
+    try {
+      const result = await dispatch(
+        createComment({
+          blogId: id,
+          content,
+        }),
+      ).unwrap();
 
       toast.success(result.message);
     } catch (error) {
       toast.error(
-        typeof error === "string"
-          ? error
-          : "Failed to send comment for review",
+        typeof error === "string" ? error : "Failed to send comment for review",
       );
     }
   };
 
-
-   
+  // =========================================
   // TOGGLE LIKE
-   
+  // =========================================
 
-  const toggleLike =
-    async () => {
+  const toggleLike = async () => {
+    if (!auth.isAuthenticated) {
+      toast.info("Please login to like this blog.");
 
-      if (
-        !auth.isAuthenticated
-      ) {
+      return;
+    }
 
-        toast.info(
-          "Please login to like this blog.",
-        );
+    try {
+      const result = await dispatch(
+        blog?.isLiked ? unlikeBlog(id) : likeBlog(id),
+      ).unwrap();
 
-        return;
+      dispatch(
+        setSelectedBlogLikeState({
+          likeCount: result.totalLikes,
 
-      }
+          isLiked: result.isLiked,
+        }),
+      );
+    } catch (error) {
+      toast.error(typeof error === "string" ? error : "Unable to update like");
+    }
+  };
 
-
-      try {
-
-        const result =
-          await dispatch(
-
-            blog?.isLiked
-              ? unlikeBlog(id)
-              : likeBlog(id),
-
-          ).unwrap();
-
-
-        dispatch(
-
-          setSelectedBlogLikeState({
-
-            likeCount:
-              result.totalLikes,
-
-            isLiked:
-              result.isLiked,
-
-          }),
-
-        );
-
-      } catch (error) {
-
-        toast.error(
-
-          typeof error === "string"
-            ? error
-            : "Unable to update like",
-
-        );
-
-      }
-
-    };
-
-
-   
+  // =========================================
   // LOADING
-   
+  // =========================================
 
-  if (
-
-    blogState.loading &&
-    !blog
-
-  ) {
-
-    return (
-      <BlogViewSkeleton />
-    );
-
+  if (blogState.loading && !blog) {
+    return <BlogViewSkeleton />;
   }
 
-
-   
+  // =========================================
   // NOT FOUND
-   
+  // =========================================
 
   if (!blog) {
-
-    return (
-
-      <BlogNotFound
-
-        message={
-          blogState.error ||
-          undefined
-        }
-
-      />
-
-    );
-
+    return <BlogNotFound message={blogState.error || undefined} />;
   }
 
+  // =========================================
+  // CATEGORY
+  // =========================================
 
-   
+  const categoryName =
+    typeof blog.category === "string" ? "Blog" : blog.category?.name || "Blog";
+
+  // =========================================
   // RELATED BLOGS
-   
+  // =========================================
 
-  const relatedBlogs =
-    blogState.blogs
+  const relatedBlogs = blogState.blogs
 
-      .filter(
-        (item) => {
+    .filter((item) => {
+      const blogCategory =
+        typeof blog.category === "string" ? blog.category : blog.category?._id;
 
-          const blogCategory =
+      const itemCategory =
+        typeof item.category === "string" ? item.category : item.category?._id;
 
-            typeof blog.category ===
-            "string"
+      return item._id !== blog._id && blogCategory === itemCategory;
+    })
 
-              ? blog.category
+    .slice(0, 3);
 
-              : blog.category?._id;
+  // =========================================
+  // BACK LINK
+  // =========================================
 
+  const backHref =
+    context === "administration"
+      ? "/dashboard/administration/blogs"
+      : context === "author"
+        ? "/dashboard/author/my-blogs"
+        : "/blogs";
 
-          const itemCategory =
+  const blogHref = (blogId: string) => {
+    if (context === "administration") {
+      return `/dashboard/administration/blogs/${blogId}`;
+    }
 
-            typeof item.category ===
-            "string"
+    if (context === "author") {
+      return `/dashboard/author/my-blogs/${blogId}`;
+    }
 
-              ? item.category
+    return `/blogs/${blogId}`;
+  };
 
-              : item.category?._id;
-
-
-          return (
-
-            item._id !==
-              blog._id &&
-
-            blogCategory ===
-              itemCategory
-
-          );
-
-        },
-      )
-
-      .slice(
-        0,
-        3,
-      );
-
-
-   
+  // =========================================
   // RENDER
-   
+  // =========================================
 
   return (
+    <main
+      className="
+        min-h-screen
+        overflow-hidden
+        bg-[#09090b]
+        text-white
+        blog-detail-page
+      "
+    >
+      {/* =====================================
+          BACKGROUND DECORATION
+      ====================================== */}
 
-    <main className="min-h-screen bg-[#09090b]">
-
-      <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
-
-
-        {/*                      ====
-            ARTICLE HEADER
-                             ==== */}
-
-        <div className="mx-auto max-w-6xl">
-
-          <BlogViewHeader
-            blog={blog}
-          />
-
-
-          <div className="mt-5">
-
-            <BlogMeta
-              blog={blog}
-            />
-
-          </div>
-
-        </div>
-
-
-        {/*                     
-            ROLE ACTIONS
-                              */}
-
-        {context !== "public" && (
-
-          <div className="mx-auto mt-6 max-w-5xl">
-
-            <BlogRoleActions
-
-              blog={blog}
-
-              role={
-                role === "administrator"
-                  ? "administration"
-                  : role
-              }
-
-              isOwner={isOwner}
-
-              loading={
-                blogState.loading
-              }
-
-              onSubmit={
-                submit
-              }
-
-              onPublish={
-                publish
-              }
-
-              onReject={
-                reject
-              }
-
-              onUnpublish={
-                unpublish
-              }
-
-              onDelete={
-                remove
-              }
-
-            />
-
-          </div>
-
-        )}
-
-
-        {/*                      ====
-            MAIN ARTICLE LAYOUT
-                             ==== */}
+      <div className="blog-page-decoration pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+        <div
+          className="
+            absolute
+            left-1/2
+            top-0
+            h-[500px]
+            w-[800px]
+            -translate-x-1/2
+            rounded-full
+            bg-violet-600/[0.08]
+            blur-[120px]
+          "
+        />
 
         <div
+          className="
+            absolute
+            right-[-200px]
+            top-[500px]
+            h-[400px]
+            w-[400px]
+            rounded-full
+            bg-indigo-500/[0.04]
+            blur-[120px]
+          "
+        />
+      </div>
 
+      <div
+        className="
+          relative
+          z-10
+          mx-auto
+          max-w-7xl
+          px-4
+          py-6
+          sm:px-6
+          lg:px-8
+          lg:py-10
+        "
+      >
+        {/* =====================================
+            BACK BUTTON
+        ====================================== */}
+
+        <div className="mx-auto max-w-6xl">
+          <Link
+            href={backHref}
+            className="
+              group
+              inline-flex
+              items-center
+              gap-2
+              text-sm
+              text-slate-500
+              transition
+              hover:text-white
+            "
+          >
+            <ArrowLeft
+              className="
+                h-4
+                w-4
+                transition-transform
+                group-hover:-translate-x-1
+              "
+            />
+            Back to blogs
+          </Link>
+        </div>
+
+        {/* =====================================
+            ARTICLE HEADER
+        ====================================== */}
+
+        <section
+          className="
+            mx-auto
+            mt-8
+            max-w-6xl
+            overflow-hidden
+            rounded-3xl
+            border
+            border-white/10
+            bg-gradient-to-br
+            from-white/[0.045]
+            via-[#111114]
+            to-[#0c0c0f]
+            p-6
+            shadow-2xl
+            shadow-black/20
+            blog-article-header
+            sm:p-10
+            lg:p-14
+          "
+        >
+          {/* Category + Reading Time */}
+
+          <div className="mb-8 flex flex-wrap items-center gap-3">
+            <span
+              className="
+                rounded-full
+                border
+                border-violet-500/30
+                bg-violet-500/10
+                px-4
+                py-2
+                text-xs
+                font-semibold
+                tracking-wide
+                text-violet-300
+              "
+            >
+              {categoryName}
+            </span>
+
+            {blog.readingTime && (
+              <span
+                className="
+                  inline-flex
+                  items-center
+                  gap-1.5
+                  text-xs
+                  text-slate-500
+                "
+              >
+                <Clock3 className="h-3.5 w-3.5" />
+                {blog.readingTime} min read
+              </span>
+            )}
+          </div>
+
+          <BlogViewHeader blog={blog} />
+
+          <div className="mt-8">
+            <BlogMeta blog={blog} />
+          </div>
+        </section>
+
+        {/* =====================================
+            ROLE ACTIONS
+        ====================================== */}
+
+        {context !== "public" && (
+          <div
+            className="
+              mx-auto
+              mt-6
+              max-w-6xl
+            "
+          >
+            <BlogRoleActions
+              blog={blog}
+              role={role === "administrator" ? "administration" : role}
+              isOwner={isOwner}
+              loading={blogState.loading}
+              onSubmit={submit}
+              onPublish={publish}
+              onReject={reject}
+              onUnpublish={unpublish}
+              onDelete={remove}
+            />
+          </div>
+        )}
+
+        {/* =====================================
+            MAIN ARTICLE LAYOUT
+        ====================================== */}
+
+        <div
           className="
             mx-auto
             mt-10
@@ -812,202 +1505,388 @@ export default function BlogViewPage({
             gap-10
             lg:grid-cols-[minmax(0,1fr)_280px]
           "
-
         >
-
-
-          {/*                      
+          {/* =====================================
               ARTICLE
-                                */}
+          ====================================== */}
 
           <article className="min-w-0">
+            {/* FEATURED IMAGE */}
 
-
-            {/* Hero */}
-
-            <BlogFeaturedImage
-              blog={blog}
-            />
-
-
-            <BlogContentImages
-              images={blog.contentImages}
-              title={blog.title}
-            />
-
-
-            {/* Content */}
-
-            <div className="mt-8">
-
-              <BlogContent
-                content={blog.content}
-              />
-
+            <div
+              className="
+                overflow-hidden
+                rounded-3xl
+                shadow-2xl
+                shadow-black/30
+                blog-featured-frame
+              "
+            >
+              <BlogFeaturedImage blog={blog} />
             </div>
 
+            {/* CONTENT IMAGES */}
 
-            {/* Interaction */}
+            <BlogContentImages images={blog.contentImages} title={blog.title} />
+
+            {/* ARTICLE CONTENT */}
 
             <div className="mt-8">
+              <BlogContent content={blog.content} />
+            </div>
 
+            {/* READING END DIVIDER */}
+
+            <div
+              className="
+                my-10
+                flex
+                items-center
+                gap-4
+              "
+            >
+              <div className="h-px flex-1 bg-white/10" />
+
+              <div
+                className="
+                  flex
+                  h-10
+                  w-10
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-violet-500/20
+                  bg-violet-500/10
+                "
+              >
+                <BookOpen className="h-4 w-4 text-violet-400" />
+              </div>
+
+              <div className="h-px flex-1 bg-white/10" />
+            </div>
+
+            {/* =====================================
+                INTERACTION
+            ====================================== */}
+
+            
               <BlogInteractionBar
-
                 blogId={blog._id}
-
-                totalLikes={
-                  blog.likeCount || 0
-                }
-
-                isLiked={
-                  blog.isLiked || false
-                }
-
-                loading={
-                  likes.loading ||
-                  blogState.loading
-                }
-
-                onLike={
-                  toggleLike
-                }
-
-                onUnlike={
-                  toggleLike
-                }
-
+                totalLikes={blog.likeCount || 0}
+                isLiked={blog.isLiked || false}
+                loading={likes.loading || blogState.loading}
+                onLike={toggleLike}
+                onUnlike={toggleLike}
               />
 
-            </div>
-
-
-            {/* Comments */}
+            {/* =====================================
+    AUTHOR
+===================================== */}
 
             <div className="mt-10">
-
-              <BlogComments
-
-                comments={
-                  comments.comments
-                }
-
-                loading={
-                  comments.loading
-                }
-
-                authenticated={
-                  auth.isAuthenticated
-                }
-
-                onSubmit={
-                  postComment
-                }
-
-              />
-
+              <BlogAuthorCard blog={blog} />
             </div>
 
+            {/* =====================================
+    COMMENTS
+===================================== */}
 
-            {/*                      
+            <div
+              className="
+    mt-12
+    border-t
+    border-white/10
+    pt-10
+  "
+            >
+              <BlogComments
+                comments={comments.comments}
+                loading={comments.loading}
+                authenticated={auth.isAuthenticated}
+                onSubmit={postComment}
+              />
+            </div>
+
+            {/* =====================================
                 RELATED BLOGS
-                                  */}
+            ====================================== */}
 
             {relatedBlogs.length > 0 && (
+              <section
+                className="
+                  mt-16
+                  border-t
+                  border-white/10
+                  pt-12
+                "
+              >
+                {/* Section Header */}
 
-              <section className="mt-14 border-t border-white/10 pt-10">
+                <div
+                  className="
+                    mb-8
+                    flex
+                    flex-wrap
+                    items-end
+                    justify-between
+                    gap-4
+                  "
+                >
+                  <div>
+                    <p
+                      className="
+                        text-xs
+                        font-semibold
+                        uppercase
+                        tracking-[0.2em]
+                        text-violet-400
+                      "
+                    >
+                      Continue exploring
+                    </p>
 
-                <div className="mb-5">
+                    <h2
+                      className="
+                        mt-2
+                        text-2xl
+                        font-bold
+                        tracking-tight
+                        text-white
+                        sm:text-3xl
+                      "
+                    >
+                      You may also like
+                    </h2>
 
-                  <p className="text-xs font-medium uppercase tracking-[0.18em] text-violet-400">
+                    <p
+                      className="
+                        mt-2
+                        text-sm
+                        text-slate-500
+                      "
+                    >
+                      More articles from the same category.
+                    </p>
+                  </div>
 
-                    Continue reading
-
-                  </p>
-
-
-                  <h2 className="mt-1 text-2xl font-bold text-white">
-
-                    You may also like
-
-                  </h2>
-
+                  <Link
+                    href={backHref}
+                    className="
+                      hidden
+                      items-center
+                      gap-2
+                      text-sm
+                      font-medium
+                      text-violet-400
+                      transition
+                      hover:text-violet-300
+                      sm:inline-flex
+                    "
+                  >
+                    Explore more
+                    <ArrowUpRight className="h-4 w-4" />
+                  </Link>
                 </div>
 
+                {/* Related Blog Cards */}
 
-                <div className="grid gap-4 sm:grid-cols-3">
+                <div
+                  className="
+                    grid
+                    gap-5
+                    sm:grid-cols-2
+                    lg:grid-cols-3
+                  "
+                >
+                  {relatedBlogs.map((related) => {
+                    const relatedCategory =
+                      typeof related.category === "string"
+                        ? "Blog"
+                        : related.category?.name || "Blog";
 
-                  {relatedBlogs.map(
-                    (related) => (
+                    const relatedImage = related.featuredImage?.url;
 
+                    return (
                       <Link
-
-                        key={
-                          related._id
-                        }
-
-                        href={
-                          `/dashboard/administration/blogs/${related._id}`
-                        }
-
+                        key={related._id}
+                        href={blogHref(related._id)}
                         className="
-                          group
-                          rounded-2xl
-                          border
-                          border-white/10
-                          bg-[#111114]
-                          p-5
-                          transition
-                          hover:-translate-y-0.5
-                          hover:border-violet-500/30
-                        "
-
+                            group
+                            overflow-hidden
+                            rounded-2xl
+                            border
+                            border-white/10
+                            bg-[#111114]
+                            transition
+                            duration-300
+                            hover:-translate-y-1
+                            hover:border-violet-500/30
+                            hover:shadow-xl
+                            hover:shadow-violet-950/20
+                            blog-related-card
+                          "
                       >
+                        {/* Image */}
 
-                        <h3 className="line-clamp-3 text-sm font-semibold leading-6 text-slate-300 transition group-hover:text-white">
+                        <div
+                          className="
+                              relative
+                              aspect-[16/9]
+                              overflow-hidden
+                              bg-gradient-to-br
+                              from-violet-500/20
+                              via-[#15151a]
+                              to-[#111114]
+                            "
+                        >
+                          {relatedImage ? (
+                            <Image
+                              src={relatedImage}
+                              alt={related.title}
+                              fill
+                              sizes="
+                                  (max-width: 640px) 100vw,
+                                  (max-width: 1024px) 50vw,
+                                  33vw
+                                "
+                              className="
+                                  object-cover
+                                  transition
+                                  duration-700
+                                  group-hover:scale-105
+                                "
+                            />
+                          ) : (
+                            <div
+                              className="
+                                  flex
+                                  h-full
+                                  items-center
+                                  justify-center
+                                "
+                            >
+                              <BookOpen
+                                className="
+                                    h-8
+                                    w-8
+                                    text-violet-400/50
+                                  "
+                              />
+                            </div>
+                          )}
 
-                          {related.title}
+                          <div
+                            className="
+                                absolute
+                                inset-0
+                                blog-image-overlay
+                                bg-gradient-to-t
+                                from-black/50
+                                via-transparent
+                                to-transparent
+                              "
+                          />
+                        </div>
 
-                        </h3>
+                        {/* Content */}
 
+                        <div className="p-5">
+                          <div
+                            className="
+                                flex
+                                items-center
+                                justify-between
+                                gap-3
+                              "
+                          >
+                            <span
+                              className="
+                                  text-xs
+                                  font-medium
+                                  text-violet-400
+                                "
+                            >
+                              {relatedCategory}
+                            </span>
 
-                        <span className="mt-4 block text-xs text-violet-400">
+                            {related.readingTime && (
+                              <span
+                                className="
+                                    inline-flex
+                                    items-center
+                                    gap-1
+                                    text-xs
+                                    text-slate-500
+                                  "
+                              >
+                                <Clock3 className="h-3 w-3" />
+                                {related.readingTime} min
+                              </span>
+                            )}
+                          </div>
 
-                          Read article →
+                          <h3
+                            className="
+                                mt-3
+                                line-clamp-3
+                                text-base
+                                font-semibold
+                                leading-6
+                                text-slate-200
+                                transition
+                                group-hover:text-white
+                              "
+                          >
+                            {related.title}
+                          </h3>
 
-                        </span>
-
+                          <div
+                            className="
+                                mt-5
+                                flex
+                                items-center
+                                gap-2
+                                text-sm
+                                font-medium
+                                text-violet-400
+                              "
+                          >
+                            Read article
+                            <ArrowUpRight
+                              className="
+                                  h-4
+                                  w-4
+                                  transition-transform
+                                  group-hover:translate-x-0.5
+                                  group-hover:-translate-y-0.5
+                                "
+                            />
+                          </div>
+                        </div>
                       </Link>
-
-                    ),
-                  )}
-
+                    );
+                  })}
                 </div>
-
               </section>
-
             )}
-
           </article>
 
-
-          {/*                      
+          {/* =====================================
               SIDEBAR
-                                */}
+          ====================================== */}
 
-          <aside className="lg:sticky lg:top-24 lg:self-start">
-
-            <BlogSidebar
-              blog={blog}
-            />
-
+          <aside
+            className="
+              lg:sticky
+              lg:top-24
+              lg:self-start
+            "
+          >
+            <BlogSidebar blog={blog} />
           </aside>
-
         </div>
-
       </div>
-
     </main>
-
   );
-
 }

@@ -1,1 +1,225 @@
 @import "tailwindcss";
+
+:root {
+	--theme-background: #09090b;
+	--theme-surface: #111114;
+	--theme-surface-raised: #1a2233;
+	--theme-border: rgba(255, 255, 255, 0.1);
+	--theme-text-primary: #f8fafc;
+	--theme-text-secondary: #cbd5e1;
+	--theme-text-muted: #64748b;
+	--theme-shadow: rgba(0, 0, 0, 0.35);
+	color-scheme: dark;
+}
+
+.light {
+	--theme-background: #f4f8fc;
+	--theme-surface: #ffffff;
+	--theme-surface-raised: #eef5fc;
+	--theme-border: #d7e3ef;
+	--theme-text-primary: #10243e;
+	--theme-text-secondary: #38516d;
+	--theme-text-muted: #667d96;
+	--theme-shadow: rgba(32, 70, 110, 0.12);
+	color-scheme: light;
+}
+
+html,
+body {
+	min-height: 100%;
+}
+
+body {
+	background: var(--theme-background);
+	color: var(--theme-text-primary);
+	transition: background-color 180ms ease, color 180ms ease;
+}
+
+/* Shared semantic hooks for new UI and the existing dark utility palette. */
+.theme-page { background-color: var(--theme-background); color: var(--theme-text-primary); }
+.theme-surface { background-color: var(--theme-surface); border-color: var(--theme-border); }
+.theme-muted { color: var(--theme-text-muted); }
+
+.light .theme-navbar {
+	background-color: rgba(255, 255, 255, 0.94);
+	border-color: var(--theme-border);
+	box-shadow: 0 4px 18px rgba(45, 87, 125, 0.08);
+	backdrop-filter: none;
+}
+.light .theme-control {
+	background-color: #f7fbff;
+	border-color: #cbdbea;
+	color: var(--theme-text-secondary);
+}
+.light .theme-control:hover {
+	background-color: #edf5fc;
+	color: var(--theme-text-primary);
+}
+.light .theme-menu {
+	box-shadow: 0 12px 28px rgba(45, 87, 125, 0.12);
+}
+.light .blog-page-decoration,
+.light .blog-author-decoration {
+	display: none;
+}
+.light .blog-featured-image {
+	box-shadow: 0 8px 24px rgba(45, 87, 125, 0.1);
+}
+.light .reader-blog-card {
+	box-shadow: 0 4px 14px rgba(45, 87, 125, 0.07);
+}
+.light .reader-blog-card:hover {
+	box-shadow: 0 8px 20px rgba(45, 87, 125, 0.11);
+}
+.light .reader-blog-hero {
+	background: linear-gradient(135deg, #ffffff 0%, #edf6ff 100%);
+	box-shadow: 0 4px 16px rgba(45, 87, 125, 0.06);
+}
+
+/* Large decorative blurs are atmospheric in Dark mode but wash out Light mode. */
+.light .blur-3xl,
+.light .blog-page-decoration {
+	display: none;
+}
+
+.light .blog-detail-page {
+	background: #f8fafc;
+}
+.light .blog-article-header {
+	background: #ffffff;
+	border-color: rgba(203, 213, 225, 0.8);
+	box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+.light .blog-view-header h1,
+.light .blog-content h1,
+.light .blog-content h2,
+.light .blog-content h3,
+.light .blog-content strong,
+.light .blog-comments h2,
+.light .blog-sidebar strong,
+.light .blog-sidebar p.font-medium,
+.light .blog-sidebar p.text-white {
+	color: #0f172a;
+}
+.light .text-white\/70,
+.light .text-white\/80,
+.light .text-white\/90 {
+	color: var(--theme-text-secondary);
+}
+.light .blog-view-header p,
+.light .blog-content,
+.light .blog-content p,
+.light .blog-content li,
+.light .blog-comments article p.text-slate-400,
+.light .blog-sidebar p.text-slate-400 {
+	color: #334155;
+}
+.light .blog-meta {
+	border-color: rgba(203, 213, 225, 0.8);
+}
+.light .blog-content a {
+	color: #5b21b6;
+}
+.light .blog-content blockquote {
+	background: #f5f3ff;
+	color: #334155;
+}
+.light .blog-content code {
+	background: #f1f5f9;
+	border-color: #e2e8f0;
+	color: #6d28d9;
+}
+.light .blog-content pre {
+	background: #f1f5f9;
+	border-color: #e2e8f0;
+	box-shadow: none;
+}
+.light .blog-content pre code {
+	background: transparent;
+	color: #334155;
+}
+.light .blog-content th,
+.light .blog-content td {
+	border-color: #e2e8f0;
+}
+.light .blog-content th {
+	background: #f8fafc;
+	color: #0f172a;
+}
+.light .blog-content td {
+	color: #334155;
+}
+.light .blog-featured-frame,
+.light .blog-featured-image {
+	box-shadow: none;
+}
+.light .blog-featured-image {
+	border-color: #cbd5e1;
+}
+.light .blog-image-overlay {
+	opacity: 0.12;
+}
+.light .blog-interaction-bar,
+.light .blog-comments form,
+.light .blog-comments > div:not(:first-child) > article,
+.light .blog-sidebar > section,
+.light .blog-related-card,
+.light .blog-author-decoration {
+	background: #ffffff;
+	border-color: rgba(203, 213, 225, 0.8);
+	box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+.light .blog-interaction-bar button:not(.bg-violet-600),
+.light .blog-comments textarea {
+	color: #334155;
+}
+.light .blog-related-card:hover {
+	box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+.light .bg-\[\#09090b\] { background-color: var(--theme-background); }
+.light .bg-\[\#050505\] { background-color: var(--theme-background); }
+.light .bg-\[\#0d0d0f\] { background-color: var(--theme-surface); }
+.light .bg-\[\#111114\],
+.light .bg-\[\#111113\],
+.light .bg-\[\#111827\] { background-color: var(--theme-surface); }
+.light .bg-\[\#1a2233\] { background-color: var(--theme-surface-raised); }
+.light .border-white\/10,
+.light .border-white\/5,
+.light .border-white\/\[0\.06\] { border-color: var(--theme-border); }
+.light .bg-white\/\[0\.03\],
+.light .bg-white\/\[0\.04\],
+.light .bg-white\/\[0\.06\],
+.light .bg-white\/\[0\.07\],
+.light .bg-white\/\[0\.02\],
+.light .bg-white\/5 { background-color: rgba(29, 113, 184, 0.06); }
+.light .text-white { color: var(--theme-text-primary); }
+.light .text-slate-200,
+.light .text-slate-300 { color: var(--theme-text-secondary); }
+.light .text-slate-400,
+.light .text-slate-500,
+.light .text-slate-600,
+.light .text-zinc-300,
+.light .text-zinc-400,
+.light .text-zinc-500 { color: var(--theme-text-muted); }
+.light .shadow-black\/40,
+.light .shadow-black\/30 { --tw-shadow-color: var(--theme-shadow); }
+
+.light .bg-violet-500.text-white,
+.light .bg-violet-600.text-white,
+.light .bg-emerald-600.text-white,
+.light .bg-red-600.text-white,
+.light .bg-gradient-to-br.text-white,
+.light .bg-violet-500 .text-white,
+.light .bg-violet-600 .text-white,
+.light .bg-emerald-600 .text-white,
+.light .bg-red-600 .text-white,
+.light .bg-gradient-to-br .text-white { color: #ffffff; }
+
+.Toastify__toast {
+	background: var(--theme-surface);
+	color: var(--theme-text-primary);
+	border: 1px solid var(--theme-border);
+	box-shadow: 0 12px 30px var(--theme-shadow);
+}
+.Toastify__close-button { color: var(--theme-text-muted); }

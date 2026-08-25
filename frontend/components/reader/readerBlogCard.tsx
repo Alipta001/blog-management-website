@@ -37,6 +37,7 @@ export default function ReaderBlogCard({
         hover:border-violet-500/30
         hover:shadow-xl
         hover:shadow-violet-950/10
+        reader-blog-card
       "
     >
       <Link href={`/dashboard/reader/blogs/${blog._id}`}>

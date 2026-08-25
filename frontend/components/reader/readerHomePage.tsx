@@ -63,6 +63,7 @@ export default function ReaderHomePage() {
           from-violet-500/15
           via-violet-500/[0.04]
           to-transparent
+          reader-blog-hero
           p-6
           sm:p-8
         "
