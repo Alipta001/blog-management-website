@@ -8,6 +8,28 @@ const {
 
 class UserController {
 
+  async toggleFavoriteAuthor(req, res, next) {
+    try {
+      const author = await User.findOne({ _id: req.params.id, role: "author", status: "active" }).select("_id name");
+      if (!author) return res.status(404).json({ success: false, message: "Author not found" });
+      if (author._id.toString() === req.user.id.toString()) return res.status(400).json({ success: false, message: "You cannot favourite yourself" });
+      const user = await User.findById(req.user.id).select("favoriteAuthors");
+      const alreadyFavorite = user.favoriteAuthors.some((id) => id.toString() === author._id.toString());
+      user.favoriteAuthors = alreadyFavorite
+        ? user.favoriteAuthors.filter((id) => id.toString() !== author._id.toString())
+        : [...user.favoriteAuthors, author._id];
+      await user.save();
+      return res.status(200).json({ success: true, message: alreadyFavorite ? "Author removed from favourites" : "Author added to favourites", data: { authorId: author._id, isFavorite: !alreadyFavorite } });
+    } catch (error) { next(error); }
+  }
+
+  async getFavoriteAuthors(req, res, next) {
+    try {
+      const user = await User.findById(req.user.id).populate("favoriteAuthors", "name profileImage bio").select("favoriteAuthors");
+      return res.status(200).json({ success: true, data: { authors: user.favoriteAuthors || [] } });
+    } catch (error) { next(error); }
+  }
+
    
   // GET ALL USERS
   // ADMINISTRATION ONLY

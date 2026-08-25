@@ -11,6 +11,7 @@ import {
 import {
   useState,
   useEffect,
+  useRef,
 } from "react";
 
 import {
@@ -115,6 +116,8 @@ export default function Navbar({
     setIsNotificationsOpen,
   ] = useState(false);
 
+  const navbarRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
     if (isNotificationsOpen) {
       appDispatch(
@@ -125,6 +128,24 @@ export default function Navbar({
       );
     }
   }, [appDispatch, isNotificationsOpen]);
+
+  useEffect(() => {
+    const handleOutsidePointerDown = (event: PointerEvent) => {
+      if (
+        navbarRef.current &&
+        !navbarRef.current.contains(event.target as Node)
+      ) {
+        setIsProfileOpen(false);
+        setIsNotificationsOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handleOutsidePointerDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handleOutsidePointerDown);
+    };
+  }, []);
 
 
    
@@ -206,6 +227,7 @@ export default function Navbar({
 
   return (
     <header
+      ref={navbarRef}
       className="
         sticky top-0 z-30
         flex h-[72px]

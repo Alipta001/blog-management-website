@@ -40,6 +40,13 @@ body {
 .theme-surface { background-color: var(--theme-surface); border-color: var(--theme-border); }
 .theme-muted { color: var(--theme-text-muted); }
 
+/* Decorative atmosphere stays available in Dark mode without washing out Light mode. */
+.light .blur-3xl,
+.light .blur-\[120px\],
+.light .blur-\[140px\] {
+	display: none;
+}
+
 .light .theme-navbar {
 	background-color: rgba(255, 255, 255, 0.94);
 	border-color: var(--theme-border);
@@ -58,13 +65,6 @@ body {
 .light .theme-menu {
 	box-shadow: 0 12px 28px rgba(45, 87, 125, 0.12);
 }
-.light .blog-page-decoration,
-.light .blog-author-decoration {
-	display: none;
-}
-.light .blog-featured-image {
-	box-shadow: 0 8px 24px rgba(45, 87, 125, 0.1);
-}
 .light .reader-blog-card {
 	box-shadow: 0 4px 14px rgba(45, 87, 125, 0.07);
 }
@@ -76,105 +76,22 @@ body {
 	box-shadow: 0 4px 16px rgba(45, 87, 125, 0.06);
 }
 
-/* Large decorative blurs are atmospheric in Dark mode but wash out Light mode. */
-.light .blur-3xl,
-.light .blog-page-decoration {
-	display: none;
+.reader-featured-panel {
+	box-shadow: none;
 }
+.dark .reader-featured-panel {
+	box-shadow: none;
+}
+.light .reader-community-heading h2 { color: #172554 !important; }
 
-.light .blog-detail-page {
-	background: #f8fafc;
+.light .reader-banner-title {
+	color: #0f172a !important;
 }
-.light .blog-article-header {
-	background: #ffffff;
-	border-color: rgba(203, 213, 225, 0.8);
-	box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+.light .reader-search-input {
+	color: #0f172a !important;
 }
-.light .blog-view-header h1,
-.light .blog-content h1,
-.light .blog-content h2,
-.light .blog-content h3,
-.light .blog-content strong,
-.light .blog-comments h2,
-.light .blog-sidebar strong,
-.light .blog-sidebar p.font-medium,
-.light .blog-sidebar p.text-white {
-	color: #0f172a;
-}
-.light .text-white\/70,
-.light .text-white\/80,
-.light .text-white\/90 {
-	color: var(--theme-text-secondary);
-}
-.light .blog-view-header p,
-.light .blog-content,
-.light .blog-content p,
-.light .blog-content li,
-.light .blog-comments article p.text-slate-400,
-.light .blog-sidebar p.text-slate-400 {
-	color: #334155;
-}
-.light .blog-meta {
-	border-color: rgba(203, 213, 225, 0.8);
-}
-.light .blog-content a {
-	color: #5b21b6;
-}
-.light .blog-content blockquote {
-	background: #f5f3ff;
-	color: #334155;
-}
-.light .blog-content code {
-	background: #f1f5f9;
-	border-color: #e2e8f0;
-	color: #6d28d9;
-}
-.light .blog-content pre {
-	background: #f1f5f9;
-	border-color: #e2e8f0;
-	box-shadow: none;
-}
-.light .blog-content pre code {
-	background: transparent;
-	color: #334155;
-}
-.light .blog-content th,
-.light .blog-content td {
-	border-color: #e2e8f0;
-}
-.light .blog-content th {
-	background: #f8fafc;
-	color: #0f172a;
-}
-.light .blog-content td {
-	color: #334155;
-}
-.light .blog-featured-frame,
-.light .blog-featured-image {
-	box-shadow: none;
-}
-.light .blog-featured-image {
-	border-color: #cbd5e1;
-}
-.light .blog-image-overlay {
-	opacity: 0.12;
-}
-.light .blog-interaction-bar,
-.light .blog-comments form,
-.light .blog-comments > div:not(:first-child) > article,
-.light .blog-sidebar > section,
-.light .blog-related-card,
-.light .blog-author-decoration {
-	background: #ffffff;
-	border-color: rgba(203, 213, 225, 0.8);
-	box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-}
-.light .blog-interaction-bar button:not(.bg-violet-600),
-.light .blog-comments textarea {
-	color: #334155;
-}
-.light .blog-related-card:hover {
-	box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+.dark .reader-banner-title {
+	color: #f8fafc !important;
 }
 
 .light .bg-\[\#09090b\] { background-color: var(--theme-background); }
@@ -204,7 +121,17 @@ body {
 .light .text-zinc-500 { color: var(--theme-text-muted); }
 .light .shadow-black\/40,
 .light .shadow-black\/30 { --tw-shadow-color: var(--theme-shadow); }
-
+.light .text-violet-300,
+.light .text-violet-400 {
+	color: #5b21b6;
+}
+.light .text-indigo-300,
+.light .text-indigo-400 {
+	color: #3730a3;
+}
+.sidebar-workspace-title {
+	font-weight: 700;
+}
 .light .bg-violet-500.text-white,
 .light .bg-violet-600.text-white,
 .light .bg-emerald-600.text-white,
@@ -223,3 +150,20 @@ body {
 	box-shadow: 0 12px 30px var(--theme-shadow);
 }
 .Toastify__close-button { color: var(--theme-text-muted); }
+
+/* Opt-in contrast failure fixture. It is inert unless ?demo=contrast is present. */
+[data-contrast-demo="true"] .demo-banner-title {
+	color: #f8fafc !important;
+}
+[data-contrast-demo="true"] .demo-sidebar-box,
+[data-contrast-demo="true"] .demo-sidebar-box * {
+	color: #f1f5f9 !important;
+	background-color: #ffffff !important;
+}
+[data-contrast-demo="true"] .demo-sidebar-box {
+	border-color: #ffffff !important;
+}
+[data-contrast-demo="true"] .demo-sidebar-icon {
+	background-color: #ffffff !important;
+	color: #ffffff !important;
+}

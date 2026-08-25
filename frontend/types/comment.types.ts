@@ -15,9 +15,15 @@ export interface Comment {
   blog: string | Blog;
   user: string | User;
 
+  parentComment?: string | Comment | null;
+
   content: string;
 
   status: CommentStatus;
+
+  likeCount?: number;
+  isLiked?: boolean;
+  isPinned?: boolean;
 
   moderatedBy: string | User | null;
 

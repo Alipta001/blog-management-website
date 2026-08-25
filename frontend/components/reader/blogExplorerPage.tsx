@@ -1,12 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search } from "lucide-react";
+import { Heart, Search, Sparkles, TrendingUp } from "lucide-react";
+import { toast } from "react-toastify";
 
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getBlogs } from "@/redux/slice/blog/blogSlice";
 import { getCategories } from "@/redux/slice/category/categorySlice";
 import { getTags } from "@/redux/slice/tag/tagSlice";
+import AxiosInstance from "@/api/axios/axios";
+import { endPoints } from "@/api/endPoints/endPoints";
 
 import ReaderBlogGrid from "./readerBlogGrid";
 
@@ -38,11 +41,22 @@ export default function BlogExplorerPage({
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState("");
   const [tag, setTag] = useState("");
+  const [sort, setSort] = useState<"latest" | "mostViewed" | "mostLiked">("latest");
+  const [favoriteOnly, setFavoriteOnly] = useState(false);
+  const [favoriteAuthors, setFavoriteAuthors] = useState<string[]>([]);
+  const auth = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(getCategories());
     dispatch(getTags());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (!auth.isAuthenticated) return;
+    AxiosInstance.get(endPoints.user.favoriteAuthors)
+      .then((response) => setFavoriteAuthors((response.data.data.authors || []).map((author: { _id: string }) => author._id)))
+      .catch(() => setFavoriteAuthors([]));
+  }, [auth.isAuthenticated]);
 
   useEffect(() => {
     dispatch(
@@ -52,9 +66,25 @@ export default function BlogExplorerPage({
         search: search.trim() || undefined,
         category: category || undefined,
         tag: tag || undefined,
+        sort,
+        author: favoriteOnly && favoriteAuthors.length ? favoriteAuthors.join(",") : undefined,
       }),
     );
-  }, [category, dispatch, page, search, tag]);
+  }, [category, dispatch, page, search, tag, sort, favoriteOnly, favoriteAuthors]);
+
+  const toggleFavoriteAuthor = async (authorId: string) => {
+    if (!auth.isAuthenticated) {
+      toast.info("Please login to add favourite authors.");
+      return;
+    }
+    try {
+      const response = await AxiosInstance.patch(endPoints.user.toggleFavoriteAuthor.replace(":id", authorId));
+      setFavoriteAuthors((current) => response.data.data.isFavorite ? [...new Set([...current, authorId])] : current.filter((id) => id !== authorId));
+      toast.success(response.data.message);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Unable to update favourite author");
+    }
+  };
 
   const handleSearch = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -152,6 +182,19 @@ export default function BlogExplorerPage({
         </div>
       </header>
 
+      <div className="flex flex-wrap items-center gap-2 border-b border-white/10 pb-5">
+        {[[Sparkles, "latest", "Most recent"], [TrendingUp, "mostViewed", "Most viewed"], [Heart, "mostLiked", "Most liked"]].map(([Icon, value, label]) => (
+          <button key={value as string} type="button" onClick={() => { setSort(value as typeof sort); setPage(1); }} className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition ${sort === value ? "bg-violet-500 text-white" : "bg-white/[0.04] text-slate-400 hover:bg-white/[0.08] hover:text-white"}`}>
+            <Icon className="h-4 w-4" /> {label as string}
+          </button>
+        ))}
+        {auth.isAuthenticated && favoriteAuthors.length > 0 && (
+          <button type="button" onClick={() => { setFavoriteOnly((value) => !value); setPage(1); }} className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition ${favoriteOnly ? "bg-rose-500 text-white" : "bg-white/[0.04] text-slate-400 hover:bg-white/[0.08] hover:text-white"}`}>
+            <Heart className="h-4 w-4" /> Favourite authors
+          </button>
+        )}
+      </div>
+
       {/* ERROR */}
       {error && (
         <div
@@ -174,6 +217,9 @@ export default function BlogExplorerPage({
       <ReaderBlogGrid
         blogs={blogs}
         loading={loading}
+        favoriteAuthors={favoriteAuthors}
+        authenticated={auth.isAuthenticated}
+        onToggleFavorite={toggleFavoriteAuthor}
       />
 
       {/* PAGINATION */}

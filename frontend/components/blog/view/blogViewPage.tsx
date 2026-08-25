@@ -908,7 +908,7 @@
 
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -920,12 +920,16 @@ import { ArrowLeft, ArrowUpRight, BookOpen, Clock3 } from "lucide-react";
 import { toast } from "react-toastify";
 
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import AxiosInstance from "@/api/axios/axios";
+import { endPoints } from "@/api/endPoints/endPoints";
 
 import { getCurrentUser } from "@/redux/slice/auth/authSlice";
 
 import {
   createComment,
   getApprovedComments,
+  toggleCommentLike,
+  toggleCommentPin,
 } from "@/redux/slice/comment/commentSlice";
 
 import { addReadingHistory } from "@/redux/slice/readingHistory/readingHistorySlice";
@@ -962,7 +966,6 @@ import BlogRoleActions from "./blogRoleActions";
 import BlogSidebar from "./blogSidebar";
 import BlogViewHeader from "./blogViewHeader";
 import BlogViewSkeleton from "./blogViewSkeleton";
-import BlogAuthorCard from "./blogAuthorCard";
 
 interface BlogViewPageProps {
   id: string;
@@ -997,6 +1000,27 @@ export default function BlogViewPage({
   const likes = useAppSelector((state) => state.like);
 
   const blog = blogState.selectedBlog;
+  const [isFavoriteAuthor, setIsFavoriteAuthor] = useState(false);
+  const [favoriteAuthorLoading, setFavoriteAuthorLoading] = useState(false);
+
+  const blogAuthorId =
+    blog && typeof blog.author !== "string" ? blog.author._id : null;
+
+  useEffect(() => {
+    if (!auth.isAuthenticated || !blogAuthorId) {
+      setIsFavoriteAuthor(false);
+      return;
+    }
+
+    AxiosInstance.get(endPoints.user.favoriteAuthors)
+      .then((response) => {
+        const authors = response.data.data.authors || [];
+        setIsFavoriteAuthor(
+          authors.some((author: { _id: string }) => author._id === blogAuthorId),
+        );
+      })
+      .catch(() => setIsFavoriteAuthor(false));
+  }, [auth.isAuthenticated, blogAuthorId]);
 
   // =========================================
   // ROLE
@@ -1199,12 +1223,13 @@ export default function BlogViewPage({
   // CREATE COMMENT
   // =========================================
 
-  const postComment = async (content: string) => {
+  const postComment = async (content: string, parentComment?: string) => {
     try {
       const result = await dispatch(
         createComment({
           blogId: id,
           content,
+          parentComment,
         }),
       ).unwrap();
 
@@ -1213,6 +1238,26 @@ export default function BlogViewPage({
       toast.error(
         typeof error === "string" ? error : "Failed to send comment for review",
       );
+    }
+  };
+
+  const likeComment = async (commentId: string) => {
+    if (!auth.isAuthenticated) {
+      toast.info("Please login to like comments.");
+      return;
+    }
+    try {
+      await dispatch(toggleCommentLike(commentId)).unwrap();
+    } catch (error) {
+      toast.error(typeof error === "string" ? error : "Unable to update comment like");
+    }
+  };
+
+  const pinComment = async (commentId: string) => {
+    try {
+      await dispatch(toggleCommentPin(commentId)).unwrap();
+    } catch (error) {
+      toast.error(typeof error === "string" ? error : "Unable to update pinned comment");
     }
   };
 
@@ -1244,6 +1289,29 @@ export default function BlogViewPage({
     }
   };
 
+  const toggleFavoriteAuthor = async () => {
+    if (!blogAuthorId) return;
+    if (!auth.isAuthenticated) {
+      toast.info("Please login to add favourite authors.");
+      return;
+    }
+
+    setFavoriteAuthorLoading(true);
+    try {
+      const response = await AxiosInstance.patch(
+        endPoints.user.toggleFavoriteAuthor.replace(":id", blogAuthorId),
+      );
+      setIsFavoriteAuthor(response.data.data.isFavorite);
+      toast.success(response.data.message);
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.message || "Unable to update favourite author",
+      );
+    } finally {
+      setFavoriteAuthorLoading(false);
+    }
+  };
+
   // =========================================
   // LOADING
   // =========================================
@@ -1259,13 +1327,6 @@ export default function BlogViewPage({
   if (!blog) {
     return <BlogNotFound message={blogState.error || undefined} />;
   }
-
-  // =========================================
-  // CATEGORY
-  // =========================================
-
-  const categoryName =
-    typeof blog.category === "string" ? "Blog" : blog.category?.name || "Blog";
 
   // =========================================
   // RELATED BLOGS
@@ -1294,7 +1355,7 @@ export default function BlogViewPage({
       ? "/dashboard/administration/blogs"
       : context === "author"
         ? "/dashboard/author/my-blogs"
-        : "/blogs";
+        : "/dashboard/reader/allBlogs";
 
   const blogHref = (blogId: string) => {
     if (context === "administration") {
@@ -1305,7 +1366,7 @@ export default function BlogViewPage({
       return `/dashboard/author/my-blogs/${blogId}`;
     }
 
-    return `/blogs/${blogId}`;
+    return `/dashboard/reader/blogs/${blogId}`;
   };
 
   // =========================================
@@ -1316,49 +1377,14 @@ export default function BlogViewPage({
     <main
       className="
         min-h-screen
-        overflow-hidden
-        bg-[#09090b]
-        text-white
-        blog-detail-page
+        bg-slate-50/50
+        text-slate-900
+        dark:bg-slate-950
+        dark:text-slate-100
       "
     >
-      {/* =====================================
-          BACKGROUND DECORATION
-      ====================================== */}
-
-      <div className="blog-page-decoration pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
-        <div
-          className="
-            absolute
-            left-1/2
-            top-0
-            h-[500px]
-            w-[800px]
-            -translate-x-1/2
-            rounded-full
-            bg-violet-600/[0.08]
-            blur-[120px]
-          "
-        />
-
-        <div
-          className="
-            absolute
-            right-[-200px]
-            top-[500px]
-            h-[400px]
-            w-[400px]
-            rounded-full
-            bg-indigo-500/[0.04]
-            blur-[120px]
-          "
-        />
-      </div>
-
       <div
         className="
-          relative
-          z-10
           mx-auto
           max-w-7xl
           px-4
@@ -1381,9 +1407,11 @@ export default function BlogViewPage({
               items-center
               gap-2
               text-sm
-              text-slate-500
+              text-slate-600
+              dark:text-slate-400
               transition
-              hover:text-white
+              hover:text-slate-900
+              dark:hover:text-white
             "
           >
             <ArrowLeft
@@ -1407,58 +1435,15 @@ export default function BlogViewPage({
             mx-auto
             mt-8
             max-w-6xl
-            overflow-hidden
-            rounded-3xl
-            border
-            border-white/10
-            bg-gradient-to-br
-            from-white/[0.045]
-            via-[#111114]
-            to-[#0c0c0f]
-            p-6
-            shadow-2xl
-            shadow-black/20
-            blog-article-header
+            border-b
+            border-slate-200
+            pb-10
+            pt-6
+            dark:border-slate-800
             sm:p-10
             lg:p-14
           "
         >
-          {/* Category + Reading Time */}
-
-          <div className="mb-8 flex flex-wrap items-center gap-3">
-            <span
-              className="
-                rounded-full
-                border
-                border-violet-500/30
-                bg-violet-500/10
-                px-4
-                py-2
-                text-xs
-                font-semibold
-                tracking-wide
-                text-violet-300
-              "
-            >
-              {categoryName}
-            </span>
-
-            {blog.readingTime && (
-              <span
-                className="
-                  inline-flex
-                  items-center
-                  gap-1.5
-                  text-xs
-                  text-slate-500
-                "
-              >
-                <Clock3 className="h-3.5 w-3.5" />
-                {blog.readingTime} min read
-              </span>
-            )}
-          </div>
-
           <BlogViewHeader blog={blog} />
 
           <div className="mt-8">
@@ -1516,10 +1501,14 @@ export default function BlogViewPage({
             <div
               className="
                 overflow-hidden
-                rounded-3xl
-                shadow-2xl
-                shadow-black/30
-                blog-featured-frame
+                rounded-2xl
+                border
+                border-slate-200
+                bg-white
+                shadow-sm
+                dark:border-slate-800
+                dark:bg-slate-900/60
+                dark:shadow-none
               "
             >
               <BlogFeaturedImage blog={blog} />
@@ -1545,7 +1534,7 @@ export default function BlogViewPage({
                 gap-4
               "
             >
-              <div className="h-px flex-1 bg-white/10" />
+              <div className="h-px flex-1 bg-slate-200 dark:bg-slate-800" />
 
               <div
                 className="
@@ -1556,14 +1545,16 @@ export default function BlogViewPage({
                   justify-center
                   rounded-full
                   border
-                  border-violet-500/20
-                  bg-violet-500/10
+                  border-violet-200
+                  bg-violet-50
+                  dark:border-violet-500/20
+                  dark:bg-violet-500/10
                 "
               >
                 <BookOpen className="h-4 w-4 text-violet-400" />
               </div>
 
-              <div className="h-px flex-1 bg-white/10" />
+              <div className="h-px flex-1 bg-slate-200 dark:bg-slate-800" />
             </div>
 
             {/* =====================================
@@ -1578,15 +1569,14 @@ export default function BlogViewPage({
                 loading={likes.loading || blogState.loading}
                 onLike={toggleLike}
                 onUnlike={toggleLike}
+                isFavoriteAuthor={isFavoriteAuthor}
+                favoriteAuthorLoading={favoriteAuthorLoading}
+                onToggleFavoriteAuthor={toggleFavoriteAuthor}
               />
 
             {/* =====================================
     AUTHOR
 ===================================== */}
-
-            <div className="mt-10">
-              <BlogAuthorCard blog={blog} />
-            </div>
 
             {/* =====================================
     COMMENTS
@@ -1596,7 +1586,8 @@ export default function BlogViewPage({
               className="
     mt-12
     border-t
-    border-white/10
+    border-slate-200
+    dark:border-slate-800
     pt-10
   "
             >
@@ -1604,6 +1595,9 @@ export default function BlogViewPage({
                 comments={comments.comments}
                 loading={comments.loading}
                 authenticated={auth.isAuthenticated}
+                isAuthor={isOwner}
+                onLike={likeComment}
+                onPin={pinComment}
                 onSubmit={postComment}
               />
             </div>
@@ -1617,7 +1611,8 @@ export default function BlogViewPage({
                 className="
                   mt-16
                   border-t
-                  border-white/10
+                  border-slate-200
+                  dark:border-slate-800
                   pt-12
                 "
               >
@@ -1652,7 +1647,8 @@ export default function BlogViewPage({
                         text-2xl
                         font-bold
                         tracking-tight
-                        text-white
+                        text-slate-900
+                        dark:text-white
                         sm:text-3xl
                       "
                     >
@@ -1716,15 +1712,16 @@ export default function BlogViewPage({
                             overflow-hidden
                             rounded-2xl
                             border
-                            border-white/10
-                            bg-[#111114]
+                            border-slate-200
+                            bg-white
                             transition
                             duration-300
                             hover:-translate-y-1
                             hover:border-violet-500/30
-                            hover:shadow-xl
-                            hover:shadow-violet-950/20
-                            blog-related-card
+                            hover:shadow-md
+                            dark:border-slate-800
+                            dark:bg-slate-900/60
+                            dark:hover:shadow-none
                           "
                       >
                         {/* Image */}
@@ -1734,10 +1731,8 @@ export default function BlogViewPage({
                               relative
                               aspect-[16/9]
                               overflow-hidden
-                              bg-gradient-to-br
-                              from-violet-500/20
-                              via-[#15151a]
-                              to-[#111114]
+                              bg-slate-100
+                              dark:bg-slate-900
                             "
                         >
                           {relatedImage ? (
@@ -1781,10 +1776,11 @@ export default function BlogViewPage({
                                 absolute
                                 inset-0
                                 blog-image-overlay
-                                bg-gradient-to-t
-                                from-black/50
-                                via-transparent
-                                to-transparent
+                                bg-transparent
+                                dark:bg-gradient-to-t
+                                dark:from-black/50
+                                dark:via-transparent
+                                dark:to-transparent
                               "
                           />
                         </div>
@@ -1833,9 +1829,11 @@ export default function BlogViewPage({
                                 text-base
                                 font-semibold
                                 leading-6
-                                text-slate-200
+                                text-slate-900
+                                dark:text-slate-200
                                 transition
-                                group-hover:text-white
+                                group-hover:text-slate-700
+                                dark:group-hover:text-white
                               "
                           >
                             {related.title}
@@ -1878,9 +1876,11 @@ export default function BlogViewPage({
 
           <aside
             className="
+              order-first
               lg:sticky
               lg:top-24
               lg:self-start
+              lg:order-none
             "
           >
             <BlogSidebar blog={blog} />

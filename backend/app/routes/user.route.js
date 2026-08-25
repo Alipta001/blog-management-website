@@ -25,6 +25,9 @@ router.patch(
   userController.updateMyProfile,
 );
 
+router.get("/favorite-authors", authMiddleware, userController.getFavoriteAuthors);
+router.patch("/favorite-authors/:id", authMiddleware, userController.toggleFavoriteAuthor);
+
  
 // ADMINISTRATION - USER MANAGEMENT
  

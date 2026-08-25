@@ -23,7 +23,7 @@ export default function AdministrationDashboardPage() {
   useEffect(() => {
     dispatch(getAdminBlogs({ page: 1, limit: 5 }));
     dispatch(getUsers({ page: 1, limit: 5 }));
-    dispatch(getAllCommentsForAdministration({ page: 1, limit: 1 }));
+    dispatch(getAllCommentsForAdministration({ page: 1, limit: 5 }));
   }, [dispatch]);
 
   return (

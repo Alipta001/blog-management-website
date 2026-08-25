@@ -34,6 +34,13 @@ export default function MobileSidebar({
   const navigationItems =
     sidebarConfig[role] || [];
 
+  const dashboardRoot =
+    role === "user"
+      ? "/dashboard/reader"
+      : role === "author"
+        ? "/dashboard/author"
+        : "/dashboard/administration";
+
 
   return (
     <>
@@ -130,10 +137,10 @@ export default function MobileSidebar({
 
 
             const isActive =
-              pathname === item.href ||
-              pathname.startsWith(
-                `${item.href}/`
-              );
+              item.href === dashboardRoot
+                ? pathname === item.href
+                : pathname === item.href ||
+                  pathname.startsWith(`${item.href}/`);
 
 
             return (

@@ -96,23 +96,26 @@ export default function BlogViewHeader({
           className="
             rounded-full
             border
-            border-violet-500/30
-            bg-violet-500/10
+            border-violet-200
+            bg-violet-50
             px-4
             py-1.5
             text-xs
             font-semibold
             uppercase
             tracking-[0.15em]
-            text-violet-300
+            text-violet-700
+            dark:border-violet-500/30
+            dark:bg-violet-500/10
+            dark:text-violet-300
           "
         >
           {category}
         </span>
 
-        <span className="h-1 w-1 rounded-full bg-slate-600" />
+        <span className="h-1 w-1 rounded-full bg-slate-300 dark:bg-slate-600" />
 
-        <span className="text-xs text-slate-500">
+        <span className="text-xs text-slate-600 dark:text-slate-400">
           {blog.status === "published"
             ? "Published"
             : blog.status}
@@ -126,7 +129,8 @@ export default function BlogViewHeader({
           font-bold
           leading-[1.05]
           tracking-[-0.03em]
-          text-white
+          text-slate-950
+          dark:text-white
           sm:text-5xl
           lg:text-6xl
           xl:text-7xl
@@ -142,7 +146,8 @@ export default function BlogViewHeader({
             max-w-3xl
             text-lg
             leading-8
-            text-slate-400
+            text-slate-600
+            dark:text-slate-400
             sm:text-xl
             sm:leading-9
           "

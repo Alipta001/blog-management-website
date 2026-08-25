@@ -44,8 +44,8 @@ export default function BlogMeta({
         gap-x-6
         gap-y-4
         border-b
-        border-white/10
-        blog-meta
+        border-slate-200
+        dark:border-slate-800
         pb-7
       "
     >
@@ -60,22 +60,25 @@ export default function BlogMeta({
               justify-center
               rounded-full
               border
-              border-violet-500/20
-              bg-violet-500/10
+              border-violet-200
+              bg-violet-50
               text-xs
               font-semibold
-              text-violet-300
+              text-violet-700
+              dark:border-violet-500/20
+              dark:bg-violet-500/10
+              dark:text-violet-300
             "
           >
             {initials}
           </div>
 
           <div>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               Written by
             </p>
 
-            <p className="text-sm font-medium text-slate-200">
+            <p className="text-sm font-medium text-slate-900 dark:text-slate-200">
               {author.name}
             </p>
           </div>
@@ -84,11 +87,11 @@ export default function BlogMeta({
 
       {date && (
         <div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Published
           </p>
 
-          <p className="text-sm text-slate-300">
+          <p className="text-sm text-slate-700 dark:text-slate-300">
             {date}
           </p>
         </div>
@@ -96,11 +99,11 @@ export default function BlogMeta({
 
       {blog.readingTime && (
         <div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-slate-500 dark:text-slate-400">
             Reading time
           </p>
 
-          <p className="text-sm text-slate-300">
+          <p className="text-sm text-slate-700 dark:text-slate-300">
             {blog.readingTime} min read
           </p>
         </div>
@@ -121,12 +124,15 @@ export default function BlogMeta({
                   className="
                     rounded-full
                     border
-                    border-white/10
-                    bg-white/[0.03]
+                    border-slate-200
+                    bg-slate-50
                     px-2.5
                     py-1
                     text-xs
-                    text-slate-400
+                    text-slate-600
+                    dark:border-slate-800
+                    dark:bg-slate-900/60
+                    dark:text-slate-400
                   "
                 >
                   #{name}

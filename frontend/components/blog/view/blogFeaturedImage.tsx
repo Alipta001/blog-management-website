@@ -101,15 +101,15 @@ export default function BlogFeaturedImage({
           items-center
           justify-center
           overflow-hidden
-          rounded-[2rem]
+          rounded-2xl
           border
-          border-white/10
-          bg-gradient-to-br
-          from-violet-500/20
-          via-[#111114]
-          to-[#111114]
+          border-slate-200
+          bg-slate-100
           text-sm
-          text-slate-500
+          text-slate-600
+          dark:border-slate-800
+          dark:bg-slate-900
+          dark:text-slate-400
         "
       >
         No featured image available
@@ -125,12 +125,14 @@ export default function BlogFeaturedImage({
         aspect-[16/9]
         w-full
         overflow-hidden
-        rounded-[2rem]
+        rounded-2xl
         border
-        border-white/10
-        bg-[#111114]
-        shadow-[0_30px_80px_rgba(0,0,0,0.45)]
-        blog-featured-image
+        border-slate-200
+        bg-white
+        shadow-sm
+        dark:border-slate-800
+        dark:bg-slate-900/60
+        dark:shadow-none
       "
     >
       <Image
@@ -160,10 +162,11 @@ export default function BlogFeaturedImage({
           absolute
           inset-0
           blog-image-overlay
-          bg-gradient-to-t
-          from-black/40
-          via-transparent
-          to-transparent
+          bg-transparent
+          dark:bg-gradient-to-t
+          dark:from-black/40
+          dark:via-transparent
+          dark:to-transparent
         "
       />
 
@@ -174,9 +177,10 @@ export default function BlogFeaturedImage({
           bottom-0
           h-1/2
           blog-image-overlay
-          bg-gradient-to-t
-          from-black/20
-          to-transparent
+          bg-transparent
+          dark:bg-gradient-to-t
+          dark:from-black/20
+          dark:to-transparent
         "
       />
     </figure>

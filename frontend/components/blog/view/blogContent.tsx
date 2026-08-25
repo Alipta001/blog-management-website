@@ -161,6 +161,8 @@
 "use client";
 
 import DOMPurify from "dompurify";
+import { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface BlogContentProps {
   content: string;
@@ -169,24 +171,32 @@ interface BlogContentProps {
 export default function BlogContent({
   content,
 }: BlogContentProps) {
+  const [expanded, setExpanded] = useState(false);
   const sanitizedContent =
     DOMPurify.sanitize(content || "");
+  const textLength = sanitizedContent.replace(/<[^>]*>/g, "").trim().length;
+  const isLongContent = textLength > 1400;
 
   return (
     <article className="mx-auto max-w-3xl">
       <div
+        className={`relative ${isLongContent && !expanded ? "max-h-[760px] overflow-hidden" : ""}`}
+      >
+        <div
         className="
           blog-content
           blog-content-surface
-          text-[17px]
-          leading-8
-          text-slate-300
-          sm:text-[18px]
-          sm:leading-9
+          text-[18px]
+          leading-[1.8]
+          text-slate-700
+          dark:text-slate-300
+          sm:text-[19px]
+          sm:leading-[1.85]
 
           [&_p]:mb-7
-          [&_p]:leading-8
-          [&_p]:text-slate-300
+          [&_p]:leading-[1.8]
+          [&_p]:text-slate-700
+          dark:[&_p]:text-slate-300
 
           [&_h1]:mb-6
           [&_h1]:mt-14
@@ -194,7 +204,8 @@ export default function BlogContent({
           [&_h1]:font-bold
           [&_h1]:leading-tight
           [&_h1]:tracking-tight
-          [&_h1]:text-white
+          [&_h1]:text-slate-950
+          dark:[&_h1]:text-white
           sm:[&_h1]:text-4xl
 
           [&_h2]:mb-5
@@ -202,27 +213,33 @@ export default function BlogContent({
           [&_h2]:text-2xl
           [&_h2]:font-bold
           [&_h2]:leading-tight
-          [&_h2]:text-white
+          [&_h2]:text-slate-950
+          dark:[&_h2]:text-white
           sm:[&_h2]:text-3xl
 
           [&_h3]:mb-4
           [&_h3]:mt-10
           [&_h3]:text-xl
           [&_h3]:font-semibold
-          [&_h3]:text-white
+          [&_h3]:text-slate-950
+          dark:[&_h3]:text-white
           sm:[&_h3]:text-2xl
 
           [&_strong]:font-semibold
-          [&_strong]:text-white
+          [&_strong]:text-slate-950
+          dark:[&_strong]:text-white
 
-          [&_em]:text-slate-200
+          [&_em]:text-slate-700
+          dark:[&_em]:text-slate-200
 
           [&_a]:font-medium
-          [&_a]:text-violet-400
+          [&_a]:text-violet-700
+          dark:[&_a]:text-violet-400
           [&_a]:underline
           [&_a]:decoration-violet-500/50
           [&_a]:underline-offset-4
-          hover:[&_a]:text-violet-300
+          hover:[&_a]:text-violet-800
+          dark:hover:[&_a]:text-violet-300
 
           [&_ul]:mb-8
           [&_ul]:ml-5
@@ -235,56 +252,67 @@ export default function BlogContent({
           [&_ol]:space-y-3
 
           [&_li]:pl-2
-          [&_li]:text-slate-300
+          [&_li]:text-slate-700
+          dark:[&_li]:text-slate-300
 
           [&_blockquote]:my-10
           [&_blockquote]:rounded-r-2xl
           [&_blockquote]:border-l-4
           [&_blockquote]:border-violet-500
-          [&_blockquote]:bg-gradient-to-r
-          [&_blockquote]:from-violet-500/10
-          [&_blockquote]:to-transparent
+          [&_blockquote]:bg-violet-50
           [&_blockquote]:px-6
           [&_blockquote]:py-6
           [&_blockquote]:text-lg
           [&_blockquote]:italic
           [&_blockquote]:leading-8
-          [&_blockquote]:text-slate-200
+          [&_blockquote]:text-slate-700
+          dark:[&_blockquote]:bg-gradient-to-r
+          dark:[&_blockquote]:from-violet-500/10
+          dark:[&_blockquote]:to-transparent
+          dark:[&_blockquote]:text-slate-200
 
           [&_blockquote_p]:mb-0
 
           [&_code]:rounded-md
           [&_code]:border
           [&_code]:border-violet-500/10
-          [&_code]:bg-violet-500/10
+          [&_code]:bg-slate-100
           [&_code]:px-2
           [&_code]:py-1
           [&_code]:font-mono
           [&_code]:text-sm
-          [&_code]:text-violet-300
+          [&_code]:text-violet-700
+          dark:[&_code]:bg-violet-500/10
+          dark:[&_code]:text-violet-300
 
           [&_pre]:my-10
           [&_pre]:overflow-x-auto
           [&_pre]:rounded-2xl
           [&_pre]:border
-          [&_pre]:border-white/10
-          [&_pre]:bg-black/50
+          [&_pre]:border-slate-200
+          [&_pre]:bg-slate-100
           [&_pre]:p-6
-          [&_pre]:shadow-xl
+          [&_pre]:shadow-none
+          dark:[&_pre]:border-slate-800
+          dark:[&_pre]:bg-black/50
+          dark:[&_pre]:shadow-xl
 
           [&_pre_code]:border-0
           [&_pre_code]:bg-transparent
           [&_pre_code]:p-0
-          [&_pre_code]:text-slate-300
+          [&_pre_code]:text-slate-700
+          dark:[&_pre_code]:text-slate-300
 
           [&_img]:my-10
           [&_img]:w-full
           [&_img]:rounded-2xl
           [&_img]:border
-          [&_img]:border-white/10
+          [&_img]:border-slate-200
+          dark:[&_img]:border-slate-800
 
           [&_hr]:my-14
-          [&_hr]:border-white/10
+          [&_hr]:border-slate-200
+          dark:[&_hr]:border-slate-800
 
           [&_table]:my-10
           [&_table]:w-full
@@ -293,24 +321,49 @@ export default function BlogContent({
           [&_table]:rounded-xl
 
           [&_th]:border
-          [&_th]:border-white/10
-          [&_th]:bg-white/[0.05]
+          [&_th]:border-slate-200
+          [&_th]:bg-slate-50
           [&_th]:px-4
           [&_th]:py-3
           [&_th]:text-left
           [&_th]:font-semibold
-          [&_th]:text-white
+          [&_th]:text-slate-950
+          dark:[&_th]:border-slate-800
+          dark:[&_th]:bg-white/[0.05]
+          dark:[&_th]:text-white
 
           [&_td]:border
-          [&_td]:border-white/10
+          [&_td]:border-slate-200
           [&_td]:px-4
           [&_td]:py-3
-          [&_td]:text-slate-300
+          [&_td]:text-slate-700
+          dark:[&_td]:border-slate-800
+          dark:[&_td]:text-slate-300
         "
         dangerouslySetInnerHTML={{
           __html: sanitizedContent,
         }}
-      />
+        />
+        {isLongContent && !expanded && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white via-white/90 to-transparent dark:from-[#09090b] dark:via-[#09090b]/90" />
+        )}
+      </div>
+      {isLongContent && (
+        <div className="mt-8 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setExpanded((value) => !value)}
+            className="group inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-5 py-2.5 text-sm font-semibold text-violet-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-violet-100 dark:border-violet-500/30 dark:bg-violet-500/10 dark:text-violet-300 dark:hover:bg-violet-500/20"
+          >
+            {expanded ? "Show less" : "Read more"}
+            {expanded ? (
+              <ChevronUp className="h-4 w-4 transition-transform group-hover:-translate-y-0.5" />
+            ) : (
+              <ChevronDown className="h-4 w-4 transition-transform group-hover:translate-y-0.5" />
+            )}
+          </button>
+        </div>
+      )}
     </article>
   );
 }

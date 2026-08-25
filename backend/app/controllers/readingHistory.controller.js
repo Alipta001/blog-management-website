@@ -131,7 +131,7 @@ class ReadingHistoryController {
               path: "blog",
 
               select:
-                "title description slug category tags author publishedAt views",
+                "title description slug featuredImage category tags author publishedAt views",
 
               populate: {
                 path: "author",

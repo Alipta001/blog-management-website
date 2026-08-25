@@ -54,6 +54,8 @@ interface CreateCommentPayload {
   blogId: string;
 
   content: string;
+
+  parentComment?: string | null;
 }
 
 
@@ -68,6 +70,14 @@ interface ModerateCommentPayload {
   id: string;
 
   status: CommentStatus;
+}
+
+interface CommentInteractionResponse {
+  id: string;
+  likeCount?: number;
+  isLiked?: boolean;
+  isPinned?: boolean;
+  message: string;
 }
 
 
@@ -290,6 +300,7 @@ export const createComment =
       {
         blogId,
         content,
+        parentComment,
       },
       { rejectWithValue },
     ) => {
@@ -307,6 +318,7 @@ export const createComment =
             url,
             {
               content,
+              ...(parentComment ? { parentComment } : {}),
             },
           );
 
@@ -492,6 +504,46 @@ export const moderateComment =
     },
   );
 
+export const toggleCommentLike = createAsyncThunk<
+  CommentInteractionResponse,
+  string,
+  { rejectValue: string }
+>(
+  "comment/toggleCommentLike",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await AxiosInstance.patch(
+        endPoints.comment.likeComment.replace(":id", id),
+      );
+      return { id, ...response.data.data, message: response.data.message };
+    } catch (error: any) {
+      return rejectWithValue(
+        error?.response?.data?.message || "Failed to update comment like",
+      );
+    }
+  },
+);
+
+export const toggleCommentPin = createAsyncThunk<
+  CommentInteractionResponse,
+  string,
+  { rejectValue: string }
+>(
+  "comment/toggleCommentPin",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await AxiosInstance.patch(
+        endPoints.comment.pinComment.replace(":id", id),
+      );
+      return { id, ...response.data.data, message: response.data.message };
+    } catch (error: any) {
+      return rejectWithValue(
+        error?.response?.data?.message || "Failed to update pinned comment",
+      );
+    }
+  },
+);
+
 
  
 // COMMENT SLICE
@@ -560,6 +612,39 @@ const commentSlice =
             state.error = null;
           },
         )
+
+        .addCase(toggleCommentLike.fulfilled, (state, action) => {
+          const comment = state.comments.find(
+            (item) => item._id === action.payload.id,
+          );
+          if (comment) {
+            comment.likeCount = action.payload.likeCount;
+            comment.isLiked = action.payload.isLiked;
+          }
+        })
+
+        .addCase(toggleCommentLike.rejected, (state, action) => {
+          state.error = action.payload || "Failed to update comment like";
+        })
+
+        .addCase(toggleCommentPin.fulfilled, (state, action) => {
+          const comment = state.comments.find(
+            (item) => item._id === action.payload.id,
+          );
+          if (comment) {
+            comment.isPinned = action.payload.isPinned;
+          }
+          state.comments.forEach((item) => {
+            if (item._id !== action.payload.id) item.isPinned = false;
+          });
+          state.comments.sort(
+            (first, second) => Number(second.isPinned) - Number(first.isPinned),
+          );
+        })
+
+        .addCase(toggleCommentPin.rejected, (state, action) => {
+          state.error = action.payload || "Failed to update pinned comment";
+        })
 
         .addCase(
           getApprovedComments.fulfilled,

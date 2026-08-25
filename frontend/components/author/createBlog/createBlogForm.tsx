@@ -373,6 +373,7 @@ const onSubmit = async (
 
           <BlogContentEditor
             register={register}
+            setValue={setValue}
             errors={errors}
             contentImages={
               contentImages

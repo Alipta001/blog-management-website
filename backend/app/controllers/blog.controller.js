@@ -347,7 +347,9 @@ class BlogController {
           // AUTHOR
     
       if (author) {
-        filter.author = author;
+        filter.author = author.includes(",")
+          ? { $in: author.split(",").filter(Boolean) }
+          : author;
       }
 
           // TAG
@@ -382,29 +384,42 @@ class BlogController {
         };
       }
 
-          // PAGINATION
-    
+      if (sort === "mostLiked") {
+        sortOption = {
+          likeCount: -1,
+          createdAt: -1,
+        };
+      }
+
       const pageNumber = Math.max(Number(page) || 1, 1);
-
       const limitNumber = Math.min(Math.max(Number(limit) || 10, 1), 100);
-
       const skip = (pageNumber - 1) * limitNumber;
 
-      const [blogs, total] = await Promise.all([
-        Blog.find(filter)
-
+      const blogQuery = sort === "mostLiked"
+        ? Blog.aggregate([
+            { $match: filter },
+            { $lookup: { from: "likes", localField: "_id", foreignField: "blog", as: "blogLikes" } },
+            { $addFields: { likeCount: { $size: "$blogLikes" } } },
+            { $sort: { likeCount: -1, createdAt: -1 } },
+            { $skip: skip },
+            { $limit: limitNumber },
+            { $project: { blogLikes: 0 } },
+          ])
+            .then((items) => Blog.populate(items, [
+              { path: "author", select: "name email profileImage" },
+              { path: "category", select: "name slug" },
+              { path: "tags", select: "name slug" },
+            ]))
+        : Blog.find(filter)
           .populate("author", "name email profileImage")
-
           .populate("category", "name slug")
-
           .populate("tags", "name slug")
-
           .sort(sortOption)
-
           .skip(skip)
+          .limit(limitNumber);
 
-          .limit(limitNumber),
-
+      const [blogs, total] = await Promise.all([
+        blogQuery,
         Blog.countDocuments(filter),
       ]);
 
@@ -574,12 +589,25 @@ class BlogController {
   // GET /blog/:id
          async getBlogById(req, res, next) {
     try {
+      const canReviewUnpublished =
+        req.user &&
+        (req.user.role === "administration" ||
+          req.user.role === "administrator");
+
       const blog = await Blog.findOne({
         _id: req.params.id,
-
-        status: "published",
-
         isDeleted: false,
+
+        ...(canReviewUnpublished
+          ? {}
+          : {
+              $or: [
+                { status: "published" },
+                ...(req.user?.role === "author"
+                  ? [{ author: req.user.id }]
+                  : []),
+              ],
+            }),
       })
 
         .populate("author", "name profileImage bio")
@@ -1033,6 +1061,24 @@ class BlogController {
 
           message: "Blog cannot be published",
         });
+      }
+
+      const followers = await User.find({
+        favoriteAuthors: blog.author,
+        status: "active",
+      }).select("_id");
+
+      if (followers.length > 0) {
+        await Notification.insertMany(
+          followers.map((follower) => ({
+            recipient: follower._id,
+            sender: blog.author,
+            type: "blog_published",
+            title: "A favourite author published",
+            message: `${blog.title} is now available to read.`,
+            blog: blog._id,
+          })),
+        );
       }
 
       return res.status(200).json({

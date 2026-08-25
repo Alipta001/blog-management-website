@@ -49,6 +49,10 @@ export const endPoints = {
 
     deleteOwnComment: "/comment/:id/delete",
 
+    likeComment: "/comment/:id/like",
+
+    pinComment: "/comment/:id/pin",
+
     moderateComment: "/comment/:id/moderate",
 
     getCommentsForAuthor: "/comment/author",
@@ -94,6 +98,8 @@ export const endPoints = {
     // Profile
     getMyProfile: "/user/profile",
     updateMyProfile: "/user/profile/update",
+    favoriteAuthors: "/user/favorite-authors",
+    toggleFavoriteAuthor: "/user/favorite-authors/:id",
 
     // Administration user management
     getUsers: "/user/all-user",
@@ -108,5 +114,9 @@ export const endPoints = {
   //Analytics
   analytics: {
     getAuthorAnalytics: "/analytics/author",
+  },
+
+  facts: {
+    getDailyFacts: "/facts",
   },
 } as const;

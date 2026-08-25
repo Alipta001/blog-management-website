@@ -34,9 +34,13 @@ export default function BlogAuthorCard({
         overflow-hidden
         rounded-3xl
         border
-        border-white/10
-        bg-[#111114]
+        border-slate-200
+        bg-white
         p-6
+        shadow-sm
+        dark:border-slate-800
+        dark:bg-slate-900/60
+        dark:shadow-none
         sm:p-8
       "
     >
@@ -46,6 +50,7 @@ export default function BlogAuthorCard({
         className="
           pointer-events-none
           absolute
+          hidden
           blog-author-decoration
           -right-20
           -top-20
@@ -54,6 +59,7 @@ export default function BlogAuthorCard({
           rounded-full
           bg-violet-500/[0.08]
           blur-3xl
+          dark:block
         "
       />
 
@@ -94,7 +100,8 @@ export default function BlogAuthorCard({
                 shrink-0
                 rounded-2xl
                 border
-                border-white/10
+                border-slate-200
+                dark:border-slate-800
                 object-cover
               "
             />
@@ -109,11 +116,14 @@ export default function BlogAuthorCard({
                 justify-center
                 rounded-2xl
                 border
-                border-violet-500/20
-                bg-violet-500/10
+                border-violet-200
+                bg-violet-50
                 text-lg
                 font-bold
-                text-violet-300
+                text-violet-700
+                dark:border-violet-500/20
+                dark:bg-violet-500/10
+                dark:text-violet-300
               "
             >
               {initials}
@@ -137,13 +147,14 @@ export default function BlogAuthorCard({
                   className="
                     text-xl
                     font-semibold
-                    text-white
+                    text-slate-950
+                    dark:text-white
                   "
                 >
                   {author.name}
                 </h3>
 
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-slate-600 dark:text-slate-500">
                   Author
                 </p>
               </div>
@@ -157,9 +168,11 @@ export default function BlogAuthorCard({
                   justify-center
                   rounded-xl
                   border
-                  border-white/10
-                  bg-white/[0.03]
+                  border-slate-200
+                  bg-slate-50
                   text-violet-400
+                  dark:border-slate-800
+                  dark:bg-slate-900/60
                 "
               >
                 <UserRound className="h-4 w-4" />
@@ -173,7 +186,8 @@ export default function BlogAuthorCard({
                   max-w-2xl
                   text-sm
                   leading-7
-                  text-slate-400
+                  text-slate-600
+                  dark:text-slate-400
                 "
               >
                 {author.bio}
@@ -189,9 +203,11 @@ export default function BlogAuthorCard({
                 gap-2
                 text-sm
                 font-medium
-                text-violet-400
+                text-violet-700
                 transition
-                hover:text-violet-300
+                hover:text-violet-800
+                dark:text-violet-400
+                dark:hover:text-violet-300
               "
             >
               More from this author

@@ -3,6 +3,7 @@
 import Link from "next/link";
 
 import { usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import {
   BarChart3,
@@ -24,9 +25,18 @@ export default function Sidebar({
 }: SidebarProps) {
 
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const contrastDemo = searchParams.get("demo") === "contrast";
 
   const navigationItems =
     sidebarConfig[role] || [];
+
+  const dashboardRoot =
+    role === "user"
+      ? "/dashboard/reader"
+      : role === "author"
+        ? "/dashboard/author"
+        : "/dashboard/administration";
 
 
   const roleLabel =
@@ -35,7 +45,10 @@ export default function Sidebar({
 
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-white/10 bg-[#0d0d0f] lg:flex lg:flex-col">
+    <aside
+      className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-white/10 bg-[#0d0d0f] lg:flex lg:flex-col"
+      data-contrast-demo={contrastDemo ? "true" : undefined}
+    >
 
       {/* LOGO */}
 
@@ -87,10 +100,10 @@ export default function Sidebar({
 
 
           const isActive =
-            pathname === item.href ||
-            pathname.startsWith(
-              `${item.href}/`
-            );
+            item.href === dashboardRoot
+              ? pathname === item.href
+              : pathname === item.href ||
+                pathname.startsWith(`${item.href}/`);
 
 
           return (
@@ -139,11 +152,11 @@ export default function Sidebar({
 
       <div className="p-4">
 
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-violet-500/10 to-transparent p-4">
+        <div className="demo-sidebar-box rounded-2xl border border-violet-200 bg-violet-50 p-4 dark:border-slate-800 dark:bg-slate-900">
 
           <div className="flex items-start gap-3">
 
-            <div className="rounded-xl bg-violet-500/15 p-2">
+            <div className="demo-sidebar-icon rounded-xl bg-violet-600 p-2 text-white dark:bg-violet-500/20 dark:text-violet-300">
 
               <BarChart3 className="h-5 w-5 text-violet-400" />
 
@@ -152,7 +165,7 @@ export default function Sidebar({
 
             <div>
 
-              <p className="text-sm font-semibold text-white">
+              <p className="sidebar-workspace-title text-sm font-semibold text-slate-950 dark:text-slate-100">
 
                 {role === "administration"
                   ? "Platform Insights"
@@ -161,7 +174,7 @@ export default function Sidebar({
               </p>
 
 
-              <p className="mt-1 text-xs leading-5 text-slate-500">
+              <p className="sidebar-workspace-subtitle mt-1 text-xs leading-5 text-slate-700 dark:text-slate-300">
 
                 {role === "administration"
                   ? "Monitor your content and community activity."
