@@ -18,6 +18,13 @@ function AuthInitializer({ children }: ProvidersProps) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    const pathname = window.location.pathname;
+    const isPublicReadingRoute = pathname === "/"
+      || pathname === "/blogs"
+      || pathname.startsWith("/blogs/");
+
+    if (isPublicReadingRoute) return;
+
     dispatch(getCurrentUser());
   }, [dispatch]);
 

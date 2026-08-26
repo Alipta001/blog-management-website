@@ -4,6 +4,7 @@ import Image from "next/image";
 import { BookOpen, Eye, Heart, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useAppSelector } from "@/redux/hooks";
 import AxiosInstance from "@/api/axios/axios";
 import { endPoints } from "@/api/endPoints/endPoints";
 import type { Blog } from "@/types/blog.types";
@@ -14,9 +15,10 @@ export default function BlogSidebar({ blog }: BlogSidebarProps) {
   const author = typeof blog.author === "string" ? null : blog.author;
   const [isFavorite, setIsFavorite] = useState(false);
   const [isUpdatingFavorite, setIsUpdatingFavorite] = useState(false);
+  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
-    if (!author?._id) return;
+    if (!isAuthenticated || !author?._id) return;
 
     AxiosInstance.get(endPoints.user.favoriteAuthors)
       .then((response) => {
@@ -24,10 +26,15 @@ export default function BlogSidebar({ blog }: BlogSidebarProps) {
         setIsFavorite(authors.some((item: { _id: string }) => item._id === author._id));
       })
       .catch(() => setIsFavorite(false));
-  }, [author?._id]);
+  }, [author?._id, isAuthenticated]);
 
   const toggleFavorite = async () => {
     if (!author?._id) return;
+
+    if (!isAuthenticated) {
+      toast.info("Please login to add favourite authors.");
+      return;
+    }
 
     setIsUpdatingFavorite(true);
     try {
@@ -36,11 +43,21 @@ export default function BlogSidebar({ blog }: BlogSidebarProps) {
       );
       setIsFavorite(response.data.data.isFavorite);
       toast.success(response.data.message);
-    } catch (error: any) {
-      if (error?.response?.status === 401) {
+    } catch (error: unknown) {
+      const response = error && typeof error === "object" && "response" in error
+        ? error.response
+        : undefined;
+      const status = response && typeof response === "object" && "status" in response
+        ? response.status
+        : undefined;
+      const message = response && typeof response === "object" && "data" in response && response.data && typeof response.data === "object" && "message" in response.data
+        ? response.data.message
+        : undefined;
+
+      if (status === 401) {
         toast.info("Please login to add favourite authors.");
       } else {
-        toast.error(error?.response?.data?.message || "Unable to update favourite author");
+        toast.error(typeof message === "string" ? message : "Unable to update favourite author");
       }
     } finally {
       setIsUpdatingFavorite(false);

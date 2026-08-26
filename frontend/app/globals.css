@@ -167,3 +167,141 @@ body {
 	background-color: #ffffff !important;
 	color: #ffffff !important;
 }
+
+.landing-reveal {
+	animation: landing-rise 700ms ease-out both;
+}
+
+.landing-story-image {
+	position: relative;
+	aspect-ratio: 16 / 10;
+	overflow: hidden;
+	background-color: var(--theme-surface-raised);
+}
+
+.landing-story-image-featured {
+	aspect-ratio: 16 / 8;
+}
+
+.landing-feature {
+	box-shadow: 0 18px 45px rgba(25, 49, 39, 0.16);
+}
+
+.landing-feature .landing-story-image {
+	min-height: 420px;
+}
+
+
+@keyframes landing-rise {
+	from { opacity: 0; transform: translateY(18px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.landing-reveal { animation: none; }
+}
+
+.light .landing-page .landing-hero {
+	border-color: var(--theme-border);
+	background: linear-gradient(135deg, #f1ebff 0%, #ffffff 52%, #eef2ff 100%);
+	color: var(--theme-text-primary);
+}
+
+.light .landing-page .landing-hero h1,
+.light .landing-page .landing-hero-card p:nth-of-type(2) {
+	color: var(--theme-text-primary);
+}
+
+.light .landing-page .text-slate-900 {
+	color: var(--theme-text-primary) !important;
+}
+
+.light .landing-page .landing-search-input {
+	color: var(--theme-text-primary) !important;
+	background-color: var(--theme-surface) !important;
+}
+
+.light .landing-page .landing-search-input::placeholder {
+	color: var(--theme-text-muted) !important;
+	opacity: 1;
+}
+
+.light .landing-page .landing-hero > div > div > span {
+	background-color: #f5f3ff;
+	color: #5b21b6;
+}
+
+.light .landing-page .landing-hero-card {
+	border-color: var(--theme-border);
+	background-color: var(--theme-surface);
+}
+
+.light .landing-page .landing-hero p:not(.text-violet-600) {
+	color: var(--theme-text-secondary);
+}
+
+.light .landing-page .landing-navbar {
+	border-color: var(--theme-border);
+	background-color: rgba(255, 255, 255, 0.94);
+}
+
+.light .landing-page .landing-navbar .landing-brand {
+	color: var(--theme-text-primary);
+}
+
+.light .landing-page .landing-navbar .landing-nav-link,
+.light .landing-page .landing-mobile-menu a:not(.text-violet-600) {
+	color: var(--theme-text-secondary);
+}
+
+.light .landing-page .landing-navbar a[href="/login"] {
+	color: var(--theme-text-secondary);
+}
+
+.light .landing-page .landing-navbar .theme-toggle-button {
+	border-color: var(--theme-border);
+	background-color: var(--theme-surface);
+	color: var(--theme-text-muted);
+}
+
+.light .landing-page .landing-mobile-menu {
+	border-color: var(--theme-border);
+	background-color: var(--theme-surface);
+}
+
+.light .landing-page section.border-y {
+	border-color: var(--theme-border);
+	background-color: var(--theme-surface-raised);
+}
+
+.light .landing-page footer {
+	border-color: var(--theme-border);
+	background-color: var(--theme-surface);
+}
+
+.light .landing-page footer a:not(.text-violet-600) {
+	color: var(--theme-text-secondary);
+}
+
+.light .landing-page .landing-cta-card {
+	border-color: #ddd6fe;
+	background-color: var(--theme-surface);
+	box-shadow: 0 20px 40px rgba(32, 70, 110, 0.1);
+}
+
+.light .landing-page .landing-cta-card h2 {
+	color: var(--theme-text-primary) !important;
+}
+
+.light .landing-page .landing-cta-card p {
+	color: var(--theme-text-secondary);
+}
+
+@media (max-width: 640px) {
+	.landing-feature .landing-story-image {
+		min-height: 460px;
+	}
+	.landing-story-image-featured {
+		aspect-ratio: 4 / 5;
+	}
+}

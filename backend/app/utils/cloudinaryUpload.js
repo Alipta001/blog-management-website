@@ -4,8 +4,7 @@ const cloudinary = require("../config/cloudinary");
 
 
         
-// UPLOAD BUFFER TO CLOUDINARY
-        
+// UPLOAD BUFFER TO CLOUDINARY       
 
 const uploadToCloudinary = (
   buffer,
@@ -37,8 +36,7 @@ const uploadToCloudinary = (
 
 
         
-// DELETE IMAGE FROM CLOUDINARY
-        
+// DELETE IMAGE FROM CLOUDINARY        
 
 const deleteFromCloudinary = (
   publicId
