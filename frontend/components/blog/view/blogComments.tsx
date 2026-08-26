@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   Heart,
   MessageSquare,
@@ -187,7 +188,10 @@ export default function BlogComments({
             dark:text-slate-400
           "
         >
-          Login to join the discussion.
+          <span>Sign in to join the discussion.</span>
+          <Link href="/login" className="ml-2 font-semibold text-violet-600 hover:text-violet-500 dark:text-violet-400 dark:hover:text-violet-300">
+            Sign in
+          </Link>
         </div>
       )}
 

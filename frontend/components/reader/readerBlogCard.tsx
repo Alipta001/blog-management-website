@@ -39,20 +39,24 @@ export default function ReaderBlogCard({
         overflow-hidden
         rounded-2xl
         border
-        border-white/10
-        bg-[#111114]
+        border-slate-200
+        bg-white
         transition
         duration-300
         hover:-translate-y-1
-        hover:border-violet-500/30
+        hover:border-violet-300
         hover:shadow-xl
-        hover:shadow-violet-950/10
+        hover:shadow-violet-100
+        dark:border-slate-800
+        dark:bg-slate-900
+        dark:hover:border-violet-500/30
+        dark:hover:shadow-violet-950/10
         reader-blog-card
       "
     >
       <div>
         {/* IMAGE */}
-        <Link href={`/dashboard/reader/blogs/${blog._id}`} className="relative block aspect-[16/9] overflow-hidden bg-white/[0.03]">
+          <Link href={`/blogs/${blog._id}`} className="relative block aspect-[16/9] overflow-hidden bg-slate-100 dark:bg-slate-800">
           {image ? (
             <Image
               src={image}
@@ -80,9 +84,11 @@ export default function ReaderBlogCard({
                 h-full
                 items-center
                 justify-center
-                bg-white/[0.02]
+                bg-slate-100
                 text-sm
-                text-slate-600
+                text-slate-500
+                dark:bg-slate-800
+                dark:text-slate-400
               "
             >
               No image available
@@ -101,22 +107,25 @@ export default function ReaderBlogCard({
               py-1
               text-xs
               font-medium
-              text-violet-400
+              text-violet-600
+              dark:text-violet-400
             "
           >
             {category}
           </span>
 
-          <Link href={`/dashboard/reader/blogs/${blog._id}`}>
+          <Link href={`/blogs/${blog._id}`}>
           <h2
             className="
               line-clamp-2
               text-lg
               font-semibold
               leading-7
-              text-white
+              text-slate-900
+              dark:text-white
               transition
-              group-hover:text-violet-300
+              group-hover:text-violet-600
+              dark:group-hover:text-violet-300
             "
           >
             {blog.title}
@@ -128,7 +137,8 @@ export default function ReaderBlogCard({
               line-clamp-2
               text-sm
               leading-6
-              text-slate-400
+              text-slate-600
+              dark:text-slate-400
             "
           >
             {blog.description}
@@ -140,10 +150,12 @@ export default function ReaderBlogCard({
               items-center
               justify-between
               border-t
-              border-white/[0.06]
+              border-slate-200
               pt-3
               text-xs
               text-slate-500
+              dark:border-slate-800
+              dark:text-slate-400
             "
           >
             <span>{author}</span>

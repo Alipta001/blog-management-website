@@ -1062,7 +1062,7 @@ export default function BlogViewPage({
       }),
     );
 
-    if (!auth.authInitialized) {
+    if (!auth.authInitialized && context !== "public") {
       dispatch(getCurrentUser());
     }
 
@@ -1075,7 +1075,7 @@ export default function BlogViewPage({
 
       dispatch(resetLikeState());
     };
-  }, [dispatch, id, auth.authInitialized]);
+  }, [auth.authInitialized, context, dispatch, id]);
 
   // =========================================
   // RECORD BLOG VIEW
@@ -1355,7 +1355,7 @@ export default function BlogViewPage({
       ? "/dashboard/administration/blogs"
       : context === "author"
         ? "/dashboard/author/my-blogs"
-        : "/dashboard/reader/allBlogs";
+        : "/blogs";
 
   const blogHref = (blogId: string) => {
     if (context === "administration") {
@@ -1366,7 +1366,7 @@ export default function BlogViewPage({
       return `/dashboard/author/my-blogs/${blogId}`;
     }
 
-    return `/dashboard/reader/blogs/${blogId}`;
+    return `/blogs/${blogId}`;
   };
 
   // =========================================

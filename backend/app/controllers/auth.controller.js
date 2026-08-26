@@ -235,7 +235,7 @@ class AuthController {
       const hashedPassword =
         await bcrypt.hash(
           password,
-          12,
+          10,
         );
 
 
@@ -1409,7 +1409,7 @@ async resetPasswordLink(req, res) {
 
           newPassword,
 
-          12,
+          10,
 
         );
 
