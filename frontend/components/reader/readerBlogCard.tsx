@@ -52,6 +52,7 @@ export default function ReaderBlogCard({
         dark:hover:border-violet-500/30
         dark:hover:shadow-violet-950/10
         reader-blog-card
+        landing-card-surface
       "
     >
       <div>
@@ -117,6 +118,7 @@ export default function ReaderBlogCard({
           <Link href={`/blogs/${blog._id}`}>
           <h2
             className="
+              landing-card-title
               line-clamp-2
               text-lg
               font-semibold

@@ -231,6 +231,37 @@ body {
 	color: #5b21b6;
 }
 
+.light .landing-page .landing-hero-eyebrow {
+	background-color: #f5f3ff !important;
+	color: #5b21b6 !important;
+}
+
+.light .landing-page .landing-reading-note {
+	border-color: var(--theme-border);
+	background-color: var(--theme-surface) !important;
+}
+
+.light .landing-page .landing-reading-title {
+	color: var(--theme-text-primary) !important;
+}
+
+.light .landing-page .landing-reading-copy {
+	color: var(--theme-text-muted) !important;
+}
+
+.light .landing-page .landing-featured-heading,
+.light .landing-page .landing-featured-title,
+.light .landing-page .landing-card-title {
+	color: var(--theme-text-primary) !important;
+}
+
+.light .landing-page .landing-featured-card,
+.light .landing-page .landing-card-surface {
+	border-color: var(--theme-border);
+	background-color: var(--theme-surface) !important;
+	box-shadow: 0 4px 14px var(--theme-shadow);
+}
+
 .light .landing-page .landing-hero-card {
 	border-color: var(--theme-border);
 	background-color: var(--theme-surface);
