@@ -19,6 +19,7 @@ import ProfileHeader from "./profileHeader";
 import ProfileInformationForm from "./profileInformationForm";
 import ProfileSkeleton from "./profileSkeleton";
 import ProfileOverview from "./profileOverview";
+import ChangePasswordForm from "./changePasswordForm";
 
 
 export default function AuthorProfilePage() {
@@ -144,9 +145,12 @@ export default function AuthorProfilePage() {
             RIGHT
                                     ===== */}
 
-        <ProfileInformationForm
-          user={profile}
-        />
+        <div className="space-y-6">
+          <ProfileInformationForm
+            user={profile}
+          />
+          <ChangePasswordForm />
+        </div>
 
       </div>
 

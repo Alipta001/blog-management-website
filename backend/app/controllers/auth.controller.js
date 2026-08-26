@@ -1342,7 +1342,29 @@ async resetPasswordLink(req, res) {
       const {
         currentPassword,
         newPassword,
+        confirmPassword,
       } = req.body;
+
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        return res.status(400).json({
+          success: false,
+          message: "Current password, new password, and confirmation are required",
+        });
+      }
+
+      if (newPassword.length < 8) {
+        return res.status(400).json({
+          success: false,
+          message: "New password must contain at least 8 characters",
+        });
+      }
+
+      if (newPassword !== confirmPassword) {
+        return res.status(400).json({
+          success: false,
+          message: "New passwords do not match",
+        });
+      }
 
 
        

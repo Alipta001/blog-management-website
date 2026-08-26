@@ -13,6 +13,7 @@ import ProfileHeader from "@/components/author/profile/profileHeader";
 import ProfileInformationForm from "@/components/author/profile/profileInformationForm";
 import ProfileOverview from "@/components/author/profile/profileOverview";
 import ProfileSkeleton from "@/components/author/profile/profileSkeleton";
+import ChangePasswordForm from "@/components/author/profile/changePasswordForm";
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
@@ -46,7 +47,10 @@ export default function ProfilePage() {
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[320px_minmax(0,1fr)]">
         <ProfileOverview user={profile} />
-        <ProfileInformationForm user={profile} />
+        <div className="space-y-6">
+          <ProfileInformationForm user={profile} />
+          <ChangePasswordForm />
+        </div>
       </div>
     </div>
   );

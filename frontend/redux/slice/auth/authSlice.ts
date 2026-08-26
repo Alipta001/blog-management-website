@@ -35,6 +35,7 @@ interface RegisterPayload {
 interface ChangePasswordPayload {
   currentPassword: string;
   newPassword: string;
+  confirmPassword: string;
 }
 
 interface LoginResponse {
