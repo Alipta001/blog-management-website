@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   Eye,
   FilePenLine,
-  MoreHorizontal,
   Send,
   Trash2,
 } from "lucide-react";
@@ -57,12 +56,13 @@ export default function BlogActions({
         "draft",
         "rejected",
         "unpublished",
+        "published",
       ].includes(
         blog.status
       ) && (
 
         <Link
-          href={`/dashboard/author/my-blogs/${blog._id}/edit`}
+          href={`/dashboard/author/myBlogs/${blog._id}/edit`}
           className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-400 transition hover:bg-white/10 hover:text-violet-400"
         >
 

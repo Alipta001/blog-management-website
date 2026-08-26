@@ -87,6 +87,8 @@ router.delete(
 
   authMiddleware,
 
+  authorize("user", "author", "administration"),
+
   commentController.deleteComment
 );
 

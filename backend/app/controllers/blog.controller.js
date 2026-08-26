@@ -741,14 +741,6 @@ class BlogController {
         });
       }
 
-      if (blog.status === "published") {
-        return res.status(400).json({
-          success: false,
-
-          message: "Published blogs cannot be edited directly",
-        });
-      }
-
       const {
         title,
 
@@ -857,12 +849,19 @@ class BlogController {
         blog.content = content;
       }
 
+      if (blog.status === "published") {
+        blog.status = "pending";
+        blog.publishedAt = null;
+      }
+
       await blog.save();
 
       return res.status(200).json({
         success: true,
 
-        message: "Blog updated successfully",
+        message: blog.status === "pending"
+          ? "Blog updated and submitted for approval"
+          : "Blog updated successfully",
 
         data: blog,
       });

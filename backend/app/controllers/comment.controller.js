@@ -62,7 +62,7 @@ class CommentController {
 
         parentComment: parentComment || null,
 
-        status: "pending",
+        status: "approved",
       });
 
       const administrators = await User.find({
@@ -98,7 +98,7 @@ class CommentController {
         success: true,
 
         message:
-          "Comment sent for review. It will be published after approval.",
+          "Comment published successfully.",
 
         data: comment,
       });
@@ -441,17 +441,14 @@ class CommentController {
 
       comment.content = req.body.content;
 
-      // Edited comments must be
-      // moderated again.
-
-      comment.status = "pending";
+      comment.status = "approved";
 
       await comment.save();
 
       return res.status(200).json({
         success: true,
 
-        message: "Comment updated and sent for approval",
+        message: "Comment updated successfully",
 
         data: comment,
       });
@@ -466,11 +463,10 @@ class CommentController {
 
   async deleteComment(req, res, next) {
     try {
-      const comment = await Comment.findOneAndDelete({
-        _id: req.params.id,
-
-        user: req.user.id,
-      });
+      const filter = req.user.role === "administration"
+        ? { _id: req.params.id }
+        : { _id: req.params.id, user: req.user.id };
+      const comment = await Comment.findOneAndDelete(filter);
 
       if (!comment) {
         return res.status(404).json({

@@ -14,13 +14,16 @@ interface BlogFeaturedImageProps {
   onChange: (
     file: File | null
   ) => void;
+
+  initialPreview?: string | null;
 }
 
 export default function BlogFeaturedImage({
   onChange,
+  initialPreview = null,
 }: BlogFeaturedImageProps) {
   const [preview, setPreview] =
-    useState<string | null>(null);
+    useState<string | null>(initialPreview);
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement>

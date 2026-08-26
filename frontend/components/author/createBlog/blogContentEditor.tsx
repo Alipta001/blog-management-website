@@ -52,6 +52,8 @@ interface BlogContentEditorProps {
   onContentImagesChange: (
     files: File[]
   ) => void;
+
+  initialContent?: string;
 }
 
 export default function BlogContentEditor({
@@ -60,9 +62,10 @@ export default function BlogContentEditor({
   errors,
   contentImages,
   onContentImagesChange,
+  initialContent = "",
 }: BlogContentEditorProps) {
   const [editor, setEditor] = useState<HTMLDivElement | null>(null);
-  const [contentValue, setContentValue] = useState("");
+  const [contentValue, setContentValue] = useState(initialContent);
 
   const [
     previews,
@@ -233,6 +236,7 @@ export default function BlogContentEditor({
         <div
           ref={setEditor}
           contentEditable
+          dangerouslySetInnerHTML={{ __html: initialContent }}
           role="textbox"
           aria-label="Blog content editor"
           data-placeholder="Start writing your blog..."

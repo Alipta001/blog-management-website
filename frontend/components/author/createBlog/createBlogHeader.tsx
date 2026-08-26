@@ -14,12 +14,18 @@ interface CreateBlogHeaderProps {
   onSubmit: () => void;
 
   isSubmitting: boolean;
+
+  title?: string;
+
+  description?: string;
 }
 
 export default function CreateBlogHeader({
   onSaveDraft,
   onSubmit,
   isSubmitting,
+  title = "Create Blog",
+  description = "Write and submit a new blog for review.",
 }: CreateBlogHeaderProps) {
   const router = useRouter();
 
@@ -37,11 +43,11 @@ export default function CreateBlogHeader({
 
         <div>
           <h1 className="text-xl font-semibold text-white">
-            Create Blog
+            {title}
           </h1>
 
           <p className="mt-1 text-sm text-slate-500">
-            Write and submit a new blog for review.
+            {description}
           </p>
         </div>
       </div>
