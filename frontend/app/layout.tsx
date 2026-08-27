@@ -7,8 +7,31 @@ import ThemeProvider from "@/components/common/theme/theme-provider";
 
 
 export const metadata: Metadata = {
-  title: "GolpoKotha",
-  description: "Premium blog platform",
+  metadataBase: new URL(
+    process.env.PUBLIC_SITE_URL || "https://yourdomain.com",
+  ),
+  title: {
+    default: "GolpoKotha | Premium Tech & Editorial Blog",
+    template: "%s | GolpoKotha",
+  },
+  description: "Discover thoughtful technology, ideas, and editorial stories on GolpoKotha.",
+  applicationName: "GolpoKotha",
+  keywords: ["GolpoKotha", "technology blog", "editorial blog", "online articles", "reading platform"],
+  openGraph: {
+    type: "website",
+    siteName: "GolpoKotha",
+    title: "GolpoKotha | Premium Tech & Editorial Blog",
+    description: "Discover thoughtful technology, ideas, and editorial stories on GolpoKotha.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GolpoKotha | Premium Tech & Editorial Blog",
+    description: "Discover thoughtful technology, ideas, and editorial stories on GolpoKotha.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 
