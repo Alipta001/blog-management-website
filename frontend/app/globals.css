@@ -249,10 +249,39 @@ body {
 	color: var(--theme-text-muted) !important;
 }
 
+.light .landing-page .landing-reading-icon,
+.light .landing-page .landing-cta-eyebrow-icon {
+	background-color: #f5f3ff !important;
+	color: #5b21b6 !important;
+}
+
 .light .landing-page .landing-featured-heading,
 .light .landing-page .landing-featured-title,
 .light .landing-page .landing-card-title {
 	color: var(--theme-text-primary) !important;
+}
+
+.light .landing-page .landing-benefit-title {
+	color: var(--theme-text-primary) !important;
+}
+
+.light .landing-page .landing-benefit-card {
+	border-color: var(--theme-border);
+	background-color: var(--theme-surface) !important;
+	box-shadow: 0 4px 14px var(--theme-shadow);
+}
+
+.light .landing-page .landing-benefit-copy {
+	color: var(--theme-text-secondary) !important;
+}
+
+.light .landing-page .landing-benefit-icon {
+	background-color: #f5f3ff !important;
+	color: #5b21b6 !important;
+}
+
+.light .landing-page .landing-featured-author {
+	color: var(--theme-text-secondary) !important;
 }
 
 .light .landing-page .landing-featured-card,
