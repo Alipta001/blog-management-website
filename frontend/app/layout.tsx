@@ -10,6 +10,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.PUBLIC_SITE_URL || "https://yourdomain.com",
   ),
+  verification: {
+    google: "7bIfWyxRH5a1fh-qQvCnHuJ97SSQuToGTYfCi7UN1qk", // Replace with your actual Google verification code
+  },
+
   title: {
     default: "GolpoKotha | Premium Tech & Editorial Blog",
     template: "%s | GolpoKotha",
