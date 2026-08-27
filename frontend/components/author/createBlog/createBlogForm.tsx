@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 import {
   useForm,
@@ -32,6 +34,7 @@ import BlogCategory from "./blogCategory";
 import BlogTags from "./blogTags";
 import BlogFeaturedImage from "./blogFeaturedImage";
 import CreateBlogHeader from "./createBlogHeader";
+import BlogAIWriter from "./BlogAIWriter";
 
 import {
   getCategories,
@@ -90,6 +93,7 @@ const createBlogSchema = yup.object({
 
 export default function CreateBlogForm() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
 
    
@@ -120,6 +124,8 @@ export default function CreateBlogForm() {
     selectedTags,
     setSelectedTags,
   ] = useState<string[]>([]);
+
+  const [generatedContent, setGeneratedContent] = useState<string | undefined>();
 
 
    
@@ -235,25 +241,22 @@ const onSaveDraft = async (
 ) => {
   try {
 
-    const payload =
-      buildBlogPayload(data);
+    const payload = {
+      ...buildBlogPayload(data),
+      status: "draft" as const,
+    };
 
     const result =
       await dispatch(
         createBlog(payload),
       ).unwrap();
 
-    console.log(
-      "Draft created:",
-      result.blog,
-    );
+    toast.success("Draft saved successfully.");
+    router.push("/dashboard/author/drafts");
 
   } catch (error) {
 
-    console.error(
-      "Create draft failed:",
-      error,
-    );
+    toast.error(typeof error === "string" ? error : "Failed to save draft.");
 
   }
 };
@@ -336,6 +339,14 @@ const onSubmit = async (
           ERROR
                                   = */}
 
+      <BlogAIWriter
+        onGenerated={(generated) => {
+          setValue("title", generated.title, { shouldDirty: true, shouldValidate: true });
+          setValue("description", generated.description, { shouldDirty: true, shouldValidate: true });
+          setGeneratedContent(generated.content);
+        }}
+      />
+
       {blogError && (
         <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
           {blogError}
@@ -378,6 +389,7 @@ const onSubmit = async (
             contentImages={
               contentImages
             }
+            generatedContent={generatedContent}
             onContentImagesChange={
               setContentImages
             }

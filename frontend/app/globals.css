@@ -300,31 +300,31 @@ body {
 	color: var(--theme-text-secondary);
 }
 
-.light .landing-page .landing-navbar {
+.light .landing-navbar {
 	border-color: var(--theme-border);
 	background-color: rgba(255, 255, 255, 0.94);
 }
 
-.light .landing-page .landing-navbar .landing-brand {
+.light .landing-navbar .landing-brand {
 	color: var(--theme-text-primary);
 }
 
-.light .landing-page .landing-navbar .landing-nav-link,
-.light .landing-page .landing-mobile-menu a:not(.text-violet-600) {
+.light .landing-navbar .landing-nav-link,
+.light .landing-mobile-menu a:not(.text-violet-600) {
 	color: var(--theme-text-secondary);
 }
 
-.light .landing-page .landing-navbar a[href="/login"] {
+.light .landing-navbar a[href="/login"] {
 	color: var(--theme-text-secondary);
 }
 
-.light .landing-page .landing-navbar .theme-toggle-button {
+.light .landing-navbar .theme-toggle-button {
 	border-color: var(--theme-border);
 	background-color: var(--theme-surface);
 	color: var(--theme-text-muted);
 }
 
-.light .landing-page .landing-mobile-menu {
+.light .landing-mobile-menu {
 	border-color: var(--theme-border);
 	background-color: var(--theme-surface);
 }

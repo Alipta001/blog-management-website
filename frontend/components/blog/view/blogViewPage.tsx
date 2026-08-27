@@ -966,6 +966,7 @@ import BlogRoleActions from "./blogRoleActions";
 import BlogSidebar from "./blogSidebar";
 import BlogViewHeader from "./blogViewHeader";
 import BlogViewSkeleton from "./blogViewSkeleton";
+import BlogAIAssistant from "./BlogAIAssistant";
 
 interface BlogViewPageProps {
   id: string;
@@ -1561,8 +1562,9 @@ export default function BlogViewPage({
                 INTERACTION
             ====================================== */}
 
-            
-              <BlogInteractionBar
+            <BlogAIAssistant blogId={blog._id} />
+
+            <BlogInteractionBar
                 blogId={blog._id}
                 totalLikes={blog.likeCount || 0}
                 isLiked={blog.isLiked || false}

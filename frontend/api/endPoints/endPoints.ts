@@ -116,6 +116,12 @@ export const endPoints = {
     getAuthorAnalytics: "/analytics/author",
   },
 
+  ai: {
+    askBlog: "/ai/ask-blog",
+    summarizeBlog: "/ai/summarize-blog",
+    generateBlog: "/ai/generate-blog",
+  },
+
   facts: {
     getDailyFacts: "/facts",
   },

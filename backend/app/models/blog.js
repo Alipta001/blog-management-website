@@ -180,6 +180,10 @@ const blogSchema = new mongoose.Schema(
 
       default: null,
     },
+    aiSummary: {
+  type: String,
+  default: null,
+},
 
     isDeleted: {
       type: Boolean,

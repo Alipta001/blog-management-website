@@ -5,7 +5,15 @@ import {
   Plus,
 } from "lucide-react";
 
-export default function MyBlogsHeader() {
+interface MyBlogsHeaderProps {
+  title?: string;
+  description?: string;
+}
+
+export default function MyBlogsHeader({
+  title = "My Blogs",
+  description = "Create, manage and track all your articles.",
+}: MyBlogsHeaderProps) {
   return (
     <section className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
 
@@ -23,13 +31,13 @@ export default function MyBlogsHeader() {
 
             <h1 className="text-2xl font-bold text-white">
 
-              My Blogs
+              {title}
 
             </h1>
 
             <p className="mt-1 text-sm text-slate-400">
 
-              Create, manage and track all your articles.
+              {description}
 
             </p>
 
@@ -41,7 +49,7 @@ export default function MyBlogsHeader() {
 
 
       <Link
-        href="/dashboard/author/create-blog"
+        href="/dashboard/author/createBlog"
         className="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-violet-500"
       >
 

@@ -61,6 +61,8 @@ const analyticsRoutes = require("./app/routes/analytics.route");
 app.use("/analytics", analyticsRoutes);
 const factRoutes = require("./app/routes/fact.route");
 app.use("/facts", factRoutes);
+const aiRoutes = require("./app/routes/ai.route");
+app.use("/ai", aiRoutes);
 
 
 app.get("/", (req, res) => {

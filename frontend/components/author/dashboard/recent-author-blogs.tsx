@@ -193,7 +193,7 @@ export default function RecentAuthorBlogs({
 
 
           <Link
-            href="/dashboard/author/blogs/create"
+            href="/dashboard/author/createBlog"
             className="mt-5 text-sm font-medium text-violet-400 hover:text-violet-300"
           >
 

@@ -54,6 +54,8 @@ interface BlogContentEditorProps {
   ) => void;
 
   initialContent?: string;
+
+  generatedContent?: string;
 }
 
 export default function BlogContentEditor({
@@ -63,9 +65,17 @@ export default function BlogContentEditor({
   contentImages,
   onContentImagesChange,
   initialContent = "",
+  generatedContent,
 }: BlogContentEditorProps) {
   const [editor, setEditor] = useState<HTMLDivElement | null>(null);
   const [contentValue, setContentValue] = useState(initialContent);
+
+  useEffect(() => {
+    if (generatedContent === undefined || !editor) return;
+    editor.innerHTML = generatedContent;
+    setContentValue(generatedContent);
+    setValue("content", generatedContent, { shouldDirty: true, shouldValidate: true });
+  }, [editor, generatedContent, setValue]);
 
   const [
     previews,

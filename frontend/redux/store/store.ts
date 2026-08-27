@@ -12,6 +12,7 @@ import readingHistoryReducer from "../slice/readingHistory/readingHistorySlice";
 import tagReducer from "../slice/tag/tagSlice";
 import userReducer from "../slice/user/userSlice";
 import analyticsReducer from "../slice/analytics/analyticsSlice"
+import aiReducer from "../slice/ai/aiSlice";
 
 export const store = configureStore({
   reducer: {
@@ -34,6 +35,8 @@ export const store = configureStore({
     user: userReducer,
 
     analytics: analyticsReducer,
+
+    ai: aiReducer,
   },
 });
 

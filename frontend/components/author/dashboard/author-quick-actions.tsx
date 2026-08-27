@@ -17,7 +17,7 @@ const actions = [
       "Start writing a new story",
 
     href:
-      "/dashboard/author/blogs/create",
+      "/dashboard/author/createBlog",
 
     icon:
       <PenLine className="h-5 w-5" />,
@@ -30,7 +30,7 @@ const actions = [
       "Manage all your content",
 
     href:
-      "/dashboard/author/blogs",
+      "/dashboard/author/myBlogs",
 
     icon:
       <BookOpen className="h-5 w-5" />,
@@ -43,7 +43,7 @@ const actions = [
       "Continue unfinished work",
 
     href:
-      "/dashboard/author/blogs?status=draft",
+      "/dashboard/author/drafts",
 
     icon:
       <FilePenLine className="h-5 w-5" />,
@@ -56,7 +56,7 @@ const actions = [
       "Track submitted blogs",
 
     href:
-      "/dashboard/author/blogs?status=pending",
+      "/dashboard/author/myBlogs?status=pending",
 
     icon:
       <Send className="h-5 w-5" />,
