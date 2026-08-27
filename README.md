@@ -50,7 +50,7 @@ Manage the platform, users, content moderation, categories, tags, and comments.
 
 ### ✍️ Authors
 
-Create, edit, submit, manage, and analyze blog content.
+Create, edit, submit, manage, and analyze blog content, including saved drafts.
 
 </td>
 
@@ -77,8 +77,8 @@ Axios Service Layer
         │
         ▼
 Express REST API
-        │
-        ▼
+   │
+   ▼
 MongoDB + Mongoose
 ```
 
@@ -148,6 +148,37 @@ The platform supports a complete blog publishing and moderation lifecycle.
 * ↕️ Sorting
 * 👁️ View tracking
 * 📊 Author analytics
+* 💾 Explicit draft saving
+* 🗂️ Dedicated draft workspace
+* ✏️ Resume editing saved drafts
+
+---
+
+## 🤖 AI Features
+
+AI requests are routed through the Express backend. Provider credentials remain server-side and are never exposed to the frontend.
+
+### Reader AI
+
+* 💬 Ask questions about published articles
+* ✨ Generate article summaries
+* 📚 Explain articles in simple language
+* 📝 Render Markdown summaries in a readable panel
+* ♻️ Reuse cached summaries without consuming another summary request
+* 📊 Display daily question usage and remaining requests
+* 🚦 Handle authentication and rate-limit errors gracefully
+
+### Author and Administration AI
+
+* 🪄 Generate blog drafts from a topic and optional instructions
+* 🧾 Auto-fill generated titles and descriptions
+* 📝 Inject clean generated HTML into the rich-text editor
+* 🔍 Keep generated content in draft/edit state for review
+* 🚫 Never automatically save, submit, or publish generated content
+
+### AI Usage Limits
+
+Daily usage is tracked per authenticated user for questions, summaries, and blog generations. Cached summaries do not consume a new summary request.
 
 ---
 
@@ -213,6 +244,10 @@ Readers can actively interact with published content.
 | 📖 Reading History   | Track previously read blogs   |
 | 👁️ Blog Views       | Track blog engagement         |
 | 🔔 Notifications     | View and manage notifications |
+| 🤖 Ask AI            | Ask questions about published articles |
+| ✨ AI summaries      | Generate or retrieve cached summaries |
+| 🔥 Reading streak    | Track consecutive reading days |
+| 📰 Daily facts       | Browse curated news and facts |
 
 ---
 
@@ -312,6 +347,8 @@ user
 | ✏️ Manage own blogs       |         ❌         |     ✅     |    ❌    |
 | 📤 Submit blogs           |         ❌         |     ✅     |    ❌    |
 | 📊 Author analytics       |         ❌         |     ✅     |    ❌    |
+| 🤖 Ask AI and summaries   |         ✅         |     ✅     |    ✅    |
+| 🪄 Generate blog drafts   |         ✅         |     ✅     |    ❌    |
 | 📚 Manage all blogs       |         ✅         |     ❌     |    ❌    |
 | ✅ Publish blogs           |         ✅         |     ❌     |    ❌    |
 | ❌ Reject blogs            |         ✅         |     ❌     |    ❌    |
@@ -341,6 +378,7 @@ user
 | 🔔 React Toastify  | Notifications           |
 | 🎯 Lucide React    | Icons                   |
 | 📊 Recharts        | Analytics visualization |
+| 📝 React Markdown  | AI summary rendering    |
 
 ---
 
@@ -359,6 +397,7 @@ user
 | 📤 Brevo      | Email service       |
 | 📁 Multer     | File uploads        |
 | ☁️ Cloudinary | Image storage       |
+| 🤖 Google Gemini | Server-side AI generation |
 
 ---
 
@@ -704,6 +743,28 @@ mostViewed
 
 ---
 
+## 🤖 AI
+
+| Method | Endpoint | Access |
+| ------ | -------- | ------ |
+| `POST` | `/ai/ask-blog` | 🔐 Authenticated |
+| `POST` | `/ai/summarize-blog` | 🔐 Authenticated |
+| `POST` | `/ai/generate-blog` | ✍️ Author / 👑 Administration |
+
+AI responses include usage information. Summary responses also report whether the result was served from the blog's cached summary. Provider API keys are read only by the backend.
+
+---
+
+## 📰 Daily Facts
+
+| Method | Endpoint | Access |
+| ------ | -------- | ------ |
+| `GET` | `/facts` | 🌐 Public |
+
+Supported query parameters are `page` and `limit`. The response returns curated stories with category, title, excerpt, image, URL, and pagination metadata.
+
+---
+
 ## 🏷️ Categories
 
 | Method   | Endpoint                   | Access            |
@@ -833,6 +894,7 @@ all
 | 🔔 `Notification`   | User notifications                                             |
 | 📖 `ReadingHistory` | Previously read content                                        |
 | 👁️ `BlogView`      | Blog view tracking                                             |
+| 🤖 `AiUsage`       | Per-user daily AI usage limits                                |
 | 🔢 `Otp`            | OTP verification and temporary registration data               |
 
 ---
@@ -1030,6 +1092,10 @@ EMAIL_FROM=<your-sender-email>
 
 # BREVO
 BREVO_API_KEY=<your-brevo-api-key>
+
+
+# AI
+GEMINI_API_KEY=<your-server-side-gemini-api-key>
 ```
 
 ---

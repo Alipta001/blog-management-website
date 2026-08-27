@@ -26,6 +26,14 @@ export default function BlogAIAssistant({ blogId }: BlogAIAssistantProps) {
   const [question, setQuestion] = useState("");
 
   useEffect(() => {
+    dispatch(clearAIState());
+
+    return () => {
+      dispatch(clearAIState());
+    };
+  }, [blogId, dispatch]);
+
+  useEffect(() => {
     if (error) toast.error(error);
   }, [error]);
 
@@ -41,7 +49,7 @@ export default function BlogAIAssistant({ blogId }: BlogAIAssistantProps) {
   const clearResponse = () => dispatch(clearAIState());
 
   return (
-    <section className="mt-10 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
+    <section className="mt-10 min-w-0 max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 text-violet-600 dark:text-violet-300">
@@ -66,8 +74,8 @@ export default function BlogAIAssistant({ blogId }: BlogAIAssistantProps) {
       {questionUsage && <p className="mt-4 text-xs font-medium text-slate-500 dark:text-slate-400">AI Questions Remaining Today: {questionUsage.remaining} / {questionUsage.limit}</p>}
       {loading && <p className="mt-4 text-sm font-medium text-violet-600 dark:text-violet-300">AI is thinking...</p>}
       {error && <p role="alert" className="mt-4 text-sm text-red-600 dark:text-red-400">{errorStatus === 429 ? "Rate limit exceeded. " : errorStatus === 403 ? "Forbidden. " : ""}{error}</p>}
-      {summary && !loading && <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300"><div className="mb-3 flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"><span>AI Summary</span>{summaryCached && <span>Cached</span>}</div><ReactMarkdown>{summary}</ReactMarkdown></div>}
-      {answer && !summary && !loading && <div className="mt-5 whitespace-pre-wrap rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">{answer}</div>}
+      {summary && !loading && <div className="mt-5 min-w-0 max-w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 break-words text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 [overflow-wrap:anywhere] [&_a]:break-all [&_code]:break-words [&_pre]:max-w-full [&_pre]:overflow-x-auto"><div className="mb-3 flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400"><span>AI Summary</span>{summaryCached && <span>Cached</span>}</div><ReactMarkdown>{summary}</ReactMarkdown></div>}
+      {answer && !summary && !loading && <div className="mt-5 min-w-0 max-w-full overflow-hidden whitespace-pre-wrap rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm leading-7 break-words text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 [overflow-wrap:anywhere]">{answer}</div>}
     </section>
   );
 }

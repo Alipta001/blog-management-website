@@ -34,8 +34,11 @@ const getTag = (xml, tag) => {
 };
 
 const getImage = (item) => {
-  const media = item.match(/<(?:media:content|media:thumbnail|enclosure)[^>]*(?:url|href)=["']([^"']+)["'][^>]*>/i);
-  return media?.[1] || null;
+  const decodedItem = decodeXml(item);
+  const media = decodedItem.match(/<(?:media:content|media:thumbnail|enclosure)[^>]*(?:url|href)=["']([^"']+)["'][^>]*>/i);
+  const imageTag = decodedItem.match(/<img[^>]*(?:src|data-src)=["']([^"']+)["'][^>]*>/i);
+  const imageElement = decodedItem.match(/<image[^>]*>[\s\S]*?<url>([^<]+)<\/url>[\s\S]*?<\/image>/i);
+  return media?.[1] || imageTag?.[1] || imageElement?.[1]?.trim() || null;
 };
 
 const parseFeed = (xml, category) => {

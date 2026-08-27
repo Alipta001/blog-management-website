@@ -10,7 +10,7 @@ interface DailyFact {
   category: string;
   title: string;
   excerpt: string;
-  image: string;
+  image: string | null;
   url: string;
 }
 
@@ -55,7 +55,7 @@ export default function DailyFactsPage() {
         <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {news.map((item) => (
             <a key={item.title} href={item.url} target="_blank" rel="noreferrer" className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-amber-300 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900 dark:hover:border-amber-700">
-              <div className="relative aspect-[16/9] overflow-hidden bg-slate-100 dark:bg-slate-800"><img src={item.image} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /><span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-white backdrop-blur-sm">{item.category}</span></div>
+              <div className="relative aspect-[16/9] overflow-hidden bg-slate-100 dark:bg-slate-800"><img src={item.image || ""} alt="" onError={(event) => { event.currentTarget.classList.add("hidden"); event.currentTarget.nextElementSibling?.classList.remove("hidden"); }} className={`h-full w-full object-cover transition duration-500 group-hover:scale-105${item.image ? "" : " hidden"}`} /><div className={`absolute inset-0 items-center justify-center bg-gradient-to-br from-amber-100 via-orange-50 to-slate-100 text-amber-700 dark:from-slate-800 dark:via-slate-900 dark:to-orange-950 dark:text-amber-300${item.image ? " hidden" : " flex"}`}><Lightbulb className="h-12 w-12 opacity-70" /></div><span className="absolute left-3 top-3 rounded-full bg-black/60 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-white backdrop-blur-sm">{item.category}</span></div>
               <div className="p-5"><h3 className="line-clamp-2 text-lg font-bold leading-7 text-slate-900 dark:text-white">{item.title}</h3><p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.excerpt}</p><span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-amber-600 hover:text-amber-700  ">Read story <ExternalLink className="h-4 w-4 transition group-hover:translate-x-0.5" /></span></div>
             </a>
           ))}

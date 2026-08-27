@@ -82,6 +82,44 @@ body {
 .dark .reader-featured-panel {
 	box-shadow: none;
 }
+
+.light .reader-continue-card {
+	border-color: #a7f3d0;
+	background-color: #ecfdf5;
+}
+
+.light .reader-continue-icon {
+	background-color: #d1fae5;
+	color: #047857;
+}
+
+.light .reader-continue-card h2,
+.light .reader-continue-card p {
+	color: #0f172a !important;
+}
+
+.light .reader-continue-card p:first-child {
+	color: #047857 !important;
+}
+
+.light .reader-streak-card {
+	border-color: #fed7aa;
+	background-color: #fff7ed;
+}
+
+.light .reader-streak-icon {
+	background-color: #ffedd5;
+	color: #c2410c;
+}
+
+.light .reader-streak-card p {
+	color: #0f172a !important;
+}
+
+.light .reader-streak-icon svg {
+	color: #c2410c !important;
+}
+
 .light .reader-community-heading h2 { color: #172554 !important; }
 
 .light .reader-banner-title {
