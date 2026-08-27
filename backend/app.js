@@ -17,7 +17,7 @@ app.set('trust proxy', 1);
 app.use(
   cors({
     origin: [
-      "https://blog-management-website-three.vercel.app",
+      "https://golpokotha-blog.vercel.app",
       "http://localhost:3000",
     ],
     credentials: true,
