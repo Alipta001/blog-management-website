@@ -21,6 +21,15 @@ export const metadata: Metadata = {
   description: "Discover thoughtful technology, ideas, and editorial stories on GolpoKotha.",
   applicationName: "GolpoKotha",
   keywords: ["GolpoKotha", "technology blog", "editorial blog", "online articles", "reading platform"],
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   openGraph: {
     type: "website",
     siteName: "GolpoKotha",
