@@ -343,7 +343,9 @@ export default function AuthLayout({
           justify-center
           px-5
           py-10
+          pt-20
           sm:px-8
+          sm:pt-10
         "
       >
 
